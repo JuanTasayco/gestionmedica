@@ -1,9 +1,9 @@
 {
   "name": "gestionmedica-frontend",
-  "version": "0.0.1-SNAPSHOT",
+  "version": "0.0.1-RC",
   "files": [
     "dist"
-  ],  
+  ],
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -11,7 +11,7 @@
     "build-prod": "ng build --prod --configuration=production --base-href=/gestionmedica/",
     "devops:int": "ng build --base-href=/gestionmedica/",
     "devops:pre": "ng build --base-href=/gestionmedica/",
-    "devops:prod": "ng build --prod --configuration=production --base-href=/gestionmedica/",	
+    "devops:prod": "ng build --prod --configuration=production --base-href=/gestionmedica/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
