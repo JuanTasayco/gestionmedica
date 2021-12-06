@@ -1,0 +1,390 @@
+.header{
+	background-color:$cWhite1;
+	height: auto;
+	position: relative;
+	z-index: 1000;
+	border-bottom: 1px solid $cGray4;
+
+	.g-header-row2 {
+		background-color:$cRed1;
+		position:absolute;
+		width:100%;
+		z-index:1;
+		&-container {
+			position:relative;
+			 z-index:10;}
+	}
+	.g-header-row3 {
+		height: 55px; float:left; width:50%; background-color:$cRed1;
+	}
+	.g-header-row4 {
+		height: 55px;
+		float:left;
+		width:50%;
+		background-color:$cWhite1;
+	}
+
+	.g-header-col-red {
+		width:160px;
+		height: 55px; @include inlineblock();
+		float:left;
+		>.logoOIM {
+			background-image: url(../assets/images/logo-oim-header2.png); background-repeat: no-repeat;
+			height: 55px; width:105px; @include inlineblock;
+		}
+		>.ico-menuderecha {
+			font-size: 48px; color: $cWhite1; cursor: pointer;
+			&:before { position: relative; top: 3px; left: -5px }
+		}
+	}
+	.g-header-col-white {
+		height: 55px;
+		@include inlineblock();
+		background-color:transparent;
+		float: right;
+		h2.g-sub-title-normal {
+			padding-top: 18px;
+		}
+		.icon-col {padding: 0;}
+	}
+
+	.g-header-item {
+		@include inlineblock();
+		vertical-align:top;
+		padding-top:11px;
+		position:relative;
+	}
+
+	.g-input-icon { @include inlineblock; position:absolute; right:0; top:13px; z-index:12; }
+
+	.ico-search { display: none; font-size:32px; color: $cWhite1; font-weight:$bold; }
+
+	.ico-notificaciones{
+		display: none;
+		font-size:32px;
+		color: $cWhite1;
+	}
+
+	.ico-perfil {
+		font-size: 32px;
+		color: $cWhite1;
+		cursor: pointer;}
+
+	.icon-col {
+		position: relative;
+	}
+
+	.g-perfil-box {
+		@include prefix(border-radius, 5px);
+		> ul {
+			position: absolute;
+			background-color: $cWhite1;
+			top: 55px;
+			left: -15px;
+			width: 300px;
+			> li {
+				text-align: left;
+                display: block;
+                padding-bottom: 13px;
+                padding-top: 13px;
+                border-bottom: 1px solid $cGray4;
+                padding-left: 13px;
+                @include prefix(transition, all 0.25s linear);
+				&:hover{
+					border-bottom: 1px solid $cRed1;
+				}
+			}
+		}
+	}
+
+	.g-sub-title-normal {
+		color:$cRed1;
+	}
+
+}
+
+.g-ayuda-box {
+	text-align:left;padding-left: 15px;padding-bottom: 9px;
+	&.active {
+		position:relative;
+		a.g-perfil-name {
+			color:$cWhite1;
+			> span.ico-select {color:$cWhite1; font-weight:$bold;}
+		}
+	}
+	a.g-perfil-name {
+		text-align:left;
+		// color:$gris7;
+			> span.ico-select {color:$cRed1; font-weight:$bold; }
+		}
+		> ul {
+			position:absolute;
+			width: 214px;
+			top: 55px;
+			right: -15px;
+			background-color: $cWhite1;
+			border: 1px solid $cGray4; //$gris13;
+			z-index: 9;
+			> li {
+				text-align: left;
+				display:block;
+				padding-bottom: 13px;
+				padding-top: 13px;
+				padding-left: 13px;
+				border-bottom: 1px solid $cGray4; //$gris13;
+				// color:$gris1;
+				&:hover{
+					background-color: $cGray5; //#f2f5f7;
+				}
+			}
+			> li:last-child {border-bottom:0;}
+		}
+	}
+
+.menu-perfil-background {
+	background-color: rgba(0,0,0,0.5);
+	position: fixed; top: 0; bottom: 0; left: 0; right: 0;
+	z-index: 999;
+}
+.menu-perfil-body { overflow: hidden; }
+
+
+@media (max-width: 960px){
+	.w-nav{ display: block; }
+	.menu-mobile-open { visibility: visible; }
+}
+
+@media (min-width: $break-medium) {
+	.header{
+		.g-header-col-red {
+			width:120px;
+			height: 55px; @include inlineblock;
+			float: none;
+			>.logoOIM {
+				background-image: url(../assets/images/logo-oim-header2.png); background-repeat: no-repeat;
+				height: 55px; width:105px;
+			}
+		}
+		.g-header-col-white {
+			height: 55px; width:87%; @include inlineblock;
+			background-color:$cWhite1;
+			float: right;
+			h2.g-sub-title-normal {
+				padding-top: 18px;
+			}
+			&:after{
+				top:50%;
+				border:solid transparent;
+				content:" ";
+				height:0; width:0;
+				position: absolute;
+				pointer-events: none;
+				border-color: rgba(255, 255, 255, 0);
+				border-right-color: $cWhite1;
+				border-width: 7px;
+				margin-top: -7px;
+			}
+		}
+
+		.g-header-item {
+			padding-top:13px;
+		}
+
+		.g-input-icon {
+			@include inlineblock; position:absolute; right:0; top:13px; z-index:12;
+		}
+
+		.ico-search {
+			@include inlineblock; font-size:22px; color: $cRed1; font-weight:$bold;
+		}
+
+		.ico-notificaciones {
+			@include inlineblock();
+			font-size: 22px;
+			color: $cRed1;
+			&.i-building{
+				font-size: 20px;
+			}
+		}
+
+		.g-perfil-box {
+			min-width:170px;
+			text-align:left;
+			padding-top:17px;
+			border-radius: 0;
+			border-left: 1px solid $cGray4;
+			&.active {
+				background-color: $cRed1;
+				position:relative;
+				a.g-perfil-name {
+					color:$cWhite1;
+					> span.ico-select {
+						color:$cWhite1;
+					}
+					.g-perfil-ico{
+						@include inlineblock();
+						color: $cWhite1;
+					}
+				}
+			}
+			a.g-perfil-name {
+				text-align:left;
+				display: block;
+                padding-left: 13px;
+                padding-right: 13px;
+                padding-bottom: 19px;
+				> span.ico-select {
+					color: $cRed1;
+					font-weight:$bold;
+				}
+					.info-user{
+						@include inlineblock();
+						float: left;
+                        max-width: 300px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+					}
+					.g-perfil-ico{
+						@include inlineblock();
+						color: $cRed1;
+					}
+			}
+			> ul {
+				position:absolute;
+				background-color: $cRed1; //#c71a03;
+				top: 55px;
+				left: 0px;
+				width: 100%;
+				> li {
+					text-align: center;
+					display:block;
+					padding-bottom: 13px;
+					padding-top: 13px;
+					border-bottom: 1px solid $cRed2; //#b31904;
+					color:$cWhite1;
+				}
+				> li:last-child {border-bottom:0;}
+				> li:hover{
+					background-color: $cRed5; //#ba1302;
+					color: $cWhite1;
+				}
+			}
+		}
+		.g-consulta-box {
+			text-align:left;
+			padding-top: 15px;
+			padding-left: 15px;
+			padding-right: 15px;
+			padding-bottom: 18px;
+			border-left: 1px solid $cGray4;
+			&.active {
+				position:relative;
+				a.g-perfil-name {
+					color:$cWhite1;
+					> span.ico-select {color:$cWhite1; font-weight:$bold;}
+				}
+			}
+			a.g-perfil-name {
+				text-align:left;
+				// color:$gris7;
+				> span.ico-select {
+					color:$cRed1;
+					font-weight:$bold;
+				}
+			}
+			> ul {
+				position:absolute;
+				width: 355px;
+				top: 50px;
+				right: 4px;
+				background-color: $cWhite1;
+				border: 1px solid $cGray4;
+				z-index: 9;
+				> li {
+					text-align: left;
+					display:block;
+					padding-bottom: 13px;
+					padding-top: 13px;
+					padding-left: 13px;
+					border-bottom: 1px solid $cGray4;
+					// color:$gris1;
+				}
+				> li:last-child {
+					border-bottom:0;
+				}
+				.header-consulta{
+					border-bottom: 0px !important;
+					background-color: $cGray5; //#f1f5f7;
+					margin: 5px;
+				}
+			}
+		}
+		.g-edificio-box {
+			text-align:left;padding-top: 15px;padding-left: 15px;padding-right: 15px;padding-bottom: 18px;
+		}
+
+		.g-ayuda-box {
+			text-align:left;
+			padding-top: 15px;
+			border-left: 1px solid $cGray4;
+			padding-left: 15px;
+			padding-right: 15px;
+			padding-bottom: 18px;
+			&.active {
+				position:relative;
+				a.g-perfil-name {
+					color:$cWhite1;
+					> span.ico-select {
+						color:$cWhite1;
+						font-weight:$bold;
+					}
+				}
+			}
+			a.g-perfil-name {
+				text-align:left;
+				// color:$gris7;
+				> span.ico-select {
+					color:$cRed1;
+					font-weight:$bold;
+				}
+			}
+			> ul {
+				position:absolute;
+				width: 214px;
+				top: 50px;
+				right: 4px;
+				background-color: $cWhite1;
+				// border: 1px solid $gris13;
+				z-index: 9;
+				> li {
+					text-align: left;
+					display:block;
+					padding-bottom: 13px;
+					padding-top: 13px;
+					padding-left: 13px;
+				}
+				> li:last-child {
+					border-bottom:0;
+				}
+			}
+		}
+	}
+}
+
+
+@media (min-width: $break-xmedium) {
+	.header{
+		.g-header-col-white {
+			&:after { left:130px; }
+		}
+	}
+}
+
+@media (min-width: $break-large) {
+	.header{
+		.g-header-col-white {
+			&:after { left:153px; }
+		}
+	}
+}

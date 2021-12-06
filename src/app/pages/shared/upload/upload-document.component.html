@@ -1,0 +1,125 @@
+<div class="g-section-inner g-dashboard-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="g-col-filter__box clearfix g-box-md mb-md-2 gBgcWhite1">
+          <div class="g-col-filter__box">
+            <div class="col-md-12 mb-md-1"></div>
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-12 mb-md-1">
+                  <span class="col-md-8 mg-top-15">
+                    <label class="g-placeholder animated ng-binding pl-xs-1-5"><b>Cargar nuevos documentos
+                      </b></label>
+                  </span>
+                </div>
+                <form name="formUploadDocument" [formGroup]="formGroupUploadDocument">
+                  <div class="col-md-12 mt-md-2 mb-md-2 ">
+                    <div class="col-md-12">
+                      <div class="col-md-3">
+
+                        <mat-form-field appearance="standard" class="form-group">
+                          <mat-label>No. de consulta</mat-label>
+                          <mat-icon *ngIf="existsNroConsulta" matSuffix>done</mat-icon>
+                          <input matInput placeholder="No. de consulta" formControlName='nroConsulta' (change)="checkNroConsulta()" autocomplete="off">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-3">
+                        <mat-form-field appearance="standard" class="form-group">
+                          <mat-label>No. de atención</mat-label>
+                          <mat-icon *ngIf="existsOrdenTrabajo" matSuffix>done</mat-icon>
+                          <input matInput placeholder="No. de atención" formControlName='ordenTrabajo' (change)="checkOrdenTrabajo()" autocomplete="off">
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div >
+                      <div class="col-md-12">
+                        <div  class="drag-container" appDnd (fileDropped)="onFileDropped($event)">
+                          <input accept="application/pdf"  [ngClass]="{'not-allowed': !existsNroConsulta}" type="file" [disabled]="!existsNroConsulta || !existsOrdenTrabajo" #fileDropRef id="fileDropRef" multiple
+                            (change)="fileBrowseHandler($event.target.files)" />
+                          <h3>Agrega o arrastre aquí los documentos</h3>
+                        </div>
+                      </div>
+                      <div class="col-md-12" *ngIf=" getArrayLength()>0">
+                        <div class="col-md-4">
+                          <b> {{ getArrayLength() }} documentos cargados</b>
+                        </div>
+                        <div class="col-md-4">
+                        </div>
+                        <div class="col-md-4">
+                          <div class="col-md-9">
+                            <mat-checkbox
+                            (change)="checkFirma($event)"
+                            [checked] = "checkAllSigned()"
+                            class="form-group delivery-checkbox">
+                              Todos están firmados
+                            </mat-checkbox></div>
+                          <div class="col-md-3"></div>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="files-list" formArrayName="items">
+                          <div class="single-file" *ngFor="let item of formGroupUploadDocument.get('items')['controls']; let i = index;">
+                            <div class="col-md-4">
+
+                              <div class="info">
+                                <h4 class="name" >
+                                  {{ item.value.archivo.name }}
+                                </h4>
+                                <p class="size">
+                                  {{ formatBytes(item.value.archivo.size ) }}
+                                </p>
+                              </div>
+
+                            </div>
+                            <div class="col-md-4" [formGroupName]="i">
+                              <mat-form-field appearance="standard" class="form-group">
+                                <mat-label>Tipo de documento</mat-label>
+                                <mat-select formControlName="fileType" required (selectionChange)="setFileType(i,$event.value)">
+                                  <mat-option *ngFor="let tipo of tipoDocumentoData"  [value]="tipo.codigo">
+                                    {{tipo.descripcion}}
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="col-md-9">
+                                <mat-checkbox
+                                [checked] = "item.value.firmado" (change)="checkDetCheckBox(i,$event)"
+                                class="form-group delivery-checkbox">
+                                  Documento firmado
+                                </mat-checkbox>
+                              </div>
+                              <div class="col-md-3">
+                                <div class="delete" (click)="deleteFile(i)">
+                                  <span class="material-icons-outlined">
+                                    delete_forever
+                                    </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-3">
+                          <button type="button" class="g-btn g-btn-transparent block px-10"
+                            [disabled]="">Cancelar</button>
+                        </div>
+                        <div class="col-md-3">
+                          <button type="button"  class="g-btn g-btn-verde block px-10"
+                          [disabled]="!formGroupUploadDocument.valid || ( formGroupUploadDocument.valid && getArrayLength() == 0)" (click)="loadDocuments()">Cargar</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

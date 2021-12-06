@@ -1,0 +1,106 @@
+<header class="header">
+    <div class="g-header-row1">
+        <ng-container>
+            <div class="g-header-row2">
+                <div class="g-header-row3"></div>
+                <div class="g-header-row4 hidden-xs hidden-sm"></div>
+            </div>
+        
+            <div class="container g-header-row2-container">
+                <div class="g-header-col-red">
+
+                <div menu-perfil-responsive id="menu-perfil-responsive" 
+                    class="g-header-item g-perfil-box hidden-md hidden-lg" 
+                    [ngClass]="{'active': isPopupPerfilResponsiveVisible}">
+                    <a class="g-perfil-name" (click)="toggleSelectPerfilResponsive();">
+                        <span [ngClass]="isPopupPerfilResponsiveVisible ? 'ico-mapfre-384-navclose' : 'ico-mapfre_147_hamburguesa'" class="ico-perfil hidden-md hidden-lg"></span>
+                    </a>
+
+                    <ul id="g-perfil-list-responsive" class="g-perfil-list" [hidden]="!isPopupPerfilResponsiveVisible">
+                        <li><a href="https://oim.mapfre.com.pe/EMISA_ANTIGUO/DefaultActualizarCliente.aspx?query=" target="_blank" rel="noopener noreferrer">Usuario Empresa</a></li>
+                        <li><a (click)="signOut()"><span class="ico-mapfre_171_cerrar">&nbsp;</span>Cerrar sesión</a></li>
+                    </ul>
+
+                    <div class="clearfix"></div>
+                </div>
+            
+                <a class="logoOIM" (click)="goHome()"></a>
+            </div>
+        
+            <div class="g-header-col-white">
+            <div class="col-md-6 col-sm-3 hidden-xs hidden-sm type-profile">
+                <h2 class="g-sub-title-normal"> {{perfilEjecutivo}}</h2>
+            </div>
+            
+            <div class="col-md-6 col-sm-12 col-xs-12 text-right icon-col type-user">
+                <div class="g-header-item g-ayuda-box">
+                <a class="g-perfil-name" href="https://oim.mapfre.com.pe/LDWCLI/Default.aspx?query=" target="_blank" rel="noopener noreferrer">
+                    <div class="hidden-xs hidden-sm">
+                        <span title="Ayuda" class="ico-mapfre_85_circlequestion ico-notificaciones"></span>
+                    </div>
+                    <span class="ico-mapfre_85_circlequestion ico-perfil hidden-md hidden-lg"></span>
+                </a>
+
+                <div class="clearfix"></div>
+                </div>
+
+                <div menu-perfil-desktop id="menu-perfil-desktop" class="g-header-item g-perfil-box hidden-xs hidden-sm"
+                [ngClass]="{'active': isPopupPerfilDesktopVisible}">
+                <a class="g-perfil-name" (click)="toggleSelectPerfilDesktop();">
+                    <div class="">
+                    <div class="info-user">
+                        <span class="g-perfil-username">¡Hola {{fullUsername}}!</span>
+                    </div>
+                    &nbsp;
+                    <span class="ico-mapfre_76_chevrondown ico-select g-perfil-ico"></span>
+                    </div>
+
+                    <span class="ico-mapfre_137_cliente-persona ico-perfil hidden-md hidden-lg"></span>
+                </a>
+
+                <ul class="g-perfil-list g-perfil-list-desktop" [hidden]="!isPopupPerfilDesktopVisible">
+                    <li>
+                    <a (click)="signOut()">
+                        <span class="ico-mapfre_171_cerrar">&nbsp;</span>Cerrar sesión
+                    </a>
+                    </li>
+                </ul>
+
+                <div class="clearfix"></div>
+                </div>
+            </div>
+            </div>
+        </div>
+        </ng-container>
+
+        <ng-container>
+            <div class="g-sec-breadcrumb">
+                <div class="container">
+                    <div class="row g-box--breadcrumb">
+                        <div class="col-sm-1 no-responsive icon">
+                            <a class="link-ico" (click)="goHome()">
+                                <span class="h-myd--none ico-mapfre_156_casa"></span>
+                                <span class="ico-mapfre_344_myd-home h-myd--show h-oim-none"></span>
+                            </a>
+
+                            <span class="arrow_box"></span>
+                        </div>
+
+                        <div class="col-sm-11 text">
+                            <ol class="breadcrumb">
+                                <li *ngFor="let crumb of crumbs; let last = last" [ngClass]="{ active: last }">
+                                    <a *ngIf="!last" [title]="crumb.title" 
+                                        (click)="openView(crumb.path)">
+                                        <span class="no-responsive">{{crumb.description}}</span>
+                                        <span class="ico-mapfre_84_circleleft ico-back no-desk si-responsive"></span>
+                                    </a>
+                                    <span *ngIf="last" class="no-responsive">{{crumb.description}}</span>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>      
+        </ng-container>
+    </div>
+</header>

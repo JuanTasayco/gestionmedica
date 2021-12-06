@@ -1,0 +1,995 @@
+@import 'fonts-roboto';
+
+@font-face {
+  font-family: 'Mapfree-iconss';
+  src:  url(../assets/fonts/Mapfree-iconss.eot);
+  src:  url(../assets/fonts/Mapfree-iconss.eot) format('embedded-opentype'),
+    url(../assets/fonts/Mapfree-iconss.ttf) format('truetype'),
+    url(../assets/fonts/Mapfree-iconss.woff) format('woff'),
+    url(../assets/fonts/Mapfree-iconss.svg) format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="ico-"], [class*=" ico-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'Mapfree-iconss' !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ico-mapfre {
+  margin-right: 10px;
+  &:before { position: relative; top: 2px; }
+}
+
+.ico-mapfre_341_delivery-medicamentos:before {
+  content: "\ea3e";
+}
+.ico-mapfre_340_reembolsos:before {
+  content: "\ea3d";
+}
+
+.ico-mapfre_339_security-badge:before {
+  content: "\ea3c";
+}
+
+.ico-mapfre_338_asistencia-legal:before {
+  content: "\ea3b";
+}
+.ico-mapfre_337_deletePerfil:before {
+  content: "\ea3a";
+}
+.ico-mapfre_336_securitySystem:before {
+  content: "\ea39";
+}
+
+.ico-mapfre_335_pericial:before {
+  content: "\ea38";
+}
+.ico-mapfre_332_hunter:before {
+  content: "\ea35";
+}
+.ico-mapfre_333_searchUser:before {
+  content: "\ea36";
+}
+.ico-mapfre_334_reporteCentroMedico:before {
+  content: "\ea37";
+}
+.ico-mapfre_331_perdidaRegular:before {
+  content: "\ea34";
+}
+.ico-mapfre_330_perdidaTotal:before {
+  content: "\ea33";
+}
+.ico-mapfre_328_autoOK:before {
+  content: "\e985";
+}
+.ico-mapfre_329_registroNuevoPar:before {
+  content: "\ea32";
+}
+.ico-mapfre_322_perdidaRegular:before {
+  content: "\ea2c";
+}
+.ico-mapfre_323_registroNuevo:before {
+  content: "\ea2d";
+}
+.ico-mapfre_324_placa:before {
+  content: "\ea2e";
+}
+.ico-mapfre_325_capaz:before {
+  content: "\ea2f";
+}
+.ico-mapfre_326_arrow_up:before {
+  content: "\ea30";
+}
+.ico-mapfre_327_arrow_down:before {
+  content: "\ea31";
+}
+.ico-mapfre_320_cargaIndividual:before {
+  content: "\ea2a";
+}
+.ico-mapfre_321_doc:before {
+  content: "\ea2b";
+}
+.ico-mapfre_319_gestionRestos:before {
+  content: "\ea29";
+}
+.ico-mapfre_318_auxilioMecanico:before {
+  content: "\ea28";
+}
+.ico-mapfre_317_messageArrow:before {
+  content: "\ea27";
+}
+.ico-mapfre_316_exclamacion:before {
+  content: "\ea26";
+}
+.ico-mapfre_315_pdf:before {
+  content: "\ea25";
+}
+.ico-mapfre_314_archivos:before {
+  content: "\ea24";
+}
+.ico-mapfre_313_habilitado:before {
+  content: "\ea22";
+}
+.ico-mapfre_312_inhabilitado:before {
+  content: "\ea23";
+}
+.ico-mapfre_311_arrowRight:before {
+  content: "\ea1d";
+}
+.ico-mapfre_310_arrowLeft:before {
+  content: "\ea1e";
+}
+.ico-mapfre_309_arrowUp:before {
+  content: "\ea1f";
+}
+.ico-mapfre_308_arrowDown:before {
+  content: "\ea20";
+}
+.ico-mapfre_307_tacho:before {
+  content: "\ea21";
+}
+.ico-mapfre_306_importar:before {
+  content: "\ea1c";
+}
+.ico-mapfre_305_user:before {
+  content: "\ea1b";
+}
+.ico-mapfre_304_csv:before {
+  content: "\ea1a";
+}
+.ico-mapfre_76_chevrondown:before {
+  content: "\e94b";
+}
+.ico-mapfre_77_chevronup:before {
+  content: "\e94c";
+}
+.ico-mapfre_78_chevronleft:before {
+  content: "\e94d";
+}
+.ico-mapfre_79_chevroneright:before {
+  content: "\e94e";
+}
+.ico-mapfre_123_envelop:before {
+  content: "\e97a";
+}
+.ico-mapfre_124_download:before {
+  content: "\e97b";
+}
+.ico-mapfre_301_warning:before {
+  content: "\ea19";
+}
+.ico-mapfre_303_informacion:before {
+  content: "\ea16";
+}
+.ico-mapfre_302_error:before {
+  content: "\ea17";
+}
+.ico-mapfre_300_sucess:before {
+  content: "\ea18";
+}
+.ico-mapfre_297_cerrarsesion:before {
+  content: "\ea05";
+}
+.ico-mapfre_298_buscar:before {
+  content: "\ea06";
+}
+.ico-mapfre_299_auto_front:before {
+  content: "\ea07";
+}
+.ico-mapfre_296_refresh:before {
+  content: "\ea08";
+}
+.ico-mapfre_295_changeuser:before {
+  content: "\ea09";
+}
+.ico-mapfre_292_notificaciones:before {
+  content: "\ea0a";
+}
+.ico-mapfre_293_phone:before {
+  content: "\ea0b";
+}
+.ico-mapfre_294_email:before {
+  content: "\ea0c";
+}
+.ico-mapfre_291_menuderecha:before {
+  content: "\ea0d";
+}
+.ico-mapfre_290_documentos:before {
+  content: "\ea0e";
+}
+.ico-mapfre_289_crearmodificar:before {
+  content: "\ea0f";
+}
+.ico-mapfre_288_emitir:before {
+  content: "\ea10";
+}
+.ico-mapfre_287_cotizar:before {
+  content: "\ea11";
+}
+.ico-mapfre_286_submenu:before {
+  content: "\ea12";
+}
+.ico-mapfre_285_circleu:before {
+  content: "\ea13";
+}
+.ico-mapfre_284_circlequestion:before {
+  content: "\ea14";
+}
+.ico-mapfre_283_circleleft:before {
+  content: "\ea15";
+}
+.ico-mapfre_203_filtro:before {
+  content: "\e9cb";
+}
+.ico-mapfre_187_vehiculo:before {
+  content: "\e9bb";
+}
+.ico-mapfre_188_siniestro:before {
+  content: "\e9bc";
+}
+.ico-mapfre_189_auxiliomecanico:before {
+  content: "\e9bd";
+}
+.ico-mapfre_190_reportarobo:before {
+  content: "\e9be";
+}
+.ico-mapfre_191_fotodelentorno:before {
+  content: "\e9bf";
+}
+.ico-mapfre_192_fotodeldano:before {
+  content: "\e9c0";
+}
+.ico-mapfre_193_auxiliomecanico:before {
+  content: "\e9c1";
+}
+.ico-mapfre_194_talleresafiliados:before {
+  content: "\e9c2";
+}
+.ico-mapfre_195_configuracion:before {
+  content: "\e9c3";
+}
+.ico-mapfre_196_agendarchofer:before {
+  content: "\e9c4";
+}
+.ico-mapfre_197_assitentemapfre:before {
+  content: "\e9c5";
+}
+.ico-mapfre_198_grua:before {
+  content: "\e9c6";
+}
+.ico-mapfre_199_miperfil:before {
+  content: "\e9c7";
+}
+.ico-mapfre_200_tomadordepoliza:before {
+  content: "\e9c8";
+}
+.ico-mapfre_201_llamando:before {
+  content: "\e9c9";
+}
+.ico-mapfre_202_llamar:before {
+  content: "\e9ca";
+}
+.ico-mapfre_204_listado:before {
+  content: "\e9cc";
+}
+.ico-mapfre_205_ubicacionmapfre:before {
+  content: "\e9cd";
+}
+.ico-mapfre_206_ubicacionsalud:before {
+  content: "\e9ce";
+}
+.ico-mapfre_207_ubiccionusuario:before {
+  content: "\e9cf";
+}
+.ico-mapfre_208_ubicacionasistente:before {
+  content: "\e9d0";
+}
+.ico-mapfre_209_ubicacionayuda:before {
+  content: "\e9d1";
+}
+.ico-mapfre_210_ubicaciongrua:before {
+  content: "\e9d2";
+}
+.ico-mapfre_211_ubicacion:before {
+  content: "\e9d3";
+}
+.ico-mapfre_212_poliza:before {
+  content: "\e9d4";
+}
+.ico-mapfre_213_horario:before {
+  content: "\e9d5";
+}
+.ico-mapfre_214_grabar:before {
+  content: "\e9d6";
+}
+.ico-mapfre_215_buscar:before {
+  content: "\e9d7";
+}
+.ico-mapfre_216_hogar:before {
+  content: "\e9d8";
+}
+.ico-mapfre_217_autos:before {
+  content: "\e9d9";
+}
+.ico-mapfre_218_vida:before {
+  content: "\e9da";
+}
+.ico-mapfre_219_salud:before {
+  content: "\e9db";
+}
+.ico-mapfre_220_estudios:before {
+  content: "\e9dc";
+}
+.ico-mapfre_221_sctr:before {
+  content: "\e9dd";
+}
+.ico-mapfre_222_informacion:before {
+  content: "\e9de";
+}
+.ico-mapfre_223_tips:before {
+  content: "\e9df";
+}
+.ico-mapfre_224_cargando:before {
+  content: "\e9e0";
+}
+.ico-mapfre_225_solicitarcotizacion:before {
+  content: "\e9e1";
+}
+.ico-mapfre_226_miubicacion:before {
+  content: "\e9e2";
+}
+.ico-mapfre_227_soat:before {
+  content: "\e9e3";
+}
+.ico-mapfre_228_editar:before {
+  content: "\e9e4";
+}
+.ico-mapfre_229_foto:before {
+  content: "\e9e5";
+}
+.ico-mapfre_230_agregarusuario:before {
+  content: "\e9e6";
+}
+.ico-mapfre_231_cancelaroff:before {
+  content: "\e9e7";
+}
+.ico-mapfre_232_cancelaron:before {
+  content: "\e9e8";
+}
+.ico-mapfre_233_cerrar:before {
+  content: "\e9e9";
+}
+.ico-mapfre_234_diasinsinisestro:before {
+  content: "\e9ea";
+}
+.ico-mapfre_235_notificacion:before {
+  content: "\e9eb";
+}
+.ico-mapfre_236_vercontrasena:before {
+  content: "\e9ec";
+}
+.ico-mapfre_237_seleccionar:before {
+  content: "\e9ed";
+}
+.ico-mapfre_238_salir:before {
+  content: "\e9ee";
+}
+.ico-mapfre_239_centrodetrabajo:before {
+  content: "\e9ef";
+}
+.ico-mapfre_240_tasegurado:before {
+  content: "\e9f0";
+}
+.ico-mapfre_241_visitasalmedico:before {
+  content: "\e9f1";
+}
+.ico-mapfre_242_mistrabajadores:before {
+  content: "\e9f2";
+}
+.ico-mapfre_243_imprimir:before {
+  content: "\e9f3";
+}
+.ico-mapfre_244_descargar:before {
+  content: "\e9f4";
+}
+.ico-mapfre_245_soat:before {
+  content: "\e9f5";
+}
+.ico-mapfre_246_transporte:before {
+  content: "\e9f6";
+}
+.ico-mapfre_247_metalmecanica:before {
+  content: "\e9f7";
+}
+.ico-mapfre_248_construccion:before {
+  content: "\e9f8";
+}
+.ico-mapfre_249_datosdeempresa:before {
+  content: "\e9f9";
+}
+.ico-mapfre_250_documentos:before {
+  content: "\e9fa";
+}
+.ico-mapfre_251_denunciasinistestro:before {
+  content: "\e9fb";
+}
+.ico-mapfre_252_mensajeenviado:before {
+  content: "\e9fc";
+}
+.ico-mapfre_253_herido:before {
+  content: "\e9fd";
+}
+.ico-mapfre_254_vehiculoinvolucrado:before {
+  content: "\e9fe";
+}
+.ico-mapfre_255_fluido:before {
+  content: "\e9ff";
+}
+.ico-mapfre_256_atencion:before {
+  content: "\ea00";
+}
+.ico-mapfre_257_airbag:before {
+  content: "\ea01";
+}
+.ico-mapfre_258_transporte:before {
+  content: "\ea02";
+}
+.ico-mapfre_259_logomapfre:before {
+  content: "\ea03";
+}
+.ico-mapfre_260_checkmark:before {
+  content: "\ea04";
+}
+.ico-mapfre_186_sucess:before {
+  content: "\e9ba";
+}
+.ico-mapfre_185_prohibido:before {
+  content: "\e9b9";
+}
+.ico-mapfre_184_circleCheck:before {
+  content: "\e9b7";
+}
+.ico-mapfre_183_refresh:before {
+  content: "\e9b8";
+}
+.ico-mapfre_181_eliminar:before {
+  content: "\e91c";
+}
+.ico-mapfre_29_eliminar:before {
+  content: "\e9b6";
+}
+.ico-mapfre_182_responder:before {
+  content: "\e9b5";
+}
+.ico-mapfre_180_estadistica:before {
+  content: "\e9af";
+}
+.ico-mapfre_179_alertas:before {
+  content: "\e9b0";
+}
+.ico-mapfre_178_autos:before {
+  content: "\e9b1";
+}
+.ico-mapfre_177_grua:before {
+  content: "\e9b2";
+}
+.ico-mapfre_176_call:before {
+  content: "\e9b3";
+}
+.ico-mapfre_175_ambulancia:before {
+  content: "\e9b4";
+}
+.ico-mapfre_174_fotoDocumento:before {
+  content: "\e9ad";
+}
+.ico-mapfre_173_solicitudesEnel:before {
+  content: "\e9ae";
+}
+.ico-mapfre_172_consultaGestion:before {
+  content: "\e9ac";
+}
+.ico-mapfre_171_cerrar:before {
+  content: "\e9ab";
+}
+.ico-mapfre_139_excel:before {
+  content: "\e98b";
+}
+.ico-mapfre_170_archivos:before {
+  content: "\e9aa";
+}
+.ico-mapfre_169_edificio:before {
+  content: "\e9a9";
+}
+.ico-mapfre_165_protesis:before {
+  content: "\e99f";
+}
+.ico-mapfre_168_especial:before {
+  content: "\e9a0";
+}
+.ico-mapfre_167_otros:before {
+  content: "\e9a1";
+}
+.ico-mapfre_166_rayosX:before {
+  content: "\e9a2";
+}
+.ico-mapfre_164_medicamento:before {
+  content: "\e9a3";
+}
+.ico-mapfre_163_diente:before {
+  content: "\e9a4";
+}
+.ico-mapfre_162_diagnostico:before {
+  content: "\e9a5";
+}
+.ico-mapfre_161_laboratorio:before {
+  content: "\e9a6";
+}
+.ico-mapfre_160_servicioMedico:before {
+  content: "\e9a7";
+}
+.ico-mapfre_159_medico:before {
+  content: "\e9a8";
+}
+.ico-mapfre_157_chat:before {
+  content: "\e99d";
+}
+.ico-mapfre_158_pdf:before {
+  content: "\e99e";
+}
+.ico-mapfre_129_accidents:before {
+  content: "\e929";
+}
+.ico-mapfre_130_SCTR:before {
+  content: "\e948";
+}
+.ico-mapfre_131_transport:before {
+  content: "\e967";
+}
+.ico-mapfre_120_building:before {
+  content: "\e96f";
+}
+.ico-mapfre_116_signal:before {
+  content: "\e971";
+}
+.ico-mapfre_114_heart:before {
+  content: "\e973";
+}
+.ico-mapfre_112_hogar:before {
+  content: "\e977";
+}
+.ico-mapfre_104_auto_front:before {
+  content: "\e980";
+}
+.ico-mapfre_73_empresa:before {
+  content: "\e981";
+}
+.ico-mapfre_42_soat:before {
+  content: "\e982";
+}
+.ico-mapfre_140_reloj:before {
+  content: "\e98c";
+}
+.ico-mapfre_141_notisiniestro:before {
+  content: "\e98d";
+}
+.ico-mapfre_142_sucess:before {
+  content: "\e98e";
+}
+.ico-mapfre_143_warning:before {
+  content: "\e98f";
+}
+.ico-mapfre_144_error:before {
+  content: "\e990";
+}
+.ico-mapfre_145_informacion:before {
+  content: "\e991";
+}
+.ico-mapfre_146_USB:before {
+  content: "\e992";
+}
+.ico-mapfre_147_hamburguesa:before {
+  content: "\e993";
+}
+.ico-mapfre_148_exito:before {
+  content: "\e994";
+}
+.ico-mapfre_149_confirmacion:before {
+  content: "\e995";
+}
+.ico-mapfre_150_cartasdegarantia:before {
+  content: "\e996";
+}
+.ico-mapfre_151_inspeccion:before {
+  content: "\e997";
+}
+.ico-mapfre_152_polizas:before {
+  content: "\e998";
+}
+.ico-mapfre_153_gestion:before {
+  content: "\e999";
+}
+.ico-mapfre_154_webprocarudor:before {
+  content: "\e99a";
+}
+.ico-mapfre_155_Sctr:before {
+  content: "\e99b";
+}
+.ico-mapfre_156_casa:before {
+  content: "\e99c";
+}
+.ico-mapfre_01_vehiculo:before {
+  content: "\e900";
+}
+.ico-mapfre_02_siniestro:before {
+  content: "\e901";
+}
+.ico-mapfre_03_auxiliomecanico:before {
+  content: "\e902";
+}
+.ico-mapfre_04_reportarobo:before {
+  content: "\e903";
+}
+.ico-mapfre_05_fotodelentorno:before {
+  content: "\e904";
+}
+.ico-mapfre_06_fotodeldano:before {
+  content: "\e905";
+}
+.ico-mapfre_07_auxiliomecanico:before {
+  content: "\e906";
+}
+.ico-mapfre_08_talleresafiliados:before {
+  content: "\e907";
+}
+.ico-mapfre_09_configuracion:before {
+  content: "\e908";
+}
+.ico-mapfre_10_agendarchofer:before {
+  content: "\e909";
+}
+.ico-mapfre_11_assitentemapfre:before {
+  content: "\e90a";
+}
+.ico-mapfre_12_grua:before {
+  content: "\e90b";
+}
+.ico-mapfre_13_miperfil:before {
+  content: "\e90c";
+}
+.ico-mapfre_14_tomadordepoliza:before {
+  content: "\e90d";
+}
+.ico-mapfre_15_llamando:before {
+  content: "\e90e";
+}
+.ico-mapfre_16_llamar:before {
+  content: "\e90f";
+}
+.ico-mapfre_17_filtro:before {
+  content: "\e910";
+}
+.ico-mapfre_18_listado:before {
+  content: "\e911";
+}
+.ico-mapfre_19_ubicacionmapfre:before {
+  content: "\e912";
+}
+.ico-mapfre_20_ubicacionsalud:before {
+  content: "\e913";
+}
+.ico-mapfre_21_ubiccionusuario:before {
+  content: "\e914";
+}
+.ico-mapfre_22_ubicacionasistente:before {
+  content: "\e915";
+}
+.ico-mapfre_23_ubicacionayuda:before {
+  content: "\e916";
+}
+.ico-mapfre_24_ubicaciongrua:before {
+  content: "\e917";
+}
+.ico-mapfre_25_ubicacion:before {
+  content: "\e918";
+}
+.ico-mapfre_26_poliza:before {
+  content: "\e919";
+}
+.ico-mapfre_27_horario:before {
+  content: "\e91a";
+}
+.ico-mapfre_28_grabar:before {
+  content: "\e91b";
+}
+.ico-mapfre_30_buscar:before {
+  content: "\e91d";
+}
+.ico-mapfre_31_hogar:before {
+  content: "\e91e";
+}
+.ico-mapfre_32_autos:before {
+  content: "\e91f";
+}
+.ico-mapfre_33_vida:before {
+  content: "\e920";
+}
+.ico-mapfre_34_salud:before {
+  content: "\e921";
+}
+.ico-mapfre_35_estudios:before {
+  content: "\e922";
+}
+.ico-mapfre_36_sctr:before {
+  content: "\e923";
+}
+.ico-mapfre_37_informacion:before {
+  content: "\e924";
+}
+.ico-mapfre_38_tips:before {
+  content: "\e925";
+}
+.ico-mapfre_39_cargando:before {
+  content: "\e926";
+}
+.ico-mapfre_40_solicitarcotizacion:before {
+  content: "\e927";
+}
+.ico-mapfre_41_miubicacion:before {
+  content: "\e928";
+}
+.ico-mapfre_43_editar:before {
+  content: "\e92a";
+}
+.ico-mapfre_44_foto:before {
+  content: "\e92b";
+}
+.ico-mapfre_45_agregarusuario:before {
+  content: "\e92c";
+}
+.ico-mapfre_46_cancelaroff:before {
+  content: "\e92d";
+}
+.ico-mapfre_47_cancelaron:before {
+  content: "\e92e";
+}
+.ico-mapfre_48_cerrar:before {
+  content: "\e92f";
+}
+.ico-mapfre_49_diasinsinisestro:before {
+  content: "\e930";
+}
+.ico-mapfre_50_notificacion:before {
+  content: "\e931";
+}
+.ico-mapfre_51_vercontrasena:before {
+  content: "\e932";
+}
+.ico-mapfre_52_seleccionar:before {
+  content: "\e933";
+}
+.ico-mapfre_53_salir:before {
+  content: "\e934";
+}
+.ico-mapfre_54_centrodetrabajo:before {
+  content: "\e935";
+}
+.ico-mapfre_55_tasegurado:before {
+  content: "\e936";
+}
+.ico-mapfre_56_visitasalmedico:before {
+  content: "\e937";
+}
+.ico-mapfre_57_mistrabajadores:before {
+  content: "\e938";
+}
+.ico-mapfre_58_imprimir:before {
+  content: "\e939";
+}
+.ico-mapfre_59_descargar:before {
+  content: "\e93a";
+}
+.ico-mapfre_60_soat:before {
+  content: "\e93b";
+}
+.ico-mapfre_61_transporte:before {
+  content: "\e93c";
+}
+.ico-mapfre_62_metalmecanica:before {
+  content: "\e93d";
+}
+.ico-mapfre_63_construccion:before {
+  content: "\e93e";
+}
+.ico-mapfre_64_datosdeempresa:before {
+  content: "\e93f";
+}
+.ico-mapfre_65_documentos:before {
+  content: "\e940";
+}
+.ico-mapfre_66_denunciasinistestro:before {
+  content: "\e941";
+}
+.ico-mapfre_67_mensajeenviado:before {
+  content: "\e942";
+}
+.ico-mapfre_68_herido:before {
+  content: "\e943";
+}
+.ico-mapfre_69_vehiculoinvolucrado:before {
+  content: "\e944";
+}
+.ico-mapfre_70_fluido:before {
+  content: "\e945";
+}
+.ico-mapfre_71_atencion:before {
+  content: "\e946";
+}
+.ico-mapfre_72_airbag:before {
+  content: "\e947";
+}
+.ico-mapfre_74_transporte:before {
+  content: "\e949";
+}
+.ico-mapfre_75_logomapfre:before {
+  content: "\e94a";
+}
+.ico-mapfre_80_checkbox:before {
+  content: "\e94f";
+}
+.ico-mapfre_81_checkmark:before {
+  content: "\e950";
+}
+.ico-mapfre_82_circle:before {
+  content: "\e951";
+}
+.ico-mapfre_83_circleoutline:before {
+  content: "\e952";
+}
+.ico-mapfre_84_circleleft:before {
+  content: "\e953";
+}
+.ico-mapfre_85_circlequestion:before {
+  content: "\e9de";
+}
+.ico-mapfre_86_circleu:before {
+  content: "\e955";
+}
+.ico-mapfre_87_trianguloup:before {
+  content: "\e956";
+}
+.ico-mapfre_88_trianguloleft:before {
+  content: "\e957";
+}
+.ico-mapfre_89_submenu:before {
+  content: "\e958";
+}
+.ico-mapfre_90_circleactive:before {
+  content: "\e959";
+}
+.ico-mapfre_91_cotizar:before {
+  content: "\e95a";
+}
+.ico-mapfre_92_emitir:before {
+  content: "\e95b";
+}
+.ico-mapfre_93_crearmodificar:before {
+  content: "\e95c";
+}
+.ico-mapfre_94_documentos:before {
+  content: "\e95d";
+}
+.ico-mapfre_95_menuderecha:before {
+  content: "\e95e";
+}
+.ico-mapfre_96_notificaciones:before {
+  content: "\e95f";
+}
+.ico-mapfre_97_phone:before {
+  content: "\e960";
+}
+.ico-mapfre_98_email:before {
+  content: "\e961";
+}
+.ico-mapfre_99_changeuser:before {
+  content: "\e962";
+}
+.ico-mapfre_100_refresh:before {
+  content: "\e963";
+}
+.ico-mapfre_101_cerrarsesion:before {
+  content: "\e964";
+}
+.ico-mapfre_102_buscar:before {
+  content: "\e965";
+}
+.ico-mapfre_103_calculator:before {
+  content: "\e966";
+}
+.ico-mapfre_105_send_email:before {
+  content: "\e968";
+}
+.ico-mapfre_106_car_front_line:before {
+  content: "\e969";
+}
+.ico-mapfre_107_car_crash:before {
+  content: "\e96a";
+}
+.ico-mapfre_108_calendar:before {
+  content: "\e96b";
+}
+.ico-mapfre_109_chat:before {
+  content: "\e96c";
+}
+.ico-mapfre_110_docs:before {
+  content: "\e96d";
+}
+.ico-mapfre_111_got_email:before {
+  content: "\e96e";
+}
+.ico-mapfre_113_soat:before {
+  content: "\e970";
+}
+.ico-mapfre_115_truck_front:before {
+  content: "\e972";
+}
+.ico-mapfre_117_auto_crash2:before {
+  content: "\e974";
+}
+.ico-mapfre_118_ok:before {
+  content: "\e975";
+}
+.ico-mapfre_119_wrong:before {
+  content: "\e976";
+}
+.ico-mapfre_121_calendar2:before {
+  content: "\e978";
+}
+.ico-mapfre_122_lock:before {
+  content: "\e979";
+}
+.ico-mapfre_125_help:before {
+  content: "\e97c";
+}
+.ico-mapfre_126_employee:before {
+  content: "\e97d";
+}
+.ico-mapfre_127_calendar3:before {
+  content: "\e97e";
+}
+.ico-mapfre_128_printer:before {
+  content: "\e97f";
+}
+.ico-mapfre_132_alert:before {
+  content: "\e983";
+}
+.ico-mapfre_133_commentary:before {
+  content: "\e984";
+}
+.ico-mapfre_135_broker:before {
+  content: "\e986";
+}
+.ico-mapfre_136_cliente-empresa:before {
+  content: "\e987";
+}
+.ico-mapfre_137_cliente-persona:before {
+  content: "\e988";
+}
+.ico-mapfre_138_ejecutivo-mapfre:before {
+  content: "\e989";
+}
+.ico-mapfre_138_proveedor:before {
+  content: "\e98a";
+}
+.ico-mapfre-384-navclose:before {
+  content: "\ea61"; 
+}

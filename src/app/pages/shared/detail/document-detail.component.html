@@ -1,0 +1,200 @@
+<!--DETALLE-->
+<div class="" *ngIf="dataDetalle != null">
+    <div class="g-title">
+        <div class="container">
+            <div class="row g-row">
+                <div class="col-md-8 col-sm-12 mb-xs-2 no-mb-md">
+                    <h1><a class="ico-mapfre-384-navclose" (click) = "return()"></a>
+                        Consulta No. {{dataDetalle.numeroConsulta}}
+                    </h1>
+                    <label class="item-dato mg-l-10 tag mg-t-10"
+                              [ngClass]="{'signed': dataDetalle.estado  === 'FIRMADO', 'pending' : dataDetalle.estado  === 'PENDIENTE' }">{{dataDetalle.estado
+                              | uppercase }}</label>
+                </div>
+                <div class="col-md-4 col-sm-12 text-right ng-star-inserted">
+                    <a class="g-btn second-design g-btn-white" (click)="downloadFile(dataDetalle.documentoBase64,'P')"
+                        style="width: 48px; margin-right: 10px; font-size: 16px; padding-top: 0; padding-bottom: 0; line-height: 32px;"><i
+                            class="glyphicon glyphicon-print"></i></a>
+                    <a class="g-btn second-design g-btn-white" (click)="downloadFile(dataDetalle.documentoBase64,'D')"
+                        style="width: 48px; margin-right: 10px; font-size: 16px; padding-top: 0; padding-bottom: 0; line-height: 32px;"><i
+                            class="glyphicon glyphicon-download-alt"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard-body g-border-top h-myd-border--top-0">
+        <div class="g-section-inner g-dashboard-section">
+            <div class="container" *ngIf= "tipoModulo != 'bandeja-historias'">
+                <!-- DATOS DEL DOCUMENTO -->
+                <div class="clearfix fz14 gBgcWhite1 containerForm gBgcGray10">
+                    <div class="col-md-12 mb-ms-0 mb-xs-3 gH4 gCGray1">
+                        <h2 class="pb-xs-3"><b>Datos del documento</b></h2>
+                    </div>
+                    <div class="col-md-12 mb-ms-1">
+                        <div class="row pb-md-2 pb-xs-0">
+                            <div class="col-md-4 mb-md-0 mb-xs-2">
+                                <div class="row">
+                                    <div class="col-md-4"><b>Tipo de documento</b></div>
+                                    <div class="col-md-8">{{dataDetalle.tipoDocumento}}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-md-0 mb-xs-2">
+                                <div class="row">
+                                    <div class="col-md-4"><b>Fecha documento</b></div>
+                                    <div class="col-md-8">{{dataDetalle.fechaDocumento | customDate}}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-md-0 mb-xs-2">
+                                <div class="row">
+                                    <div class="col-md-4"><b>Fecha de firma</b></div>
+                                    <div class="col-md-8">{{dataDetalle.fechaFirma | customDate}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pb-md-2 pb-xs-0">
+                            <div class="col-md-4 mb-md-0 mb-xs-2">
+                                <div class="row">
+                                    <div class="col-md-4"><b>Estado</b></div>
+                                    <div class="col-md-8">{{dataDetalle.estado}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!-- DATOS DE LA ATENCION -->
+                 <div class="clearfix fz14 gBgcWhite1 containerForm gBgcGray10">
+                    <div class="col-md-12 mb-ms-0 mb-xs-3 gH4 gCGray1">
+                        <h2 class="pb-xs-3"><b>Datos de la atención</b></h2>
+                    </div>
+                    <div class="col-md-12 mb-ms-1">
+                        <div class="row pb-md-2 pb-xs-0">
+                            <div class="col-md-4 mb-md-0 mb-xs-2">
+                                <div class="row">
+                                    <div class="col-md-4"><b>Sede</b></div>
+                                    <div class="col-md-8">{{dataDetalle.sede}}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-md-0 mb-xs-2">
+                                <div class="row">
+                                    <div class="col-md-4"><b>No de HC</b></div>
+                                    <div class="col-md-8">{{dataDetalle.historiaClinica}}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-md-0 mb-xs-2">
+                                <div class="row">
+                                    <div class="col-md-4"><b>No de consulta</b></div>
+                                    <div class="col-md-8">{{dataDetalle.numeroConsulta}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pb-md-2 pb-xs-0">
+                            <div class="col-md-4 mb-md-0 mb-xs-2">
+                                <div class="row">
+                                    <div class="col-md-4"><b>Fecha de consulta</b></div>
+                                    <div class="col-md-8">{{dataDetalle.fechaConsulta | customDate}}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-md-0 mb-xs-2">
+                                <div class="row">
+                                    <div class="col-md-4"><b>Especialidad</b></div>
+                                    <div class="col-md-8">{{dataDetalle.especialidad}}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-md-0 mb-xs-2">
+                                <div class="row">
+                                    <div class="col-md-4"><b>Médico</b></div>
+                                    <div class="col-md-8">{{dataDetalle.medico}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pb-md-2 pb-xs-0">
+                            <div class="col-md-4 mb-md-0 mb-xs-2">
+                                <div class="row">
+                                    <div class="col-md-4"><b>Paciente</b></div>
+                                    <div class="col-md-8">{{dataDetalle.paciente}}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-md-0 mb-xs-2">
+                                <div class="row">
+                                    <div class="col-md-4"><b>No de atención</b></div>
+                                    <div class="col-md-8">{{dataDetalle.numeroAtencion}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container" *ngIf= "tipoModulo == 'bandeja-historias'">
+                 <!-- DATOS DEL DOCUMENTO -->
+                 <div class="clearfix fz14 gBgcWhite1 containerForm gBgcGray10">
+                    <div class="col-md-12 mb-ms-0 mb-xs-3 gH4 gCGray1">
+                        <h2 class="pb-xs-3"><b>Datos del documento</b></h2>
+                    </div>
+                    <div class="col-md-12 mb-ms-1">
+                        <div class="row pb-md-2 pb-xs-0">
+                            <div class="col-md-4 mb-md-0 mb-xs-2">
+                                <div class="row">
+                                    <div class="col-md-4"><b>Sede</b></div>
+                                    <div class="col-md-8">{{dataDetalle.sede}}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-md-0 mb-xs-2">
+                                <div class="row">
+                                    <div class="col-md-4"><b>Tipo de item</b></div>
+                                    <div class="col-md-8">{{dataDetalle.tipoItem}}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-md-0 mb-xs-2">
+                                <div class="row">
+                                    <div class="col-md-4"><b>Nro. Hc Local</b></div>
+                                    <div class="col-md-8">{{dataDetalle.historiaClinicaLocal}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pb-md-2 pb-xs-0">
+                            <div class="col-md-4 mb-md-0 mb-xs-2">
+                                <div class="row">
+                                    <div class="col-md-4"><b>Nro. Hc Global</b></div>
+                                    <div class="col-md-8">{{dataDetalle.historiaClinicaGlobal}}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-md-0 mb-xs-2">
+                                <div class="row">
+                                    <div class="col-md-4"><b>Paciente</b></div>
+                                    <div class="col-md-8">{{dataDetalle.paciente}}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-md-0 mb-xs-2">
+                                <div class="row">
+                                    <div class="col-md-4"><b>Nro. Documento</b></div>
+                                    <div class="col-md-8">{{dataDetalle.numeroDocumento}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pb-md-2 pb-xs-0">
+                            <div class="col-md-4 mb-md-0 mb-xs-2">
+                                <div class="row">
+                                    <div class="col-md-4"><b>Beneficio</b></div>
+                                    <div class="col-md-8">{{dataDetalle.beneficio}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <!-- DOCUMENTO DIGITAL -->
+                <div class="clearfix fz14 gBgcWhite1 containerForm gBgcGray10">
+                    <div class="col-md-12 mb-ms-0 mb-xs-3 gH4 gCGray1">
+                        <h2 class="pb-xs-3"><b>Documento de la atención</b></h2>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="pdfView" >
+                            <iframe width="100%" height="100%" [src]="domSanitize(dataDetalle.documentoBase64)"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,74 @@
+.lblNvt {
+    background-color: #ddd;
+    border-radius: 4px;
+    padding: 0 5px;
+    margin: 0 0 0 15px;
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 76px;
+    max-width: 300px; 
+    text-align: center;
+    cursor: default;
+}
+
+.bgActive {
+    background-color: #6b8a01; 
+}
+  
+.bgInactive {
+    background-color: #d81e05; 
+}
+  
+.bgDraft {
+    background-color: #888383; 
+}
+
+/* START Nuevo/Detalle Programa */
+.containerForm {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+
+    .disabled {
+        border-color: #d5d5d5;
+        color: #d5d5d5;
+    }
+}
+
+.coverageContainerForm {
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-bottom: 20px; 
+    
+    &.read {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .read {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+}
+
+.checkIcon {
+    vertical-align: bottom;
+    margin-right: 10px;
+  
+    &.done {
+        color: #749806;
+    }
+}
+  
+.editSection {
+    float: right;
+    font-size: 20px;
+    margin: 0 10px;
+}
+
+.rowDiagnostic {
+    padding: 10px 0px;
+}
+
+
+/* END Nuevo/Detalle Programa */

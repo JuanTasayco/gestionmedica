@@ -1,0 +1,13 @@
+<div class="col-md-12">
+    <ul class="g-pagination pagination">
+        <li *ngIf="boundaryLinkNumbers" [ngClass]="{ 'disabled' : noPrevious() || disabled }" class="pagination-prev">
+            <a (click)="selectPage(currentPage - 1)">Previous</a>
+        </li>
+        <li *ngFor="let page of pages" [ngClass]="{ 'active' : page.active, 'disabled': disabled }" class="pagination-page">
+            <a (click)="selectPage(page.number)">{{page.text}}</a>
+        </li>
+        <li *ngIf="boundaryLinkNumbers" [ngClass]="{ 'disabled' : noNext() || disabled }" class="pagination-next">
+            <a (click)="selectPage(currentPage + 1)">Next</a>
+        </li>
+    </ul>
+</div>

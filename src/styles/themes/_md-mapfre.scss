@@ -1,0 +1,10 @@
+@import '~@angular/material/theming';
+
+@import '../base/palettes';
+
+@include mat-core();
+$mapfre-primary: mat-palette($palette-mapfre-primary);
+$mapfre-accent: mat-palette($palette-mapfre-secondary);
+$mapfre-warn: mat-palette($mat-red);
+$mapfre-theme: mat-light-theme($mapfre-primary, $mapfre-accent, $mapfre-warn);
+@include angular-material-theme($mapfre-theme);
