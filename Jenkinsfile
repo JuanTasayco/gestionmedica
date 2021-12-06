@@ -141,7 +141,7 @@ pipeline {
                     } else if (BRANCH_NAME.startsWith('hotfix/')) {
                         msg = 'hotfix'
                     }                    
-                    gitCommit  "promotion to " + msg + " completed (" + PACKAGE_VERSION + ")"
+                    gitCommitPackage  "promotion to " + msg + " completed (" + PACKAGE_VERSION + ")"
                     gitPush()
                     gitTag(PACKAGE_VERSION,  "New " + msg + " tag " + PACKAGE_VERSION)
                     gitPushTags()
@@ -217,7 +217,7 @@ pipeline {
                 container('node') {
                     promotionNpmPeru(developBranch, env.PACKAGE_VERSION)
                 }
-                gitCommit "promotion to next SNAPSHOT completed (" + PACKAGE_VERSION  + ")"
+                gitCommitPackage "promotion to next SNAPSHOT completed (" + PACKAGE_VERSION  + ")"
                 gitPush()
             }
             post {
