@@ -1,6 +1,6 @@
 {
   "name": "gestionmedica-frontend",
-  "version": "0.0.3-RC",
+  "version": "0.0.3",
   "files": [
     "dist"
   ],
