@@ -9,7 +9,7 @@
     "start": "ng serve",
     "build": "ng build --base-href=/gestionmedica/",
     "build-prod": "ng build --prod --configuration=production --base-href=/gestionmedica/",
-    "devops:int": "ng build --base-href=/gestionmedica/",
+    "devops:int": "ng build --configuration=integration --base-href=/gestionmedica/",
     "devops:pre": "ng build --base-href=/gestionmedica/",
     "devops:prod": "ng build --prod --configuration=production --base-href=/gestionmedica/",	
     "test": "ng test",
