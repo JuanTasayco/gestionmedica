@@ -26,16 +26,16 @@
                       </div>
                       <div class="col-md-3">
                         <mat-form-field appearance="standard" class="form-group">
-                          <mat-label>No. de atención</mat-label>
+                          <mat-label>No. de orden de atención</mat-label>
                           <mat-icon *ngIf="existsOrdenTrabajo" matSuffix>done</mat-icon>
-                          <input matInput placeholder="No. de atención" formControlName='ordenTrabajo' (change)="checkOrdenTrabajo()" autocomplete="off">
+                          <input matInput placeholder="No. de orden de atención" formControlName='ordenTrabajo' (change)="checkOrdenTrabajo()" autocomplete="off">
                         </mat-form-field>
                       </div>
                     </div>
                     <div >
                       <div class="col-md-12">
                         <div  class="drag-container" appDnd (fileDropped)="onFileDropped($event)">
-                          <input accept="application/pdf"  [ngClass]="{'not-allowed': !existsNroConsulta}" type="file" [disabled]="!existsNroConsulta || !existsOrdenTrabajo" #fileDropRef id="fileDropRef" multiple
+                          <input accept="application/pdf"  [ngClass]="{'not-allowed': !existsNroConsulta && !existsOrdenTrabajo}" type="file" [disabled]="!existsNroConsulta && !existsOrdenTrabajo" #fileDropRef id="fileDropRef" multiple
                             (change)="fileBrowseHandler($event.target.files)" />
                           <h3>Agrega o arrastre aquí los documentos</h3>
                         </div>
@@ -105,11 +105,11 @@
                         <div class="col-md-6"></div>
                         <div class="col-md-3">
                           <button type="button" class="g-btn g-btn-transparent block px-10"
-                            [disabled]="">Cancelar</button>
+                            [disabled]="" (click)="return()">Cancelar</button>
                         </div>
                         <div class="col-md-3">
                           <button type="button"  class="g-btn g-btn-verde block px-10"
-                          [disabled]="!formGroupUploadDocument.valid || ( formGroupUploadDocument.valid && getArrayLength() == 0)" (click)="loadDocuments()">Cargar</button>
+                          [disabled]="disableButton()" (click)="uploadDocuments()">Cargar</button>
                         </div>
                       </div>
                     </div>

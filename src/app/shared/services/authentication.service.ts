@@ -23,4 +23,16 @@ export class AuthenticationService {
 
     return this.dataService.execGetJson().pipe();
   }
+  getRol(){
+    const pathService = environment.urlService + PATH_SERVICE.rol;
+    
+    this.dataService.set(pathService);
+    return this.dataService.execGetJsonAndStatus();
+  }
+
+  getVersion() : Observable<any>  {
+    const pathService = environment.urlVersion + "version";
+    this.dataService.set(pathService);
+    return this.dataService.execGetJson().pipe();
+  }
 }

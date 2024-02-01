@@ -12,24 +12,47 @@
             <div class="col-md-12">
                 <div class="container mb-xs-2">
                     <div class="row">
-                        <div class="col-md-4 col-sm-6 col-xs-12 mt-xs-1 option-dashboard__box" *ngIf="hasMedicalRequest">
+                        <div class="col-md-4 col-sm-6 col-xs-12 mt-xs-1 option-dashboard__box" *ngIf="hasListDocumentTray">
                             <a (click)="openView(20)">
                                 <span>
                                     <mat-icon>all_inbox</mat-icon><span>FIRMA DIGITAL</span>
                                 </span>
                             </a>
                         </div>
-                        <div class="col-md-4 col-sm-6 col-xs-12 mt-xs-1 option-dashboard__box" *ngIf="hasInsured">
+                        <div class="col-md-4 col-sm-6 col-xs-12 mt-xs-1 option-dashboard__box" *ngIf="hasHistoryTray">
                             <a (click)="openView(5)">
                                 <span>
                                     <mat-icon>people</mat-icon><span>CARGA DE DOCUMENTOS</span>
                                 </span>
                             </a>
                         </div>
-                        <div class="col-md-4 col-sm-6 col-xs-12 mt-xs-1 option-dashboard__box" *ngIf="hasProgram">
+                        <div class="col-md-4 col-sm-6 col-xs-12 mt-xs-1 option-dashboard__box" *ngIf="hasUploadHistory">
                             <a (click)="openView(1)">
                                 <span>
                                     <mat-icon>local_hospital</mat-icon><span>BANDEJA DE HISTORIAS CLÍNICAS</span>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-12 mt-xs-1 option-dashboard__box">
+                            <a (click)="openView(60)">
+                                <span>
+                                    <mat-icon class="material-icons-outlined">note_alt</mat-icon><span>INFORMES DE PROC. Y SERV.</span>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 mt-xs-1 option-dashboard__box">
+                            <a (click)="openView(3)">
+                                <span>
+                                    <mat-icon>local_hospital</mat-icon><span>BANDEJA DE CONSULTAS MÉDICAS</span>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="col-md-4 col-sm-6 col-xs-12 mt-xs-1 option-dashboard__box" *ngIf="searchElement('GM_MANTENIMIENTO', opciones)">
+                            <a (click)="openView(2)">
+                                <span>
+                                    <mat-icon>view_module</mat-icon><span>MANTENIMIENTOS</span>
                                 </span>
                             </a>
                         </div>

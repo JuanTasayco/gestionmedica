@@ -1,0 +1,298 @@
+<br>
+                        <br>
+                        <form [formGroup]="formFiltroAtenciones" class="form-validate col-md-3">
+                            <div class="clearfix g-col-filter g-box-md fz14 gBgcGray5-md gBgcWhite1" id="filterBox"
+                                [ngClass]="isFilterVisible ? 'show' : ''">
+                                <div class="col-md-12 mb-ms-0 mb-xs-3 gH4 gCGray1">
+                                    <h2 class="pb-xs-1 hidden-xs hidden-sm"><b>Filtros de búsqueda</b></h2>
+
+                                    <div id="show-filter"
+                                        class="row pt-xs-2 pb-xs-2 gBgcGray5 g-border-bottom-xs hidden-md hidden-lg"
+                                        (click)="toggleFilter()">
+                                        <div class="col-xs-10">
+                                            <h1><b>Filtros de búsqueda</b></h1>
+                                        </div>
+
+                                        <div class="col-xs-2 g-text-right-xs">
+                                            <span class="glyphicon"
+                                                [ngClass]="isFilterVisible ? 'glyphicon-chevron-down' : 'glyphicon-chevron-up'"></span>
+                                        </div>
+
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="g-col-filter__box">
+                                    <div class="clearfix">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <mat-label><b>Buscar por</b></mat-label>
+                                                </div>
+                                                <div class="col-md-12" style="margin-top: 10px;">
+                                                    <mat-radio-group formControlName="tipoBusqueda" name="txtfiltro">
+                                                        <mat-radio-button value="1">Consultas</mat-radio-button>
+                                                        <mat-radio-button value="2">Ordenes de atención</mat-radio-button>
+                                                    </mat-radio-group>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <mat-form-field appearance="standard" class="form-group">
+                                                        <mat-label>Sede</mat-label>
+                                                        <mat-select formControlName="sede" (selectionChange) = "getEspecialidadBySede($event)">
+                                                            <mat-option *ngFor="let s of sedes" [value]="s">{{s.descripcion}}</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-12" *ngIf='formFiltroAtenciones.controls.tipoBusqueda.value == 2' >
+                                                    <mat-form-field appearance="standard" class="form-group">
+                                                        <mat-label>Especialidad</mat-label>
+                                                        <mat-select formControlName="codigoEspecialidad">
+                                                            <mat-option *ngFor="let e of especialidad" [value]="e.codigo">{{e.descripcion}}</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <mat-label><b>Rango de fechas</b></mat-label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <mat-form-field appearance="standard" class="form-group">
+                                                        <input matInput formControlName="fechaInicio" [matDatepicker]="picker" placeholder="Desde"
+                                                            autocomplete="off" (click)="picker.open()" readonly>
+                                                        <mat-datepicker-toggle matSuffix [for]="picker">
+                                                        </mat-datepicker-toggle>
+                                                        <mat-datepicker #picker></mat-datepicker>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <mat-form-field appearance="standard" class="form-group">
+                                                        <input matInput formControlName="fechaFin" [matDatepicker]="pickerTwo" placeholder="Hasta"
+                                                            autocomplete="off" (click)="pickerTwo.open()" readonly>
+                                                        <mat-datepicker-toggle matSuffix [for]="pickerTwo">
+                                                        </mat-datepicker-toggle>
+                                                        <mat-datepicker #pickerTwo></mat-datepicker>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div *ngIf="formFiltroAtenciones.controls.tipoBusqueda.value == 2">
+                                                    <div class="col-md-12" *ngIf='formFiltroAtenciones.controls.tipoBusqueda.value == 2' >
+                                                        <mat-form-field appearance="standard" class="form-group">
+                                                            <mat-label>Buscar por nombre o no. de documento paciente</mat-label>
+                                                            <input matInput formControlName="nombrePaciente">
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <!-- <div class="col-md-12">
+                                                        <mat-form-field appearance="standard" class="form-group">
+                                                            <mat-label>Procedimiento/Servicio</mat-label>
+                                                            <mat-select formControlName="codigoProcedimiento">
+                                                                <mat-option *ngFor="let p of procedimientos" [value]="p.codigo">{{p.descripcion}}</mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </div> -->
+
+                                                    <div class="col-md-12">
+                                                        <mat-form-field appearance="standard" class="form-group">
+                                                            <mat-label>Procedimiento/Servicio</mat-label>
+                                                            <input [formControl]="formFiltroAtenciones.get('codigoProcedimiento')" type="text"
+                                                                autoActiveFirstOption placeholder="Procedimiento/Servicio" matInput
+                                                                class="g-text-uppercase" [matAutocomplete]="procedimiento">
+                                                            <mat-autocomplete #procedimiento="matAutocomplete"
+                                                                [displayWith]="onDisplaySearch">
+                                                                <mat-option *ngFor="let p of procedimientos" [value]="p">
+                                                                    {{p.descripcion}}
+                                                                </mat-option>
+                                                            </mat-autocomplete>
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <mat-form-field appearance="standard" class="form-group">
+                                                            <mat-label>Estado</mat-label>
+                                                            <mat-select formControlName="estado">
+                                                                <mat-option *ngFor="let e of estado" [value]="e.codigo">{{e.descripcion}}</mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-xs-2 mb-md-0">
+                                                    <button type="button" class="g-btn g-btn-transparent block"
+                                                        (click)="clean()">Limpiar</button>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <button type="button" class="g-btn g-btn-verde block"
+                                                        (click)="buscarHistorial('1')" [disabled]="!formFiltroAtenciones?.valid">Buscar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                        <div class="col-md-9">
+                            <div class="row g-text-center-xs g-box-no-result" *ngIf="consultas.length == 0
+                            && ordenes.length == 0">
+                                <div class="col-md-12 g-box-noresult-ico gCRed1">
+                                    <span class="ico-mapfre_302_error"></span>
+                                </div>
+                                <div class="col-md-12 g-box-noresult-text">
+                                    No hay resultados para los filtros escogidos.<br>Intenta de nuevo.
+                                </div>
+                            </div>
+                            <div class="row mt-xs-1" *ngIf="true">
+                                <div *ngIf="consultas.length > 0">
+                                    <div *ngFor="let c of consultas">
+                                        <div class="clearfix g-box mb-xs-2">
+                                            <div class="dataContainer" style="border-left: none">
+                                                <div class="headReg clearfix g-box-content">
+                                                    <div class="row">
+                                                    <div class="col-dm-12" style="padding: 7px;">
+
+                                                            <b>Consulta No. {{c.numeroConsulta}}</b>
+                                                            <span [ngClass]="{'g-btn-rojo': c.estado == 'EN ESPERA',
+                                                            'g-btn-gris' : c.estado == 'ANULADO','g-btn-verde' : c.estado == 'ATENDIDO'}"
+                                                            style="padding: 2px 8px 2px 8px;margin-left: 8px;border-radius: 3px;">
+                                                            {{c.estado}}
+                                                            </span>
+
+                                                        <div class="pull-right">
+                                                            <a rel="noopener noreferrer"
+                                                               (click)="getDetail(c)"
+                                                               matTooltip="Ver Detalle" matTooltipPosition='right'>
+                                                                <mat-icon class="fz18">arrow_forward</mat-icon>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                                <div class="clearfix g-box-content" style="background-color: #fafafa;">
+                                                    <ul class="row g-list-md">
+                                                        <li class="col-md-4 clearfix cnt-item">
+                                                            <div class="col-sm-5 col-xs-6 item-label">Fecha</div>
+                                                            <div class="col-sm-7 col-xs-6 item-dato">{{c.fecha}}</div>
+                                                        </li>
+                                                        <li class="col-md-4 clearfix cnt-item">
+                                                            <div class="col-sm-5 col-xs-6 item-label">Especialidad</div>
+                                                            <div class="col-sm-7 col-xs-6 item-dato">{{c.especialidad}}</div>
+                                                        </li>
+                                                        <li class="col-md-4 clearfix cnt-item">
+                                                            <div class="col-sm-5 col-xs-6 item-label">Médico</div>
+                                                            <div class="col-sm-7 col-xs-6 item-dato">{{c.medico}}
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+
+                                                    <ul class="row g-list-md">
+                                                        <li class="col-md-8 clearfix cnt-item">
+                                                            <div class="col-sm-2 col-xs-3 item-label">Diagnóstico</div>
+                                                            <div class="col-sm-9 col-xs-9 item-dato"
+                                                                style="padding-left: 37px;">{{c.diagnostico}}
+                                                            </div>
+                                                        </li>
+                                                        <li class="col-md-4 clearfix cnt-item">
+                                                            <div class="col-sm-5 col-xs-6 item-label">Peso</div>
+                                                            <div class="col-sm-7 col-xs-6 item-dato">{{c.peso}}</div>
+                                                        </li>
+                                                    </ul>
+
+                                                    <ul class="row g-list-md">
+                                                        <li class="col-md-8 clearfix cnt-item">
+                                                            <div class="col-sm-2 col-xs-3 item-label">Tratamiento</div>
+                                                            <div class="col-sm-9 col-xs-9 item-dato"
+                                                                style="padding-left: 37px;">{{c.tratamiento}}
+                                                            </div>
+                                                        </li>
+                                                        <li class="col-md-4 clearfix cnt-item">
+                                                            <div class="col-sm-5 col-xs-6 item-label">Talla</div>
+                                                            <div class="col-sm-7 col-xs-6 item-dato">{{c.talla}}</div>
+                                                        </li>
+                                                    </ul>
+                                                    <ul class="row g-list-md">
+
+                                                        <li class="col-md-8 clearfix cnt-item">
+                                                            <div class="col-sm-2 col-xs-3 item-label">Apoyo al Dx</div>
+                                                            <div class="col-sm-9 col-xs-9 item-dato"
+                                                                style="padding-left: 37px;">{{c.apoyoDiagnostico}}
+                                                            </div>
+                                                        </li>
+                                                        <li class="col-md-4 clearfix cnt-item">
+                                                            <div class="col-sm-5 col-xs-6 item-label">T. Oral</div>
+                                                            <div class="col-sm-7 col-xs-6 item-dato">{{c.temperaturaOral}}</div>
+                                                        </li>
+                                                    </ul>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="ordenes.length > 0">
+                                    <div *ngFor="let orden of ordenes">
+                                        <div class="clearfix g-box mb-xs-2">
+                                            <div class="dataContainer" style="border-left: none">
+                                                <div class="headReg clearfix g-box-content">
+                                                    <div class="col-dm-12" style="padding: 7px;">
+                                                        <mat-chip-list>
+                                                            <b>Orden de Atención No. 048452</b>
+                                                            <div [ngClass]="{'g-btn-rojo': orden.estado == 'EN ESPERA',
+                                                            'g-btn-gris' : orden.estado == 'ANULADO','g-btn-verde' : orden.estado == 'ATENDIDO','g-btn-blue' : orden.estado == 'EN ATENCION'}"  style="padding: 2px 8px 2px 8px;
+                                                            margin-left: 8px;border-radius: 3px;">
+                                                                <span style="color: white;font-size: 12px;">{{orden.estado}}</span>
+                                                            </div>
+                                                        </mat-chip-list>
+                                                        <!-- <div class="pull-right">
+                                                            <a matTooltip="Ver Detalle" matTooltipPosition='right'>
+                                                                <mat-icon class="fz18">arrow_forward</mat-icon>
+                                                            </a>
+                                                        </div> -->
+                                                    </div>
+                                                </div>
+                                                <div class="clearfix g-box-content" style="background-color: #fafafa;">
+                                                    <ul class="row g-list-md">
+                                                        <li class="col-md-4 clearfix cnt-item">
+                                                            <div class="col-sm-5 col-xs-6 item-label">Sede</div>
+                                                            <div class="col-sm-7 col-xs-6 item-dato">{{formFiltroAtenciones.controls.sede.value.descripcion}}
+                                                            </div>
+                                                        </li>
+                                                        <li class="col-md-4 clearfix cnt-item">
+                                                            <div class="col-sm-5 col-xs-6 item-label">No. HC Local</div>
+                                                            <div class="col-sm-7 col-xs-6 item-dato">{{orden.historiaClinicaLocal}}</div>
+                                                        </li>
+                                                        <li class="col-md-4 clearfix cnt-item">
+                                                            <div class="col-sm-6 col-xs-6 item-label">No. HC Global</div>
+                                                            <div class="col-sm-6 col-xs-6 item-dato">{{orden.historiaClinicaGlobal}}</div>
+                                                        </li>
+                                                    </ul>
+
+                                                    <ul class="row g-list-md">
+                                                        <li class="col-md-4 clearfix cnt-item">
+                                                            <div class="col-sm-4 col-xs-6 item-label">Proc./Servicio</div>
+                                                            <div class="col-sm-8 col-xs-6 item-dato">{{orden.procedimiento}}
+                                                            </div>
+                                                        </li>
+                                                        <!-- <li class="col-md-4 clearfix cnt-item">
+                                                            <div class="col-sm-6 col-xs-6 item-label">Proceso Sede</div>
+                                                            <div class="col-sm-6 col-xs-6 item-dato">-</div>
+                                                        </li>
+                                                    </ul>
+
+                                                    <ul class="row g-list-md"> -->
+                                                        <li class="col-md-4 clearfix cnt-item">
+                                                            <div class="col-sm-3 col-xs-3 item-label">Paciente</div>
+                                                            <div class="col-sm-9 col-xs-9 item-dato">{{data_consulta['nombrePaciente']}}
+                                                            </div>
+                                                        </li>
+                                                        <li class="col-md-4 clearfix cnt-item">
+                                                            <div class="col-sm-6 col-xs-6 item-label">No. de Consulta</div>
+                                                            <div class="col-sm-6 col-xs-6 item-dato">{{orden.numeroConsulta}}</div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <mapfre-pagination *ngIf=" consultas.length > 0 || ordenes.length > 0"
+                                [currentPage]="pagination" [boundaryLinkNumbers]="true"
+                                [totalItems]="totalItems" [itemsPerPage]="totalItemsPage" [totalPages]="totalPages"
+                                [maxSize]="10" (onChangePage)="changePage($event)"></mapfre-pagination>
+                            </div>
+                        </div>

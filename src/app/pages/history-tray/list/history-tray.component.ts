@@ -1,27 +1,17 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { MatSelectChange, MatDialog, MatAutocompleteSelectedEvent } from '@angular/material';
-import { Router } from '@angular/router';
-
-import { environment } from '@environments/environment';
-
-import { AlertComponent } from '@shared/components/alert/alert.component';
-
-import { ALERT_MESSAGES, ALERT_TYPE, PATH_URL_DATA, FileUploadService, DOWNLOAD_CONFIG, MODULES, MIN_CHARACTERS_SEARCH, BASE_DATE_FORMAT_API, downloadBase64, printPdfBase64 } from '@shared/helpers';
-
-import { IMaestro, IPrograma } from '@shared/models/common/interfaces';
-import { IListMaestroRequest } from '@shared/models/request/interfaces';
-import { IGetModulesResponse, IListMaestroResponse, ISearchProgramResponse } from '@shared/models/response/interfaces';
-import { ISearchProgramRequest } from '@shared/models/request/interfaces/search-programs.interface';
-
-import { MaestroService } from '@shared/services/maestro.service';
-import { AuthenticationService } from '@shared/services/authentication.service';
-
-import { ProgramDataService } from '@pages/history-tray/shared/program.service';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material';
+import {MIN_CHARACTERS_SEARCH, BASE_DATE_FORMAT_API, downloadBase64, printPdfBase64, substractMonthFromDate, detailNewTab, getEvoProfile, getProfile, ROLE_MEDIC, CONTENT_TYPE, HTTP_NO_CONTENT, ALERT_MESSAGES, COMMON_TYPES, ROLE_ADMIN, searchElementInArray, getOptions, HTTP_METHOD_NOT_ALLOWED } from '@shared/helpers';
 import { ComunService } from '@shared/services/comun.service';
 import { debounceTime, startWith, tap } from 'rxjs/operators';
 import { DocumentoService } from '@shared/services/documento.service';
 import * as moment from 'moment';
+import { UsuarioService } from '@shared/services/usuario.service';
+import { MedicoService } from '@shared/services/medico.service';
+import { IComun } from '@shared/models/response/interfaces/comun.interface';
+import { IHistoriaClinicaResult } from '@shared/models/common/interfaces';
+import { ModalMessageService } from '@shared/services/modal-message.service';
+import { EventTrackerService } from '@shared/services/event-tracker.service';
 
 @Component({
   selector: 'mapfre-program',
@@ -30,52 +20,42 @@ import * as moment from 'moment';
 })
 
 export class HistoryTrayComponent implements OnInit {
-  formGroupBuscarPrograma: FormGroup;
+  formGroupBuscarHistoria: FormGroup;
 
   isFilterVisible: boolean;
   disableButton: boolean;
   isSearched: boolean;
 
-  companies: IMaestro[] = [];
-  products: IMaestro[] = [];
-  states: IMaestro[] = [];
-
-  programs: IPrograma[] = [];
   pagination = 1;
   totalItems = 0;
   totalPages = 0;
   totalItemsPage = 10;
 
-  companySelected: string;
-
-  username: string;
-  currentIp: string;
-  sedesData: any;
-  estadoData: any;
-  especialidadesData: any;
-  medicosData: any;
-  diagnosticosData: any;
-  procedimientosData: any;
-  beneficiosData: any;
+  sedesData: IComun[];
+  estadoData: IComun[];
+  especialidadesData: IComun[];
+  medicosData: IComun[];
+  diagnosticosData: IComun[];
+  procedimientosData: IComun[];
+  beneficiosData: IComun[];
+  tipoDocumentoData: IComun[];
   hasRecords: boolean;
-  dataSource: any;
-  tipoDocumentoData: any;
+  dataSource: IHistoriaClinicaResult[];
   mostrarFiltros = false;
+  isMedico: boolean;
+  codMedico: number;
+  disableSearch= false;
+  opciones: any[];
 
-  constructor(private fb: FormBuilder, private maestroService: MaestroService,
-              private programService: ProgramDataService, private dialog: MatDialog,
+  constructor(private fb: FormBuilder, private medicoService: MedicoService,
+              private usuarioService: UsuarioService, private modalService: ModalMessageService,
               private comunService: ComunService, private documentoService: DocumentoService,
-              private fileUploadService: FileUploadService, private authService: AuthenticationService,
-              private router: Router) { }
+              private eventTracker: EventTrackerService) { }
 
   ngOnInit() {
+    this.eventTracker.postEventTracker("opc9", "").subscribe()
     this.setValuesFormBuilder();
-    // this.validateRole();
     this.initComponents();
-    this.getCurrentIp();
-
-    let profile = JSON.parse(localStorage.getItem('evoProfile'));
-    this.username = profile ? profile.loginUserName : 'WEBMASTER';
   }
 
   // Inicializar componente de filtro (estilos)
@@ -90,63 +70,133 @@ export class HistoryTrayComponent implements OnInit {
     }
 
     this.getComunes();
+    this.checkRoles();
   }
   getComunes() {
-    this.comunService.getComun('sedes')
-      .subscribe((response: any) => {
-        this.sedesData = response.data;
+    this.comunService.getComun(COMMON_TYPES.estados)
+      .subscribe((response) => {
+        if(response.status == HTTP_NO_CONTENT){
+          return this.modalService.alert(false, '',ALERT_MESSAGES[9].message + COMMON_TYPES.estados);
+        }
+        this.estadoData = response.body.data;
       });
-    this.comunService.getComun('documentos')
-      .subscribe((response: any) => {
-        this.tipoDocumentoData = response.data;
+      this.comunService.getComun(COMMON_TYPES.documentos)
+      .subscribe((response) => {
+        if(response.status == HTTP_NO_CONTENT){
+          return this.modalService.alert(false, '',ALERT_MESSAGES[9].message + COMMON_TYPES.documentos);
+        }
+        this.tipoDocumentoData = response.body.data;
       });
-    this.comunService.getComun('estados')
-      .subscribe((response: any) => {
-        this.estadoData = response.data;
+      this.comunService.getComun(COMMON_TYPES.beneficios)
+      .subscribe((response) => {
+        if(response.status == HTTP_NO_CONTENT){
+          return this.modalService.alert(false, '',ALERT_MESSAGES[9].message + COMMON_TYPES.beneficios);
+        }
+        this.beneficiosData = response.body.data;
       });
-    this.comunService.getComun('especialidades')
-      .subscribe((response: any) => {
-        this.especialidadesData = response.data;
-      });
-    this.comunService.getComun('beneficios')
-      .subscribe((response: any) => {
-        this.beneficiosData = response.data;
-      });
-
-    this.search(1);
   }
 
+  checkRoles(){
+    this.isMedico = false;
+    this.opciones = getOptions();
+    if(getEvoProfile() == null){return;}
+    getEvoProfile().rolesCode.forEach(element => {
+        if(element.codigoRol == ROLE_MEDIC && element.codigoRol != ROLE_ADMIN){
+          this.isMedico = true;
+          this.formGroupBuscarHistoria.patchValue({
+            medico: getProfile().name
+          });
+        }
+    });
+    if(this.isMedico){
+      this.usuarioService.getMedicoByUser(getProfile().username).subscribe((response) => {
+        if(response.status == HTTP_NO_CONTENT){
+          this.disableSearch = true;
+          return this.modalService.alert(false, '',ALERT_MESSAGES[9].message + COMMON_TYPES.medico);
+        }
+          this.codMedico = response.body.data.codMedico;
+          this.medicoService.getSedesByMedico(this.codMedico).subscribe((response) => {
+            this.sedesData = response.body.data;
+            const sedeTodos = this.sedesData.find((f: any) => f.codigo == 0);
+            this.formGroupBuscarHistoria.get('sede').setValue(sedeTodos.codigo);
+          });
+          this.medicoService.getEspecialidadByMedico(this.codMedico, 0).subscribe((response) => {
+            this.especialidadesData = response.body.data;
+            // this.especialidadesData.unshift({codigo: "999", descripcion: "TODOS"})
+            this.formGroupBuscarHistoria.get('especialidad').setValue('999');
+          });
+
+          // this.search(1);
+      });
+    }else{
+      this.codMedico = 0;
+      this.medicoService.getSedesByMedico(0).subscribe((response) => {
+        this.sedesData = response.body.data;
+        const sedeTodos = this.sedesData.find((f: any) => f.codigo == 0);
+      this.formGroupBuscarHistoria.get('sede').setValue(sedeTodos.codigo);
+      });
+      this.medicoService.getEspecialidadByMedico(this.codMedico, 0).subscribe((response) => {
+        this.especialidadesData = response.body.data;
+        // this.especialidadesData.unshift({codigo: "999", descripcion: "TODOS"})
+        this.formGroupBuscarHistoria.get('especialidad').setValue('999');
+      });
+      // this.search(1);
+    }
+  }
+  getSedeByMedico(){
+    this.medicoService.getSedesByMedico(this.codMedico).subscribe((response) => {
+      this.sedesData = response.body.data;
+    });
+  }
+  onDisplayMedic(medic) {
+    return medic ? medic.descripcion : '';
+  }
+  onDisplayDiagnostic(diagnostic) {
+    return diagnostic ? diagnostic.descripcion : '';
+  }
+  onDisplayProcedure(procedure) {
+    return procedure ? procedure.descripcion : '';
+  }
+  onSelectedMedic(event) {
+    this.codMedico = event.option.value.codigo;
+    this.medicosData = [];
+    this.getSedeByMedico();
+  }
+  getEspecialidadByMedico(event){
+    const especialidad = event.value;
+    this.medicoService.getEspecialidadByMedico(this.codMedico, especialidad).subscribe((response) => {
+      this.especialidadesData = response.body.data;
+      // this.especialidadesData.unshift({codigo: "999", descripcion: "TODOS"})
+      this.formGroupBuscarHistoria.get('especialidad').setValue('999');
+    });
+  }
   // Valores iniciales de datos de formulario de búsqueda
   setValuesFormBuilder() {
-    this.formGroupBuscarPrograma = this.fb.group({
+    this.formGroupBuscarHistoria = this.fb.group({
       sede: [''],
       tipoDocumento: [''],
       beneficio: [''],
-      diagnostico: [''],
-      procedimiento: [''],
-      medico: [''],
+      diagnostico: new FormControl(''),
+      procedimiento: new FormControl(''),
+      medico:  new FormControl(''),
       especialidad: [''],
-      producto: [''],
-      fecha_desde: [new Date()],
+      fecha_desde: [substractMonthFromDate(new Date(),1)],
       fecha_hasta: [new Date()],
       codigo: [''],
-      etiquetas: [''],
       numeroConsulta: [''],
-      delivery: [false],
-      estado: ['A']
     });
 
-    this.formGroupBuscarPrograma.controls.medico.valueChanges.pipe(
+    this.formGroupBuscarHistoria.controls.medico.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       tap(value => {
-        if (value && value != null && value.length >= MIN_CHARACTERS_SEARCH) {
+        if (value && value != null && value.length >= MIN_CHARACTERS_SEARCH && !this.isMedico) {
           this.getMedicos(value);
         }
       })
     ).subscribe();
 
-    this.formGroupBuscarPrograma.controls.diagnostico.valueChanges.pipe(
+    this.formGroupBuscarHistoria.controls.diagnostico.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       tap(value => {
@@ -156,7 +206,7 @@ export class HistoryTrayComponent implements OnInit {
       })
     ).subscribe();
 
-    this.formGroupBuscarPrograma.controls.procedimiento.valueChanges.pipe(
+    this.formGroupBuscarHistoria.controls.procedimiento.valueChanges.pipe(
       startWith(''),
       debounceTime(400),
       tap(value => {
@@ -167,86 +217,117 @@ export class HistoryTrayComponent implements OnInit {
     ).subscribe();
 
   }
-  getMedicos(text: any) {
-    this.comunService.getComun('medicos', '', text.toUpperCase(), '1', '10')
-      .subscribe((response: any) => {
-        this.medicosData = response.data;
+  getMedicos(text) {
+    this.comunService.getComun(COMMON_TYPES.medicos, '', text.toUpperCase(), '1', '10')
+      .subscribe((response) => {
+        if(response.status == HTTP_NO_CONTENT){
+          return this.modalService.alert(false, '',ALERT_MESSAGES[9].message + COMMON_TYPES.medicos);
+        }
+        this.medicosData = response.body.data;
       });
   }
-  getProcedimientos(text: any) {
-    this.comunService.getComun('procedimientos', '', text.toUpperCase(), '1', '10')
-      .subscribe((response: any) => {
-        this.procedimientosData = response.data;
+  changePage(event) {
+    this.search(event.page);
+  }
+  getProcedimientos(text) {
+    this.comunService.getComun(COMMON_TYPES.procedimientos, '', text.toUpperCase(), '1', '10')
+      .subscribe((response) => {
+        if(response.status == HTTP_NO_CONTENT){
+          return this.modalService.alert(false, '',ALERT_MESSAGES[9].message + COMMON_TYPES.procedimientos);
+        }
+        this.procedimientosData = response.body.data;
       });
   }
-  getDiagnosticos(text: any) {
-    this.comunService.getComun('diagnosticos', '', text.toUpperCase(), '1', '10')
-    .subscribe((response: any) => {
-      this.diagnosticosData = response.data;
+  getDiagnosticos(text) {
+    this.comunService.getComun(COMMON_TYPES.diagnosticos, '', text.toUpperCase(), '1', '10')
+    .subscribe((response) => {
+      if(response.status == HTTP_NO_CONTENT){
+        return this.modalService.alert(false, '',ALERT_MESSAGES[9].message + COMMON_TYPES.diagnosticos);
+      }
+      this.diagnosticosData = response.body.data;
     });
   }
-  onSelectedSearch(tipo: string, e: MatAutocompleteSelectedEvent) {
+  onSelectedSearch(tipo: string) {
     switch (tipo) {
-      case 'M': this.medicosData = []; break;
       case 'D': this.diagnosticosData = []; break;
       case 'P': this.procedimientosData = []; break;
     }
   }
-  operationsDetail(id, tipo, historia?) {
-    const request = { id };
-    this.documentoService.download(request)
-      .subscribe((response: any) => {
+  operationsDetail(historia, tipo) {
+    if (tipo == 'V') {
+      this.eventTracker.postEventTracker("opc11", JSON.stringify(historia)).subscribe()
+      return detailNewTab(historia);
+    }
+    this.documentoService.download(historia)
+      .subscribe((response) => {
+        if(response.status == HTTP_NO_CONTENT){
+          return this.modalService.alert(false, '', ALERT_MESSAGES[5].message);
+         }
         if (tipo == 'D') {
-          downloadBase64(response.data.documentoBase64, 'Documento', 'pdf');
+          this.eventTracker.postEventTracker("opc15", JSON.stringify(historia)).subscribe()
+          downloadBase64(response.body.data.object, response.body.data.fileName, CONTENT_TYPE.pdf);
         }
         if (tipo == 'P') {
-          printPdfBase64(response.data.documentoBase64);
-        }
-        if (tipo == 'V') {
-          this.router.navigate(['bandeja-historias/detalle-documentos/' + historia.compania + '/'  + historia.numeroConsulta + '/' + historia.codigoItem + '/' + historia.numeroItem] );
+          this.eventTracker.postEventTracker("opc14", JSON.stringify(historia)).subscribe()
+          printPdfBase64(response.body.data.object);
         }
       });
   }
 
-  onDisplaySearch(value) {
-    return value ? value.descripcion : '';
-  }
-  // Obtener IP local
-  getCurrentIp() {
-    this.maestroService.getIpLocal()
-      .subscribe((response: any) => {
-        if (response != null) { this.currentIp = response.ip; }
-      });
-  }
   verFiltros() {
-    console.log(this.mostrarFiltros);
     if (this.mostrarFiltros) {
       this.mostrarFiltros = false;
       } else {
       this.mostrarFiltros = true;
     }
   }
+  searchElement(element, array){
+    return  searchElementInArray(element, array);
+  }
   search(numPagina) {
     const request = {
-      codigo: this.formGroupBuscarPrograma.get('codigo').value,
-      numeroConsulta: this.formGroupBuscarPrograma.get('numeroConsulta').value,
-      sede: this.formGroupBuscarPrograma.get('sede').value,
-      beneficio: this.formGroupBuscarPrograma.get('beneficio').value,
-      medico: this.formGroupBuscarPrograma.get('medico').value.codigo ? this.formGroupBuscarPrograma.get('medico').value.codigo : '',
-      especialidad: this.formGroupBuscarPrograma.get('especialidad').value,
-      diagnostico: this.formGroupBuscarPrograma.get('diagnostico').value.codigo ? this.formGroupBuscarPrograma.get('diagnostico').value.codigo : '',
-      procedimientoServicio: this.formGroupBuscarPrograma.get('procedimiento').value.codigo ? this.formGroupBuscarPrograma.get('procedimiento').value.codigo : '',
-      tipoDocumento: this.formGroupBuscarPrograma.get('tipoDocumento').value,
-      fechaInicio: this.formGroupBuscarPrograma.get('fecha_desde').value ?
-                   moment(this.formGroupBuscarPrograma.get('fecha_desde').value).format(BASE_DATE_FORMAT_API) : '',
-      fechaFinal: this.formGroupBuscarPrograma.get('fecha_hasta').value ?
-                   moment(this.formGroupBuscarPrograma.get('fecha_hasta').value).format(BASE_DATE_FORMAT_API) : '',
+      codigo: this.formGroupBuscarHistoria.get('codigo').value,
+      numeroConsulta: this.formGroupBuscarHistoria.get('numeroConsulta').value,
+      sede: +this.formGroupBuscarHistoria.get('sede').value,
+      beneficio: this.formGroupBuscarHistoria.get('beneficio').value,
+      medico: this.formGroupBuscarHistoria.get('medico').value.codigo ? this.formGroupBuscarHistoria.get('medico').value.codigo : this.codMedico,
+      especialidad: +this.formGroupBuscarHistoria.get('especialidad').value || 999,
+      diagnostico: this.formGroupBuscarHistoria.get('diagnostico').value.codigo ? this.formGroupBuscarHistoria.get('diagnostico').value.codigo : '',
+      procedimientoServicio: this.formGroupBuscarHistoria.get('procedimiento').value.codigo ? this.formGroupBuscarHistoria.get('procedimiento').value.codigo : '',
+      tipoDocumento: this.formGroupBuscarHistoria.get('tipoDocumento').value,
+      fechaInicio: this.formGroupBuscarHistoria.get('fecha_desde').value ?
+                   moment(this.formGroupBuscarHistoria.get('fecha_desde').value).format(BASE_DATE_FORMAT_API) : '',
+      fechaFinal: this.formGroupBuscarHistoria.get('fecha_hasta').value ?
+                   moment(this.formGroupBuscarHistoria.get('fecha_hasta').value).format(BASE_DATE_FORMAT_API) : '',
       pagina: numPagina,
       tamanio: this.totalItemsPage
     };
+    if(this.disableSearch){
+      return this.modalService.alert(false, '',ALERT_MESSAGES[9].message + COMMON_TYPES.documentosMedico);
+    }
+
+    const dataFilter = {
+      "codigo :" : request.codigo,
+      "numeroConsulta :" : request.numeroConsulta,
+      "sede :" : request.sede,
+      "beneficio :" : request.beneficio,
+      "medico :" : request.medico,
+      "especialidad :" : request.especialidad,
+      "diagnostico :" : request.diagnostico,
+      "procedimientoServicio :" : request.procedimientoServicio,
+      "tipoDocumento :" : request.tipoDocumento,
+      "fechaInicio :" : request.fechaInicio,
+      "fechaFinal :" : request.fechaFinal
+  }
+
+    this.eventTracker.postEventTracker("opc10", JSON.stringify(dataFilter)).subscribe()
+
 
     this.documentoService.getBandejaHistoriaClinica(request)
-    .subscribe((response: any) => {
+    .subscribe((response) => {
+      if(response.status == HTTP_METHOD_NOT_ALLOWED){
+        return this.modalService.alert(false, '',ALERT_MESSAGES[13].message);
+      }
       this.dataSource = response.data;
       if (this.dataSource.length != 0) {
         this.pagination = numPagina;
@@ -254,7 +335,7 @@ export class HistoryTrayComponent implements OnInit {
         this.totalItems = response.numeroRegistros;
         const totalPages = response.numeroRegistros / this.totalItemsPage;
         if (totalPages < 1) { this.totalPages = 1; }
-        if (totalPages >= 1) { this.totalPages = totalPages; }
+        if (totalPages >= 1) { this.totalPages = Math.ceil(totalPages); }
       } else {
         this.hasRecords = false;
       }
@@ -263,184 +344,20 @@ export class HistoryTrayComponent implements OnInit {
   }
   // Limpiar datos de formulario de búsqueda
   clean() {
-    this.formGroupBuscarPrograma.reset();
-    this.isSearched = false;
-
-    this.products = [];
-
-    this.formGroupBuscarPrograma.get('sede').setValue('');
-    this.formGroupBuscarPrograma.get('producto').setValue('');
-    this.formGroupBuscarPrograma.get('estado').setValue('A');
-  }
-
-  // Enviar datos de formulario de búsqueda al servicio
-  formGroupBuscarProgramaSubmit(fg: FormGroup) {
-    if (fg.invalid) { return true; }
-
-    this.toggleFilter();
-
-    this.pagination = 1;
-    let request = this.searchProgramRequest(fg);
-    this.searchProgram(request);
-  }
-
-  // Obtener información de programas en base a filtros de búsqueda
-  searchProgram(request: ISearchProgramRequest) {
-    this.disableButton = true;
-
-    this.programService.searchPrograms(request)
-      .subscribe((response: ISearchProgramResponse) => {
-        this.disableButton = false;
-        if (response.codRpta === 200) {
-          this.totalItems = Number(response.totalReg);
-          this.totalPages = Number(response.totalPag);
-          const { data } = response;
-          this.programs = data;
-
-          if (Number(response.totalReg) != 0) {
-            this.isSearched = true;
-          } else {
-            this.isSearched = false;
-            this.openModalError();
-          }
-        }
+    this.formGroupBuscarHistoria.reset();
+    this.sedesData = [];
+    this.especialidadesData = [];
+    this.setValuesFormBuilder();
+    if(!this.isMedico){
+      this.codMedico = 0;
+    }else{
+      this.formGroupBuscarHistoria.patchValue({
+        medico: getProfile().name
       });
-  }
-
-  // Cambio de página con mismos filtros
-  changePage(event: any) {
-    if (this.formGroupBuscarPrograma.invalid) { return true; }
-
-    this.pagination = event.page;
-    let request = this.searchProgramRequest(this.formGroupBuscarPrograma);
-    this.searchProgram(request);
-  }
-
-  // Descarga ficha de programa
-  downloadFile(codProgram: string, name: string) {
-    this.programService.downloadProgramFile(codProgram, this.username,
-      this.currentIp, DOWNLOAD_CONFIG.programa.modulo, DOWNLOAD_CONFIG.programa.accion.busqueda)
-      .subscribe((response: any) => {
-        if (response != null && response.body != null && response.body.size > 0) {
-          this.fileUploadService.downloadFile('PDF', response.body, name);
-        } else {
-          this.openModalErrorFile();
-        }
-      });
-  }
-
-  // Validar que tenga acceso al modulo PROGRAMAS
-  validateRole() {
-    this.authService.getModules().subscribe((response: IGetModulesResponse) => {
-      if (response.codRpta == 200) {
-        const { data } = response;
-        if (data.length != 0) {
-          let hasProgram = data.filter(obj => obj.nomCorto == MODULES.programas);
-          if (hasProgram.length == 0) { this.openModalAccessError(); }
-        } else {
-          this.openModalAccessError();
-        }
-      } else {
-        this.openModalAccessError();
-      }
-    });
-  }
-
-  // Mostrar/Ocultar filtro en vista responsive
-  toggleFilter() {
-    let isDesktop = window.innerWidth > 991;
-    if (isDesktop) {
-      document.getElementsByTagName('body')[0].classList.remove('menu-perfil-body');
-      return;
-    } else {
-      this.isFilterVisible = !this.isFilterVisible;
-      if (this.isFilterVisible) {
-        document.getElementsByTagName('body')[0].classList.add('menu-perfil-body');
-      } else {
-        document.getElementsByTagName('body')[0].classList.remove('menu-perfil-body');
-      }
+      this.getSedeByMedico();
     }
   }
 
-  // Objeto Request para filtro de empresas
-  getCompaniesRequest(): IListMaestroRequest {
-    return {
-      opt: '1'
-    };
-  }
-
-  // Objeto Request para filtro de productos (por empresa)
-  getProductsRequest(codCompany: string): IListMaestroRequest {
-    return {
-      opt: '2',
-      param3: codCompany
-    };
-  }
-
-  // Objeto Request para filtro de estados
-  getStatesRequest(): IListMaestroRequest {
-    return {
-      opt: '999',
-      param3: '1'
-    };
-  }
-
-  // Objeto Request para filtro de programas
-  searchProgramRequest(fg: FormGroup): ISearchProgramRequest {
-    let request: ISearchProgramRequest = {};
-    if (fg.value.sede) { request.compania = fg.value.sede; }
-    if (fg.value.producto) { request.codigoProducto = fg.value.producto; }
-    if (fg.value.programa) { request.nombrePrograma = fg.value.programa; }
-    if (fg.value.etiquetas) { request.etiqueta = fg.value.etiquetas; }
-    if (fg.value.delivery) { request.medicamento = fg.value.delivery; }
-    if (fg.value.estado) { request.estado = fg.value.estado; }
-    request.p_size = String(this.totalItemsPage);
-    request.p_page = String(this.pagination);
-    return request;
-  }
-
-
-  // Mostrar modal de alerta
-  openModalError() {
-    const alert = ALERT_MESSAGES.filter(obj => obj.type == ALERT_TYPE.search)[0];
-
-    const dialogRef = this.dialog.open(AlertComponent, {
-      width: '400px', data: { alert }
-    });
-
-    dialogRef.afterClosed().subscribe(result => { });
-  }
-
-  // Mostrar modal de alerta para archivo
-  openModalErrorFile() {
-    const alert = ALERT_MESSAGES.filter(obj => obj.type === ALERT_TYPE.custom)[0];
-    alert.title = 'Alerta';
-    alert.message = 'No se pudo descargar el archivo correspondiente.';
-
-    const dialogRef = this.dialog.open(AlertComponent, {
-      width: '400px', data: { alert }
-    });
-
-    dialogRef.afterClosed().subscribe(result => { });
-  }
-
-  // Mostrar modal de alerta en caso no tenga acceso a modulos
-  openModalAccessError() {
-    const alert = ALERT_MESSAGES.filter(obj => obj.type == ALERT_TYPE.custom)[0];
-
-    alert.title = 'Alerta';
-    alert.message = ALERT_MESSAGES[4].message + ' (Módulo PROGRAMAS)';
-
-    const dialogRef = this.dialog.open(AlertComponent, {
-      width: '400px', data: { alert }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      window.location.href = environment.oimHome;
-    });
-  }
-
-  // Inicializar componente de filtro (estilos) cuando la ventana cambia de tamaño
   @HostListener('window:resize')
   onResize() {
     let isDesktop = window.innerWidth > 991;
@@ -459,13 +376,5 @@ export class HistoryTrayComponent implements OnInit {
     }
   }
 
-  openView(id) {
-    this.router.navigate([PATH_URL_DATA[id]], { replaceUrl: false });
-  }
-
-  viewDetail(program) {
-    let id = program.codigoPrograma;
-    this.router.navigate([PATH_URL_DATA[4], id], { replaceUrl: false });
-  }
 
 }

@@ -1,0 +1,149 @@
+<section>
+  <div class="g-title">
+      <div class="container">
+          <div class="row g-row">
+              <div class="col-md-6 col-sm-6 mb-xs-6 no-mb-md" style="display: flex;
+              flex-direction: row;
+              align-items: center;">
+                  <div>
+                    <a matTooltip="regresar" style="margin-right:16px ;" matTooltipPosition='above' (click)="regresar()">
+                      <mat-icon class="material-icons-outlined">close</mat-icon>
+                    </a>
+                  </div>
+                  <div>
+                    <h2>{{'Informe No.'+codInformeMedico}}</h2>
+                  </div>
+                  <div>
+                    <span *ngIf="informeMedico?.estado =='A'" class="g-btn" style=" background-color: #747979; color: #ffffff; margin-left: 8px; padding: 0 5px 0 5px; "> ANULADO </span>
+                    <span *ngIf="informeMedico?.estado =='R'" class="g-btn" style=" background-color: #747979; color: #ffffff; margin-left: 8px; padding: 0 5px 0 5px; "> REGISTRADO </span>
+                    <span *ngIf="informeMedico?.estado =='F'" class="g-btn" style=" background-color: #8DB602; color: #ffffff; margin-left: 8px; padding: 0 5px 0 5px; "> FIRMADO </span>
+                  </div>
+              </div>
+              <div class="col-md-6 col-sm-6 mb-xs-6 no-mb-md" >
+                <button *ngIf="!edit_detail && detail_informe != '' && informeMedico?.estado =='R'" type="button" class="btn g-btn-verde pull-right" style="padding-left:32px ; padding-right:32px ;" [disabled]='!isMedic(profile)' (click) = 'signDocuments()' >FIRMAR</button>
+                <a  *ngIf="!edit_detail && informeMedico?.estado !='A'" class="pull-right" matTooltip="Eliminar" style="margin-right:16px ;" matTooltipPosition='above' (click)="delete()">
+                  <mat-icon class="material-icons-outlined">delete</mat-icon>
+                </a>
+                
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="dashboard-body g-border-top h-myd-border--top-0">
+
+      <div class="g-section-inner g-dashboard-section">
+        <div class="container">
+          <div class="clearfix g-box mb-xs-2">
+            <div class="dataContainer" style="border-left: none">
+              <div class="clearfix g-box-content gBgcGray5">
+                <ul class="row g-list-md">
+                  <li class="col-md-12 clearfix cnt-item" style="display: flex;
+                  flex-direction: row;
+                  align-items: center;
+                  ">
+                    <div class="item-label pull-left col-sm-6" >Datos de la consulta médica</div>
+                  </li>
+                </ul>
+                <ul class="row g-list-md">
+                    <li class="col-md-4 clearfix cnt-item">
+                      <div class="col-sm-5 col-xs-6 item-label">Sede</div>
+                      <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico?.sede?.descripcion}}</div>
+                    </li>
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">Especialidad</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico?.especialidad?.descripcion}}
+                        </div>
+                    </li>
+                    <li class="col-md-4 clearfix cnt-item">
+                      <div class="col-sm-5 col-xs-6 item-label">Médico</div>
+                      <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico?.medico?.descripcion}}</div>
+                    </li>
+                    
+                </ul>
+                <ul class="row g-list-md">
+                    <li class="col-md-4 clearfix cnt-item">
+                      <div class="col-sm-5 col-xs-6 item-label">No. de consulta</div>
+                      <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico?.registroClinico?.numeroConsulta}}</div>
+                    </li>
+
+                    <li class="col-md-4 clearfix cnt-item">
+                      <div class="col-sm-5 col-xs-6 item-label">No. de HC</div>
+                      <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico?.registroClinico?.numeroHistoriaClinica}}</div>
+                    </li>
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">No. de OA</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico?.registroClinico?.numeroOrdenAtencion}}
+                        </div>
+                    </li>
+                </ul>
+                <ul class="row g-list-md">
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">Paciente</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico?.paciente?.paciente}}</div>
+                    </li>
+
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">Diagnóstico</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico?.diagnostico?.descripcion}}
+                        </div>
+                    </li>
+                </ul>
+              </div>
+            </div>   
+          </div> 
+
+          <div class="clearfix g-box mb-xs-2">
+            <div class="dataContainer" style="border-left: none">
+              <div class="clearfix g-box-content ">
+                <ul class="row g-list-md">
+                  <li class="col-md-12 clearfix cnt-item">
+                    <div class="col-sm-6 item-label centrar-vertical" style="height: 29.7px;">
+                        Detalle el informe médico
+                    </div>
+                    <div class="col-sm-6">    
+                        <button *ngIf="edit_detail"  type="button" class="btn g-btn-transparent pull-right" style="margin-right:15px ;" (click) = 'useTemplate()'>USAR PLANTILLA</button>
+                        <button *ngIf="edit_detail" class="btn g-btn-transparent pull-right" style="margin-right:15px ;" (click) = 'generateTemplate()'>GENERAR PLANTILLA</button>
+                        <a *ngIf="!edit_detail && informeMedico?.estado =='R'" class="pull-right" matTooltip="Editar" matTooltipPosition='above' (click)="editDetail()">
+                          <mat-icon class="material-icons-outlined">edit</mat-icon>
+                        </a>
+                    </div>
+                  </li>
+                </ul>
+                <ul *ngIf="edit_detail || detail_informe != '' " class="row g-list-md">
+                    <li class="col-md-4 clearfix cnt-item">
+                      <div class="col-sm-5 col-xs-6 item-label">Contenido del Informe</div>
+                    </li>
+                </ul>
+
+                <ul class="row g-list-md">
+                  <li class="col-md-12 clearfix cnt-item">
+                    <div class="col-sm-12 col-xs-12">
+                      <div class="detail-informe"  *ngIf="detail_informe != '' && !edit_detail" [innerHTML]="detail_informe"> </div>
+                      <span *ngIf="detail_informe == '' && !edit_detail" style="color: #D81E05;"> <b>Falta completar el informe médico</b> </span>
+                    </div>
+                  </li>
+                </ul>
+
+                <ul *ngIf="edit_detail" class="row g-list-md">
+                  <li class="col-md-12 ">
+                    <div class="col-sm-12 col-xs-12">
+                      <ejs-richtexteditor id='defaultRTE' [(ngModel)]='detail_informe' [toolbarSettings]='tools' > </ejs-richtexteditor>
+                    </div>
+                  </li>
+                    
+                </ul>
+                <ul class="row g-list-md" *ngIf="edit_detail">
+                  <div class="col-sm-12">    
+                    <button type="button" class="btn g-btn-verde pull-right" style="margin-right:15px ;" [disabled]='!isMedic(profile)' (click) = 'signDocuments()' >FIRMAR</button>
+                    <button type="button" class="btn g-btn-green-border pull-right" style="margin-right:15px ;" (click)="guardar()" >GUARDAR</button>
+                    <button type="button" class="btn g-btn-transparent pull-right" style="margin-right:15px ;" (click)="cancelar()">CANCELAR</button>
+                  </div>
+                </ul>
+                
+              </div>
+            </div>   
+          </div> 
+        </div>
+      </div>
+    </div>
+</section>

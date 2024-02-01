@@ -1,0 +1,18 @@
+  <div class="card border-0">
+    <div class="card-body">
+      <div class="row text-center">
+        <mat-icon class="material-icons-outlined">info</mat-icon>
+      </div>
+      <div class="row mt-xs-1 text-center">
+        <b>{{ alert.title }}</b>
+      </div>
+      <div class="row mt-xs-1 text-center" innerHtml="{{ alert.message }}"></div>
+      <div class="row">
+        <mat-dialog-actions align="end">
+        <button mat-button [mat-dialog-close]="false">SALIR</button>
+        <button mat-button [mat-dialog-close]="true" cdkFocusInitial>PERMANECER</button>
+      </mat-dialog-actions>
+        </div>
+      </div>
+    </div>
+

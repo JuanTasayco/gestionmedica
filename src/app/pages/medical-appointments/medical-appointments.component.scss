@@ -1,0 +1,118 @@
+.count-result-search {
+    margin: 0 0 20px 0;
+}
+
+.imgContainer {
+    display: flex;
+    width: 160px;
+
+    img {
+        max-height: 140px;
+        max-width: 100%;
+    }
+}
+.fz20 {
+  font-size: 20px
+}
+
+.vam{
+  vertical-align: middle;
+}
+.green-color {
+  color: #749806;
+}
+
+.atencion{
+    background-color: #749806;
+    color: white;
+  }
+
+  .anulado{
+    background-color: red;
+    color: white;
+  }
+
+  .espera{
+    background-color: #008dfc;
+    color: white;
+  }
+
+  .atendido{
+    background-color: orange;
+    color: white;
+  }
+
+  .triaje{
+    background-color: yellow;
+    color: black;
+  }
+  
+
+.mb-10 {
+  margin-bottom: 10px
+}
+
+.fz12 {
+  font-size: 12px
+}
+.dataContainer {
+    width: 100%;
+    border-left: 1px solid #d5d5d5;
+}
+
+.g-box {
+    display: flex;
+}
+
+.headReg {
+    padding: 12px 15px;
+    font-size: 14px;
+    border-radius: 6px 6px 0 0;
+    border-bottom: 1px solid #ddd;
+    line-height: 20px;
+}
+
+.icon-btn {
+    padding: 0 10px;
+
+    mat-icon {
+        vertical-align: bottom;
+        font-size: 20px;
+        height: 20px;
+    }
+}
+
+.label-item {
+    overflow-wrap: break-word;
+}
+
+.limit-lines {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    /* autoprefixer: off */
+    -webkit-box-orient: vertical;
+}
+
+@media (min-width:992px) {
+    .count-result-search {
+        margin: 40px 0;
+    }
+}
+
+
+// .mat-option {
+//   height: unset !important;
+//   padding: 0 16px;
+//   text-align: left;
+//   font-size: 12px;
+//   align-items: center;
+// }
+
+// .mat-option-text {
+//   white-space: normal;
+//   line-height: normal;
+//   padding-top: 0.5em;
+//   padding-bottom: 0.5em;
+// }

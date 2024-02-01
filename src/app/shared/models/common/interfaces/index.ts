@@ -7,7 +7,6 @@ export * from './respuesta.interface';
 export * from './maestro.interface';
 export * from './message-route.interface';
 export * from './crumbs.interface';
-export * from './program.interface';
 export * from './document.interface';
 export * from './coverage.interface';
 export * from './client.interface';
@@ -17,6 +16,10 @@ export * from './program-filter.interface';
 export * from './insured.interface';
 export * from './medical-request.interface';
 export * from './state.interface';
+export * from './crumbs.interface';
+export * from './search-results.interface';
+export * from './program.interface';
+
 export * from './medicine.interface';
 export * from './order.interface';
 export * from './program-insured.request';

@@ -8,8 +8,8 @@ export class HtmlPipe implements PipeTransform {
 
   constructor(private _sanitizer: DomSanitizer) { }
 
-  transform(value: string): SafeHtml {
-    return this._sanitizer.bypassSecurityTrustHtml(value);
+  transform(url: string): SafeHtml {
+    return this._sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
 }

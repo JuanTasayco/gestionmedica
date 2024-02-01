@@ -10,9 +10,10 @@
             <div class="row mt-xs-1 text-center">
                 <b>{{alert.title}}</b>
             </div>
-            <div class="row mt-xs-1 text-center">
+            <!-- <div class="row mt-xs-1 text-center">
                 {{alert.message}}
-            </div>
+            </div> -->
+            <div class="row mt-xs-1 text-center" innerHtml="{{ alert.message }}"></div>
         </div>
     </div>
 </mat-dialog-content>

@@ -12,12 +12,13 @@
                               | uppercase }}</label>
                 </div>
                 <div class="col-md-4 col-sm-12 text-right ng-star-inserted">
-                    <a class="g-btn second-design g-btn-white" (click)="downloadFile(dataDetalle.documentoBase64,'P')"
-                        style="width: 48px; margin-right: 10px; font-size: 16px; padding-top: 0; padding-bottom: 0; line-height: 32px;"><i
+                    <button class="g-btn second-design g-btn-verde block mg-l-15 btn-sign" (click)="signDocument()"
+                    [disabled]="dataDetalle.estado === 'FIRMADO'"
+                    >Firmar documento</button>
+                    <a class="g-btn second-design g-btn-white btn-detail" (click)="downloadFile(dataDetalle.documentoBase64,'P')"><i
                             class="glyphicon glyphicon-print"></i></a>
-                    <a class="g-btn second-design g-btn-white" (click)="downloadFile(dataDetalle.documentoBase64,'D')"
-                        style="width: 48px; margin-right: 10px; font-size: 16px; padding-top: 0; padding-bottom: 0; line-height: 32px;"><i
-                            class="glyphicon glyphicon-download-alt"></i></a>
+                    <!-- <a class="g-btn second-design g-btn-white btn-detail" (click)="downloadFile(dataDetalle.documentoBase64,'D')"><i
+                            class="glyphicon glyphicon-download-alt"></i></a> -->
                 </div>
             </div>
         </div>
@@ -77,7 +78,7 @@
                             <div class="col-md-4 mb-md-0 mb-xs-2">
                                 <div class="row">
                                     <div class="col-md-4"><b>No de HC</b></div>
-                                    <div class="col-md-8">{{dataDetalle.historiaClinica}}</div>
+                                    <div class="col-md-8">{{dataDetalle.historiaClinicaLocal}}</div>
                                 </div>
                             </div>
                             <div class="col-md-4 mb-md-0 mb-xs-2">
@@ -116,8 +117,8 @@
                             </div>
                             <div class="col-md-4 mb-md-0 mb-xs-2">
                                 <div class="row">
-                                    <div class="col-md-4"><b>No de atención</b></div>
-                                    <div class="col-md-8">{{dataDetalle.numeroAtencion}}</div>
+                                    <div class="col-md-4"><b>No de orden de atención</b></div>
+                                    <div class="col-md-8">{{dataDetalle.ordenAtencion}}</div>
                                 </div>
                             </div>
                         </div>
@@ -141,7 +142,7 @@
                             <div class="col-md-4 mb-md-0 mb-xs-2">
                                 <div class="row">
                                     <div class="col-md-4"><b>Tipo de item</b></div>
-                                    <div class="col-md-8">{{dataDetalle.tipoItem}}</div>
+                                    <div class="col-md-8">{{dataDetalle.tipoDocumento}}</div>
                                 </div>
                             </div>
                             <div class="col-md-4 mb-md-0 mb-xs-2">
@@ -189,9 +190,31 @@
                         <h2 class="pb-xs-3"><b>Documento de la atención</b></h2>
                     </div>
                     <div class="col-md-12">
-                        <div class="pdfView" >
-                            <iframe width="100%" height="100%" [src]="domSanitize(dataDetalle.documentoBase64)"></iframe>
-                        </div>
+                      <!-- <div class="pdfView" > -->
+                        <ng-container *ngIf="dataDetalle.documentoBase64">
+                          <ngx-extended-pdf-viewer  [base64Src]="dataDetalle.documentoBase64" height="60vh"
+                              [showUnverifiedSignatures]="true"
+                              [showPropertiesButton]="false"
+                              [showBorders]="false"
+                              [showSidebarButton]="false"
+                              [showBookmarkButton]="false"
+                              [showDownloadButton]="false"
+                              [showFindButton]="false"
+                              [showHandToolButton]="false"
+                              [showOpenFileButton]="false"
+                              [showPagingButtons]="false"
+                              [showPresentationModeButton]="false"
+                              [showPrintButton]="false"
+                              [showRotateButton]="false"
+                              [showScrollingButton]="false"
+                              [showToolbar]="false"
+                              [showSecondaryToolbarButton]="false"
+                              >
+                          </ngx-extended-pdf-viewer>
+                        </ng-container>
+
+                    <!-- </div> -->
+                        <!-- <iframe [src]="pdfDetalle | html" width="100%" height="500px" ></iframe> -->
                     </div>
                 </div>
             </div>

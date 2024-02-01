@@ -11,16 +11,14 @@
     <div class="dashboard-body g-border-top h-myd-border--top-0">
         <div class="g-section-inner g-dashboard-section">
             <div class="container">
-                <form name="frmSearchProgram" [formGroup]="formGroupBuscarPrograma" class="form-validate col-md-3"
-                    (ngSubmit)="formGroupBuscarProgramaSubmit(formGroupBuscarPrograma)" style="padding-left: 0;">
+                <form name="frmSearchProgram" [formGroup]="formGroupBuscarHistoria" class="form-validate col-md-3" style="padding-left: 0;">
                     <div class="clearfix g-col-filter g-box-md fz14 gBgcGray5-md gBgcWhite1" id="filterBox"
                         [ngClass]="isFilterVisible ? 'show' : ''">
                         <div class="col-md-12 mb-ms-0 mb-xs-3 gH4 gCGray1">
                             <h2 class="pb-xs-1 hidden-xs hidden-sm"><b>Filtros de búsqueda</b></h2>
 
                             <div id="show-filter"
-                                class="row pt-xs-2 pb-xs-2 gBgcGray5 g-border-bottom-xs hidden-md hidden-lg"
-                                (click)="toggleFilter()">
+                                class="row pt-xs-2 pb-xs-2 gBgcGray5 g-border-bottom-xs hidden-md hidden-lg">
                                 <div class="col-xs-10">
                                     <h2><b>Filtros de búsqueda</b></h2>
                                 </div>
@@ -46,11 +44,31 @@
                                                     class="g-text-uppercase" autocomplete="off">
                                             </mat-form-field>
                                         </div>
+                                        <div class="col-md-12" *ngIf="!isMedico">
+                                            <mat-form-field appearance="standard" class="form-group">
+                                              <mat-label>Médico</mat-label>
+                                              <input [formControl]="formGroupBuscarHistoria.get('medico')" type="text" autoActiveFirstOption
+                                                placeholder="Médico" matInput class="g-text-uppercase" [matAutocomplete]="medicos">
+                                              <mat-autocomplete #medicos="matAutocomplete" (optionSelected)="onSelectedMedic($event)"
+                                                [displayWith]="onDisplayMedic">
+                                                <mat-option *ngFor="let medic of medicosData" [value]="medic">
+                                                  {{medic.descripcion}}
+                                                </mat-option>
+                                              </mat-autocomplete>
+                                            </mat-form-field>
+                                          </div>
+                                        <div class="col-md-12" *ngIf="isMedico">
+                                            <mat-form-field appearance="standard" class="form-group">
+                                              <mat-label>Médico</mat-label>
+                                              <input readonly [formControl]="formGroupBuscarHistoria.get('medico')" type="text"
+                                                placeholder="Médico" matInput class="g-text-uppercase" >
+                                            </mat-form-field>
+                                          </div>
                                         <div class="col-md-12">
                                             <mat-form-field appearance="standard" class="form-group">
                                                 <mat-label>Sede</mat-label>
-                                                <mat-select formControlName="sede">
-                                                    <mat-option value="">Todos</mat-option>
+                                                <mat-select formControlName="sede" (selectionChange)="getEspecialidadByMedico($event)">
+                                                    <!-- <mat-option value="">Todos</mat-option> -->
                                                     <mat-option *ngFor="let sede of sedesData" [value]="sede.codigo">
                                                         {{sede.descripcion}}</mat-option>
                                                 </mat-select>
@@ -58,12 +76,11 @@
                                         </div>
                                         <div class="col-md-12">
                                             <mat-form-field appearance="standard" class="form-group">
-                                                <mat-label>Beneficios</mat-label>
-                                                <mat-select formControlName="beneficio" name="beneficio">
-                                                    <mat-option value="">Todos</mat-option>
-                                                    <mat-option *ngFor="let beneficio of beneficiosData"
-                                                        [value]="beneficio.codigo">
-                                                        {{beneficio.descripcion}}
+                                                <mat-label>Especialidad</mat-label>
+                                                <mat-select formControlName="especialidad">
+                                                    <!-- <mat-option value="">TODOS</mat-option> -->
+                                                    <mat-option *ngFor="let especialidad of especialidadesData"
+                                                        [value]="especialidad.codigo">{{especialidad.descripcion}}
                                                     </mat-option>
                                                 </mat-select>
                                             </mat-form-field>
@@ -82,41 +99,29 @@
                                           </a>
                                         </div>
                                         <div  [hidden]="!mostrarFiltros">
-                                          <div class="col-md-12">
-                                            <mat-form-field appearance="standard" class="form-group">
-                                                <mat-label>Médico</mat-label>
-                                                <input [formControl]="formGroupBuscarPrograma.get('medico')" type="text"
-                                                    autoActiveFirstOption placeholder="Médico" matInput
-                                                    class="g-text-uppercase" [matAutocomplete]="medicos">
-                                                <mat-autocomplete #medicos="matAutocomplete"
-                                                    (optionSelected)="onSelectedSearch('M',$event)"
-                                                    [displayWith]="onDisplaySearch">
-                                                    <mat-option *ngFor="let medic of medicosData" [value]="medic">
-                                                        {{medic.descripcion}}
-                                                    </mat-option>
-                                                </mat-autocomplete>
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <mat-form-field appearance="standard" class="form-group">
-                                                <mat-label>Especialidad</mat-label>
-                                                <mat-select formControlName="especialidad">
-                                                    <mat-option value="">Todos</mat-option>
-                                                    <mat-option *ngFor="let especialidad of especialidadesData"
-                                                        [value]="especialidad.codigo">{{especialidad.descripcion}}
-                                                    </mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </div>
+
+                                            <div class="col-md-12">
+                                                <mat-form-field appearance="standard" class="form-group">
+                                                    <mat-label>Beneficio</mat-label>
+                                                    <mat-select formControlName="beneficio" name="beneficio">
+                                                        <mat-option value="">Todos</mat-option>
+                                                        <mat-option *ngFor="let beneficio of beneficiosData"
+                                                            [value]="beneficio.codigo">
+                                                            {{beneficio.descripcion}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+
                                         <div class="col-md-12">
                                             <mat-form-field appearance="standard" class="form-group">
                                                 <mat-label>Diagnóstico</mat-label>
-                                                <input [formControl]="formGroupBuscarPrograma.get('diagnostico')"
+                                                <input [formControl]="formGroupBuscarHistoria.get('diagnostico')"
                                                     type="text" autoActiveFirstOption placeholder="Diagnóstico" matInput
                                                     class="g-text-uppercase" [matAutocomplete]="diagnostico">
                                                 <mat-autocomplete #diagnostico="matAutocomplete"
-                                                    (optionSelected)="onSelectedSearch('D',$event)"
-                                                    [displayWith]="onDisplaySearch">
+                                                    (optionSelected)="onSelectedSearch('D')"
+                                                    [displayWith]="onDisplayDiagnostic">
                                                     <mat-option *ngFor="let diagnostic of diagnosticosData"
                                                         [value]="diagnostic">
                                                         {{diagnostic.descripcion}}
@@ -127,12 +132,12 @@
                                         <div class="col-md-12">
                                             <mat-form-field appearance="standard" class="form-group">
                                                 <mat-label>Procedimiento/Servicio</mat-label>
-                                                <input [formControl]="formGroupBuscarPrograma.get('procedimiento')" type="text"
+                                                <input [formControl]="formGroupBuscarHistoria.get('procedimiento')" type="text"
                                                     autoActiveFirstOption placeholder="Procedimiento/Servicio" matInput
                                                     class="g-text-uppercase" [matAutocomplete]="procedimiento">
                                                 <mat-autocomplete #procedimiento="matAutocomplete"
-                                                    (optionSelected)="onSelectedSearch('P',$event)"
-                                                    [displayWith]="onDisplaySearch">
+                                                    (optionSelected)="onSelectedSearch('P')"
+                                                    [displayWith]="onDisplayProcedure">
                                                     <mat-option *ngFor="let procedimiento of procedimientosData" [value]="procedimiento">
                                                         {{procedimiento.descripcion}}
                                                     </mat-option>
@@ -198,7 +203,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <button type="button" class="g-btn g-btn-verde block" (click)="search(1)"
-                                                [disabled]="disableButton">Buscar</button>
+                                                [disabled]="!searchElement('BUSHISCLI', opciones)">Buscar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -226,19 +231,15 @@
                                         <div class="col-dm-12">
                                             <b>HC No. {{historia.historiaClinica}}</b>
                                             <div class="pull-right">
-                                                <a (click)="operationsDetail(historia.consulta,'P')"
+                                                <a *ngIf="searchElement('IMPDOCHISCLI', opciones)" (click)="operationsDetail(historia,'P')"
                                                     matTooltip="Imprimir" matTooltipPosition='above'>
                                                     <mat-icon class="fz18">print</mat-icon>
                                                 </a>
-                                                <a (click)="operationsDetail(historia.consulta,'D')"
+                                                <!-- <a *ngIf="searchElement('DESDOCHISCLI', opciones)" (click)="operationsDetail(historia,'D')"
                                                     matTooltip="Descargar" matTooltipPosition='above'>
                                                     <mat-icon class="fz18">file_download</mat-icon>
-                                                </a>
-                                                <a
-                                                    matTooltip="Enviar por correo" matTooltipPosition='above'>
-                                                    <mat-icon class="fz18">email</mat-icon>
-                                                </a>
-                                                <a (click)="operationsDetail(historia.consulta,'V',historia)" matTooltip="Ver Detalle"
+                                                </a> -->
+                                                <a *ngIf="searchElement('VERDETDOCHISCLI', opciones)" (click)="operationsDetail(historia,'V',historia)" matTooltip="Ver Detalle"
                                                     matTooltipPosition='right'>
                                                     <mat-icon class="fz18">arrow_forward</mat-icon>
                                                 </a>
@@ -271,7 +272,7 @@
                                                 <div class="col-sm-7 col-xs-6 item-dato">{{historia.paciente}}</div>
                                             </li>
                                             <li class="col-md-4 clearfix cnt-item">
-                                                <div class="col-sm-5 col-xs-6 item-label">No. de documento</div>
+                                                <div class="col-sm-5 col-xs-6 item-label">Documento de identidad</div>
                                                 <div class="col-sm-7 col-xs-6 item-dato">{{historia.numeroDocumento}}
                                                 </div>
                                             </li>
@@ -282,7 +283,7 @@
                                                 <div class="col-sm-7 col-xs-6 item-dato">{{historia.medico}}</div>
                                             </li>
                                             <li class="col-md-4 clearfix cnt-item">
-                                                <div class="col-sm-5 col-xs-6 item-label">Esepcialidad</div>
+                                                <div class="col-sm-5 col-xs-6 item-label">Especialidad</div>
                                                 <div class="col-sm-7 col-xs-6 item-dato">{{historia.especialidad}}</div>
                                             </li>
                                             <li class="col-md-4 clearfix cnt-item">

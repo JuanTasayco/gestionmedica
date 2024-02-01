@@ -13,11 +13,11 @@ import { DocumentTrayModule } from '@pages/document-tray/shared/document-tray.mo
 import { ListDocumentTrayComponent } from '@pages/document-tray/list/list-document-tray.component';
 import { ListDocumentTrayRoutingModule } from '@pages/document-tray/list/list-document-tray-routing.module';
 import { SignDocumentComponent } from '../modals/sign/sign-document.component';
+import { SignDocumentModule } from '../modals/sign/sign-document.module';
 
 @NgModule({
   declarations: [
-    ListDocumentTrayComponent,
-    SignDocumentComponent
+    ListDocumentTrayComponent
   ],
     imports: [
         CommonModule,
@@ -35,13 +35,13 @@ import { SignDocumentComponent } from '../modals/sign/sign-document.component';
         MatAutocompleteModule,
 
         DocumentTrayModule,
-
+        SignDocumentModule,
         SharedModule,
 
         ListDocumentTrayRoutingModule,
         MatCheckboxModule
     ],
-  entryComponents: [
+  entryComponents: [    
     SignDocumentComponent
   ]
 })

@@ -1,0 +1,29 @@
+.mat-dialog-content {
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: -11px;
+  right: 5px;
+  padding: 5px;
+  line-height: 14px;
+  min-width: auto;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+}
+
+.mat-button,
+.mat-icon-button {
+&.cdk-focused,
+&.cdk-program-focused {
+  background-color: none !important;
+
+  .mat-button-focus-overlay {
+    display: none !important;
+  }
+}
+}

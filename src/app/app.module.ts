@@ -4,6 +4,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MAT_DATE_LOCALE } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CalendarModule } from '@syncfusion/ej2-angular-calendars';
 
 import { ErrorInterceptor, JwtTokenInterceptor } from '@core/interceptors';
 
@@ -17,6 +18,7 @@ import { ErrorComponent } from './pages/error/error.component';
 import { MessageComponent } from './pages/message/message.component';
 
 import { SharedModule } from '@shared/shared.module';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,16 @@ import { SharedModule } from '@shared/shared.module';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    SharedModule
+    SharedModule,
+    CalendarModule,
+    ToastrModule.forRoot({
+      timeOut: 2500,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true
+    }),
+  ],
+  exports: [
+    CalendarModule
   ],
   providers: [
     DatePipe,

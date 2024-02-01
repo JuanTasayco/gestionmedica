@@ -11,6 +11,10 @@ import { SharedModule } from '@shared/shared.module';
 import { DocumentTrayModule } from '@pages/document-tray/shared/document-tray.module';
 import { DocumentDetailComponent } from './document-detail.component';
 import { DocumentDetailRoutingModule } from './document-detail-routing.module';
+import { SignDocumentComponent } from '@pages/document-tray/modals/sign/sign-document.component';
+import { SignDocumentModule } from '@pages/document-tray/modals/sign/sign-document.module';
+// import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 
 
 @NgModule({
@@ -33,13 +37,15 @@ import { DocumentDetailRoutingModule } from './document-detail-routing.module';
         MatAutocompleteModule,
 
         DocumentTrayModule,
-
+        SignDocumentModule,
         SharedModule,
 
         DocumentDetailRoutingModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        NgxExtendedPdfViewerModule,
     ],
-  entryComponents: [
+  entryComponents: [    
+    SignDocumentComponent
   ]
 })
 

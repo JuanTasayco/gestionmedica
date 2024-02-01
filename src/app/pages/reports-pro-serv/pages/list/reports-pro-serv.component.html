@@ -1,0 +1,300 @@
+<section>
+  <div class="g-title">
+      <div class="container">
+          <div class="row g-row">
+              <div class="col-md-8 col-sm-12 mb-xs-2 no-mb-md">
+                  <h2>Bandeja de Informes de Procedimientos y Servicios</h2>
+              </div>
+              <div class="col-md-4 col-sm-12 mb-xs-2 no-mb-md">
+                <div class="col-md-8 mb-xs-1 no-mb-sm col-md-offset-8">
+                    <a class="g-btn second-design g-btn-verde block button-with-icon" (click)="newReport()"> 
+                      <mat-icon> add</mat-icon>
+                      <span>NUEVO INFORME MÉDICO</span>
+                    </a>
+                </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="dashboard-body g-border-top h-myd-border--top-0">
+      <div class="g-section-inner">
+          <div class="container">
+                <div class="col-md-3">
+                    <form name="frmSearchProgram" [formGroup]="formGroupInformeMedico" class="form-validate"
+                    (ngSubmit)="formGroupInformeMedicoSubmit(formGroupInformeMedico)" style="padding-left: 0;">
+                    <div class="clearfix g-col-filter g-box-md fz14 gBgcGray5-md gBgcWhite1" id="filterBox"
+                        [ngClass]="isFilterVisible ? 'show' : ''">
+                        <div class="col-md-12 mb-ms-0 mb-xs-3 gH4 gCGray1">
+                            <h2 class="pb-xs-1 hidden-xs hidden-sm"><b>Filtros de búsqueda</b></h2>
+
+                            <div id="show-filter"
+                                class="row pt-xs-2 pb-xs-2 gBgcGray5 g-border-bottom-xs hidden-md hidden-lg"
+                                (click)="toggleFilter()">
+                                <div class="col-xs-10">
+                                    <h2><b>Filtros de búsqueda</b></h2>
+                                </div>
+
+                                <div class="col-xs-2 g-text-right-xs">
+                                    <span class="glyphicon"
+                                        [ngClass]="isFilterVisible ? 'glyphicon-chevron-down' : 'glyphicon-chevron-up'"></span>
+                                </div>
+
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+
+                        <div class="g-col-filter__box">
+                            <div class="clearfix">
+                                <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <mat-form-field appearance="standard" class="form-group">
+                                                    <mat-label>Busca por nombre o DNI de paciente</mat-label>
+                                                    <input formControlName="nombre_dni" matInput
+                                                        placeholder="Busca por nombre o DNI de paciente"
+                                                        class="g-text-uppercase" autocomplete="off">
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <mat-form-field appearance="standard" class="form-group">
+                                                    <mat-label>Busca por N° de consulta, OA o N° HC</mat-label>
+                                                    <input formControlName="numeroConsulta" matInput
+                                                        placeholder="Busca por N° de consulta, OA o N° HC"
+                                                        class="g-text-uppercase" autocomplete="off">
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <mat-form-field appearance="standard" class="form-group">
+                                                    <mat-label>Médico</mat-label>
+                                                    <input [formControl]="formGroupInformeMedico.get('medico')" type="text" [readonly] = 'isMedic(profile)'
+                                                        autoActiveFirstOption placeholder="Médico" matInput
+                                                        class="g-text-uppercase" [matAutocomplete]="medicos">
+                                                    <mat-autocomplete #medicos="matAutocomplete"
+                                                        (optionSelected)="onSelectedSearch('M',$event)"
+                                                        [displayWith]="onDisplaySearch">
+                                                        <mat-option *ngFor="let medic of medicosData" [value]="medic">
+                                                            {{medic.descripcion}}
+                                                        </mat-option>
+                                                    </mat-autocomplete>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <mat-form-field appearance="standard" class="form-group">
+                                                    <mat-label>Sede</mat-label>
+                                                    <mat-select formControlName="sede" (selectionChange)="onSelectedSearch('S',$event)">
+                                                        <mat-option *ngFor="let sede of sedesData" [value]="sede.codigo">
+                                                            {{sede.descripcion}}</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <mat-form-field appearance="standard" class="form-group">
+                                                    <mat-label>Especialidad</mat-label>
+                                                    <mat-select formControlName="especialidad" >
+                                                        <mat-option *ngFor="let especialidad of especialidadesData"
+                                                            [value]="especialidad.codigo">{{especialidad.descripcion}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                        
+                                            <div class="col-md-12">
+                                                <mat-label><b>Rango de fechas</b></mat-label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <mat-form-field appearance="standard" class="form-group">
+                                                <input formControlName="fecha_desde" matInput [matDatepicker]="picker" placeholder="Desde"
+                                                    autocomplete="off" (click)="picker.open()" readonly>
+                                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                                <mat-datepicker #picker></mat-datepicker>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <mat-form-field appearance="standard" class="form-group">
+                                                <input formControlName="fecha_hasta" matInput [matDatepicker]="pickerTwo" placeholder="Hasta"
+                                                    autocomplete="off" (click)="pickerTwo.open()" readonly>
+                                                <mat-datepicker-toggle matSuffix [for]="pickerTwo"></mat-datepicker-toggle>
+                                                <mat-datepicker #pickerTwo></mat-datepicker>
+                                                </mat-form-field>
+                                            </div>
+                                        
+                                            <div class="col-md-6 mb-xs-2 mb-md-0">
+                                                <button type="button" class="g-btn g-btn-transparent block"
+                                                    (click)="clean()" [disabled]="disableButton">Limpiar</button>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <button type="button" class="g-btn g-btn-verde block" (click)="search(1)"
+                                                    [disabled]="disableButton">Buscar</button>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+              </div>
+
+                <div class="col-md-9">
+                    <div class="row" >
+                        <mat-tab-group color = 'warn' mat-align-tabs="center" mat-stretch-tabs (selectedTabChange) = 'tabChange($event)' >
+                            <mat-tab label="PENDIENTE" >
+                                <div class="row g-text-center-xs g-box-no-result" *ngIf="!hasRecords">
+                                    <div class="col-md-12 g-box-noresult-ico gCRed1">
+                                        <span class="ico-mapfre_302_error"></span>
+                                    </div>
+                                    <div class="col-md-12 g-box-noresult-text">
+                                        No hay resultados para los filtros escogidos.<br>Intenta de nuevo.
+                                    </div>
+                                </div>
+                                <div *ngFor="let informeMedico of dataSource" style="width: 100%;">
+                                    <div class="clearfix g-box mb-xs-2" >
+                                        <div class="dataContainer" style="border-left: none">
+                                            <div class="headReg clearfix g-box-content">
+                                                <div class="col-dm-12">
+                                                    <span><b>Informe No. {{informeMedico.codigoInformeMedico}}</b></span>
+                                                    <span class="g-btn" *ngIf="informeMedico.estado == 'R'" style=" background-color: #747979; color: #ffffff; margin-left: 8px; padding: 0 5px 0 5px; "> PENDIENTE </span>
+                                                    <span class="g-btn" *ngIf="informeMedico.estado == 'A'" style=" background-color: #747979; color: #ffffff; margin-left: 8px; padding: 0 5px 0 5px; "> ANULADO </span>
+                                                    <span class="g-btn" *ngIf="informeMedico.semaforo =='V'" style=" background-color: #8DB602; color: #ffffff; margin-left: 8px; padding: 0 5px 0 5px;  "> Hace {{informeMedico.diasTranscurridos * -1}} dias </span>
+                                                    <span class="g-btn" *ngIf="informeMedico.semaforo =='A'" style=" background-color: #FFAA00; color: #ffffff; margin-left: 8px; padding: 0 5px 0 5px;  "> Hace {{informeMedico.diasTranscurridos * -1}} dias </span>
+                                                    <span class="g-btn" *ngIf="informeMedico.semaforo =='R'"style=" background-color: #D81E05; color: #ffffff; margin-left: 8px; padding: 0 5px 0 5px;  "> Hace {{informeMedico.diasTranscurridos * -1}} dias </span>
+                                                    <div class="pull-right">
+                                                        <a *ngIf="informeMedico.flagAnular == 'S'"
+                                                            matTooltip="Eliminar" matTooltipPosition='above' (click)="delete(informeMedico)">
+                                                            <mat-icon class="material-icons-outlined">delete</mat-icon>
+                                                        </a>
+                                                        <a (click)="editInforme(informeMedico.codigoInformeMedico,informeMedico)" matTooltip="Ver informe"
+                                                            matTooltipPosition='right'>
+                                                            <mat-icon class="material-icons-outlined">arrow_forward</mat-icon>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix g-box-content gBgcGray5">
+                                                <ul class="row g-list-md">
+                                                    <li class="col-md-4 clearfix cnt-item">
+                                                        <div class="col-sm-5 col-xs-6 item-label">Especialidad</div>
+                                                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico.especialidad.descripcion}}
+                                                        </div>
+                                                    </li>
+                                                    <li class="col-md-4 clearfix cnt-item">
+                                                        <div class="col-sm-5 col-xs-6 item-label">Sede</div>
+                                                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico.sede.descripcion}}</div>
+                                                    </li>
+                                                    <li class="col-md-4 clearfix cnt-item">
+                                                        <div class="col-sm-5 col-xs-6 item-label">Médico</div>
+                                                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico.medico.descripcion}}</div>
+                                                    </li>
+                                                </ul>
+                                                <ul class="row g-list-md">
+                                                    <li class="col-md-4 clearfix cnt-item">
+                                                        <div class="col-sm-5 col-xs-6 item-label">Paciente</div>
+                                                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico.paciente.paciente}}</div>
+                                                    </li>
+                                                    <li class="col-md-4 clearfix cnt-item">
+                                                        <div class="col-sm-5 col-xs-6 item-label">No. de consulta</div>
+                                                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico.registroClinico.numeroConsulta}}</div>
+                                                    </li>
+                                                    <li class="col-md-4 clearfix cnt-item">
+                                                        <div class="col-sm-5 col-xs-6 item-label">No. de orden de atención</div>
+                                                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico.registroClinico.numeroOrdenAtencion}}
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <mapfre-pagination [currentPage]="pagination" [boundaryLinkNumbers]="true"
+                                    [totalItems]="totalItems" [itemsPerPage]="totalItemsPage" [totalPages]="totalPages"
+                                    [maxSize]="10" (onChangePage)="changePage($event)" *ngIf="hasRecords" ></mapfre-pagination>
+                            </mat-tab>
+                        
+                            <mat-tab label="FIRMADO" color = 'warn'>
+                                <div class="row g-text-center-xs g-box-no-result" *ngIf="!hasRecords">
+                                    <div class="col-md-12 g-box-noresult-ico gCRed1">
+                                        <span class="ico-mapfre_302_error"></span>
+                                    </div>
+                                    <div class="col-md-12 g-box-noresult-text">
+                                        No hay resultados para los filtros escogidos.<br>Intenta de nuevo.
+                                    </div>
+                                </div>
+                                <div *ngFor="let informeMedico of dataSource">
+                                    <div class="clearfix g-box mb-xs-2">
+                                        <div class="dataContainer" style="border-left: none">
+                                            <div class="headReg clearfix g-box-content">
+                                                <div class="col-dm-12">
+                                                    <span><b>Informe No. {{informeMedico.codigoInformeMedico}}</b></span>
+                                                    <span class="g-btn" *ngIf="informeMedico.estado == 'A'" style=" background-color: #747979; color: #ffffff; margin-left: 8px; padding: 0 5px 0 5px; "> ANULADO </span>
+                                                    <span class="g-btn g-btn-verde" style=" margin-left: 8px; padding: 0 5px 0 5px; "> FIRMADO </span>
+                                                    <div class="pull-right">
+                                                        <a *ngIf="informeMedico.flagAnular == 'S'"
+                                                            matTooltip="Eliminar" matTooltipPosition='above' (click)="delete(informeMedico)" >
+                                                            
+                                                            <mat-icon class="material-icons-outlined" >delete</mat-icon>
+                                                        </a>
+                                                        <a
+                                                            matTooltip="Descargar" matTooltipPosition='above' (click)="download(informeMedico)">
+                                                            <mat-icon class="material-icons-outlined">download</mat-icon>
+                                                        </a>
+                                                        <a (click)="editInforme(informeMedico.codigoInformeMedico)"  matTooltip="Ver informe"
+                                                            matTooltipPosition='right'>
+                                                            <mat-icon class="material-icons-outlined">arrow_forward</mat-icon>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix g-box-content gBgcGray5">
+                                                <ul class="row g-list-md">
+                                                    <li class="col-md-4 clearfix cnt-item">
+                                                        <div class="col-sm-5 col-xs-6 item-label">Especialidad</div>
+                                                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico.especialidad.descripcion}}
+                                                        </div>
+                                                    </li>
+                                                    <li class="col-md-4 clearfix cnt-item">
+                                                        <div class="col-sm-5 col-xs-6 item-label">Sede</div>
+                                                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico.sede.descripcion}}</div>
+                                                    </li>
+                                                    <li class="col-md-4 clearfix cnt-item">
+                                                        <div class="col-sm-5 col-xs-6 item-label">Médico</div>
+                                                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico.medico.descripcion}}</div>
+                                                    </li>
+                                                </ul>
+                                                <ul class="row g-list-md">
+                                                    <li class="col-md-4 clearfix cnt-item">
+                                                        <div class="col-sm-5 col-xs-6 item-label">Paciente</div>
+                                                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico.paciente.paciente}}</div>
+                                                    </li>
+                                                    <li class="col-md-4 clearfix cnt-item">
+                                                        <div class="col-sm-5 col-xs-6 item-label">No. de consulta</div>
+                                                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico.registroClinico.numeroConsulta}}</div>
+                                                    </li>
+                                                    <li class="col-md-4 clearfix cnt-item">
+                                                        <div class="col-sm-5 col-xs-6 item-label">No. de orden de atención</div>
+                                                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico.registroClinico.numeroOrdenAtencion}}
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <ul class="row g-list-md">
+                                                    <li class="col-md-4 clearfix cnt-item">
+                                                        <div class="col-sm-5 col-xs-6 item-label">Fecha y Hora</div>
+                                                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico.fechaRegistro}}</div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <mapfre-pagination [currentPage]="pagination" [boundaryLinkNumbers]="true"
+                                    [totalItems]="totalItems" [itemsPerPage]="totalItemsPage" [totalPages]="totalPages"
+                                    [maxSize]="10" (onChangePage)="changePage($event)" *ngIf="hasRecords" ></mapfre-pagination>
+                            </mat-tab>
+                        </mat-tab-group>
+                      
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

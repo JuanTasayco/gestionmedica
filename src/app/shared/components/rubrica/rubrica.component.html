@@ -1,0 +1,15 @@
+<mat-dialog-content>
+    <button class="close-button" mat-dialog-close [autofocus]="false">
+        <mat-icon>close</mat-icon>
+    </button>
+    <div class="card border-0 mt-3">
+        <div class="card-body">
+            <div class="row mt-2 text-center">
+                <b>{{data.rubrica.title | uppercase}}</b>
+            </div>
+            <div class="row mt-xs-1 text-center">
+                <img [src]="data.rubrica.imagePath" alt="">
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>

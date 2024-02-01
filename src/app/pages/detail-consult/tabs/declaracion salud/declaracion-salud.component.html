@@ -1,0 +1,56 @@
+<div class="col-sm-12 col-md-4" >
+    <mat-accordion class="expansion_panel" >
+        <br> 
+        <mat-expansion-panel [expanded]="true" style="padding: 10px;">
+            <mat-expansion-panel-header>
+                <mat-panel-title style="font-weight: bold;">
+                    Pre-existencias
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <br>
+            <div *ngFor="let p of declaracion?.preexistencias" class="row declaracion">
+                <div class="col-md-12">
+                    <b>{{p.codigoDiagnostico}} - {{p.descripcionDiagnostico}}</b>
+                </div>                                  
+            </div>                            
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+<div class="col-sm-12 col-md-4" style="margin-bottom: 10px;">
+    <mat-accordion class="expansion_panel" >
+        <br> 
+        <mat-expansion-panel [expanded]="true" style="padding: 10px;">
+            <mat-expansion-panel-header>
+                <mat-panel-title style="font-weight: bold;">
+                    Alergias - Medicamentos
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <br>
+            <div *ngFor="let a of declaracion?.alergiaMedicamentos" class="row declaracion">
+                <div class="col-md-12">
+                    <b>{{a.codigoMedicamento}} - {{a.medicamento}}</b>
+                    <p>Creado por {{a.usuarioRegistro}} el {{a.fechaActualizacion}}</p>
+                </div>                                  
+            </div>                           
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+<div class="col-sm-12 col-md-4" style="margin-bottom: 10px;">
+    <mat-accordion class="expansion_panel" >
+        <br> 
+        <mat-expansion-panel [expanded]="true" style="padding: 10px;">
+            <mat-expansion-panel-header>
+                <mat-panel-title style="font-weight: bold;">
+                    Alergias - Principios Activos
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <br>
+            <div *ngFor="let ap of declaracion?.alergiaPrincipiosActivos" class="row declaracion">
+                <div class="col-md-12">
+                    <b>{{ap.codigoPrincipioActivo}} - {{ap.principioActivo}}</b>
+                    <p>Creado por {{ap.usuarioRegistro}} el {{ap.fechaActualizacion}}</p>
+                </div>                                  
+            </div>                            
+        </mat-expansion-panel>
+    </mat-accordion>
+</div> 

@@ -1,0 +1,120 @@
+<section>
+  <div class="g-title">
+      <div class="container">
+          <div class="row g-row">
+              <div class="col-md-6 col-sm-6 mb-xs-6 no-mb-md" style="display: flex;
+              flex-direction: row;
+              align-items: center;">
+                  <div>
+                    <h2>{{codInformeMedico > 0 ?'Informe No.'+codInformeMedico:'Nuevo Informe de Procedimientos y Servicios'}}</h2>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="dashboard-body g-border-top h-myd-border--top-0">
+
+      <div class="g-section-inner g-dashboard-section">
+        <div class="container">
+          <div class="clearfix g-box mb-xs-2">
+            <div class="dataContainer" style="border-left: none">
+              <div class="clearfix g-box-content gBgcGray5">
+                <ul class="row g-list-md">
+                  <li class="col-md-12 clearfix cnt-item" style="display: flex;
+                  flex-direction: row;
+                  align-items: center;
+                  ">
+                    <div class="item-label pull-left col-sm-6" >Datos de la consulta médica</div>
+                  </li>
+                </ul>
+                <ul class="row g-list-md">
+                    <li class="col-md-4 clearfix cnt-item">
+                      <div class="col-sm-5 col-xs-6 item-label">Sede</div>
+                      <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico?.sede?.descripcion}}</div>
+                    </li>
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">Especialidad</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico?.especialidad?.descripcion}}
+                        </div>
+                    </li>
+                    <li class="col-md-4 clearfix cnt-item">
+                      <div class="col-sm-5 col-xs-6 item-label">Médico</div>
+                      <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico?.medico?.descripcion}}</div>
+                    </li>
+                    
+                </ul>
+                <ul class="row g-list-md">
+                    <li class="col-md-4 clearfix cnt-item">
+                      <div class="col-sm-5 col-xs-6 item-label">No. de consulta</div>
+                      <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico?.registroClinico?.numeroConsulta}}</div>
+                    </li>
+
+                    <li class="col-md-4 clearfix cnt-item">
+                      <div class="col-sm-5 col-xs-6 item-label">No. de HC</div>
+                      <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico?.registroClinico?.numeroHistoriaClinica}}</div>
+                    </li>
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">No. de OA</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico?.registroClinico?.numeroOrdenAtencion}}
+                        </div>
+                    </li>
+                </ul>
+                <ul class="row g-list-md">
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">Paciente</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico?.paciente?.paciente}}</div>
+                    </li>
+
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">Diagnóstico</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{informeMedico?.diagnostico?.descripcion}}
+                        </div>
+                    </li>
+                </ul>
+              </div>
+            </div>   
+          </div> 
+
+          <div class="clearfix g-box mb-xs-2">
+            <div class="dataContainer" style="border-left: none">
+
+              <div class="clearfix g-box-content ">
+                <ul class="row g-list-md">
+                  <li class="col-md-12 clearfix cnt-item">
+                    <div class="col-sm-6 item-label centrar-vertical" style="height: 29.7px;">
+                        Detalle el informe médico
+                    </div>
+                    <div class="col-sm-6">    
+                        <button  type="button" class="btn g-btn-transparent pull-right" style="margin-right:15px ;" (click) = 'useTemplate()'>USAR PLANTILLA</button>
+                        <button  class="btn g-btn-transparent pull-right" style="margin-right:15px ;" (click) = 'generateTemplate()'>GENERAR PLANTILLA</button>
+                    </div>
+                  </li>
+                </ul>
+                <ul class="row g-list-md">
+                    <li class="col-md-4 clearfix cnt-item">
+                      <div class="col-sm-5 col-xs-6 item-label">Contenido del Informe</div>
+                    </li>
+                </ul>
+                <ul class="row g-list-md">
+                  <li class="col-md-12 ">
+                    <div class="col-sm-12 col-xs-12">
+                      <ejs-richtexteditor id='defaultRTE' [(ngModel)]='detail_informe' [toolbarSettings]='tools' > </ejs-richtexteditor>
+                    </div>
+                  </li>
+                    
+                </ul>
+                <ul class="row g-list-md">
+                  <div class="col-sm-12">    
+                    <button type="button" class="btn g-btn-verde pull-right" style="margin-right:15px ;" [disabled] = '!isMedic(profile)' (click) = 'signDocuments()' >FIRMAR</button>
+                    <button type="button" class="btn g-btn-green-border pull-right" style="margin-right:15px ;" (click)="guardar()" >GUARDAR</button>
+                    <button type="button" class="btn g-btn-transparent pull-right" style="margin-right:15px ;" (click)="regresar()">CANCELAR</button>
+                  </div>
+                </ul>
+                
+              </div>
+            </div>   
+          </div> 
+        </div>
+      </div>
+    </div>
+</section>

@@ -1,6 +1,6 @@
-import { IPrograma } from '../interfaces';
 
-export class Programa implements IPrograma {
+
+export class Programa  {
     codigoPrograma: number;
     nombrePrograma: string;
     fecInicioVigencia: string;

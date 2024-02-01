@@ -6,15 +6,14 @@ import { environment } from '@environments/environment';
 
 import { DataService } from '@core/services';
 
-import { PATH_IP_SERVICE, PATH_SERVICE } from '@shared/helpers';
+import { PATH_SERVICE } from '@shared/helpers';
 
 import { HttpParams } from '@angular/common/http';
-import { IListMaestroResponse } from '@shared/models/response/interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class ComunService {
   constructor(private dataService: DataService) { }
-  getComun(id, param1?, param2?, param3?, param4?): Observable<IListMaestroResponse> {
+  getComun(id, param1?, param2?, param3?, param4?){
     const pathService = environment.urlService + PATH_SERVICE.comun + id;
 
     let parameters = new HttpParams();
@@ -24,6 +23,6 @@ export class ComunService {
     parameters = parameters.append('tamanio', param4 ? param4 : '');
 
     this.dataService.set(pathService);
-    return this.dataService.execGetJson(parameters);
+    return this.dataService.execGetJsonAndStatus(parameters);
   }
 }

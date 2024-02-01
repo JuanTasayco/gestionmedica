@@ -81,7 +81,7 @@
   $cGray7: #fdfdfd;
   $cGray8: #fafafa;
   $cGray9: #e9edef;
-  $cGray10: #f1f5f7;
+  $cGray10: #e8ebed;
   $cGray11: #626262;
   //red
   $cRed1: #d81e05;
@@ -579,6 +579,11 @@
     margin: auto;
   }
   
+  .containerDetail{
+    max-width: 1500px;
+    width: 100%;
+    margin: auto;
+  }
   
   // @media (min-width: 1450px){
   // 	.w-content{

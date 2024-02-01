@@ -4,11 +4,14 @@
 
 export const environment = {
   production: false,
-  urlService: 'http://localhost:8080/wsGestionMedica/gestionMedica/',
-  //urlService: 'https://api.pre.mapfre.com.pe/legacy/salud/tecuidamos/',
-  oimHome: 'http://localhost:4200/',
-  oimApiPath: 'http://10.160.120.216/oim_new_login/',
-  logoutPath: 'api/seguridad/acceso/logout'
+  urlService: 'https://api.pre.mapfre.com.pe/legacy/salud/wsGestionMedica/gestionMedica/',
+  urlService_cronicos: 'https://api.pre.mapfre.com.pe/legacy/salud/wsGestionMedica/',
+  oimHome: 'https://oim.pre.mapfre.com.pe/',
+  oimApiPath: 'https://oim.pre.mapfre.com.pe/oim_new_login/',
+  logoutPath: 'api/seguridad/acceso/logout',
+  urlEventTracker: 'https://api.pre.mapfre.com.pe/legacy/salud/wsGestionMedica/eventTracker',
+  // urlEventTracker: 'http://10.160.120.214/oim_peca/api/eventTracker'
+  urlVersion: 'https://api.pre.mapfre.com.pe/legacy/salud/wsGestionMedica/gestionMedica/',
 };
 
 /*
