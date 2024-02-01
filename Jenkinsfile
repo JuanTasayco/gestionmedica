@@ -14,11 +14,7 @@ def libModules = '.deploy/libModules.yml'
 pipeline {
     agent {
         kubernetes {
-            yaml getPodTemplate(DEVOPS_PLATFORM_ORGANIZATION, [
-                    ['node', ContainerType.NODE_16_14_0, ContainerSize.EXTRA_LARGE],
-                    ['sonar', ContainerType.SONAR_SCANNER_CLI_STABLE, ContainerSize.LARGE],
-                    ['azure-cli', ContainerType.AZURE_CLI_2_25_0, ContainerSize.SMALL]
-            ] as Container[], true)
+            yaml getYmlBuildPod('node12')
         }
     }
     options {
