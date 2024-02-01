@@ -1,0 +1,51 @@
+
+<div mat-dialog-title>
+  <h3 *ngIf="odontograma === odontogramType.HALLAZGOS">HALLAZGOS</h3>
+  <div class="row" *ngIf="odontograma !== odontogramType.HALLAZGOS">
+    <div class="col-12">
+      <fieldset>
+        <mat-form-field appearance="standard" class="form-group">
+          <mat-label>{{data?.placeholder}}</mat-label>
+          <input matInput #valueSearch [formControl]="formSearch" autocomplete="off" placeholder="{{data?.tipo}}">
+          <button *ngIf="formSearch.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </fieldset>
+    </div>
+  </div>
+</div>
+<div mat-dialog-content *ngIf="valoresFiltrados; else loading">
+  <div fxLayout="row wrap" fxLayout.sm="column" fxLayoutGap="10px grid">
+      <ng-container *ngFor="let item of valoresFiltrados">
+        <div [fxFlex]="odontograma === 'Diagnosticos' ? '100%' : '33.33%'" fxFlex.xs="100%">
+          <div class="h-100">
+            <p style="font-size: 10px;">
+              <input type="checkbox" [checked]="item.checked" (change)="toggleCheckbox(item)">
+              <ng-container *ngIf="odontograma === 'Diagnosticos'; else otros">{{item.codigo}} - {{item.descripcion}}</ng-container>
+              <ng-template #otros>
+                {{item.descripcion}}
+              </ng-template>
+
+            </p>
+          </div>
+        </div>
+      </ng-container>
+  </div>
+</div>
+
+  <div class="row" style="margin-top: 20px;">
+    <div class="col-md-12 mb-xs-2 no-mb-md text-right">
+      <button class="g-btn second-design g-btn-white" mat-dialog-close>CANCELAR</button>
+      <ng-container *ngIf="(valoresFiltrados) as valores">
+        <button class="g-btn second-design g-btn-verde" (click)="valorSeleccionados()" *ngIf="valores.length > 0" [mat-dialog-close]="data">AGREGAR</button>
+        <!-- <button class="g-btn second-design g-btn-verde" (click)="valorSeleccionados()" *ngIf="valores.length > 0" >AGREGAR</button> -->
+
+      </ng-container>
+
+    </div>
+  </div>
+  <!-- <button mat-button mat-dialog-close>Close</button> -->
+<ng-template #loading>
+  <!-- <mapfre-card-loader class="col-12" [bars]="10" [barHeight]="10"></mapfre-card-loader> -->
+</ng-template>

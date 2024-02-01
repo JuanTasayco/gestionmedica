@@ -1,0 +1,121 @@
+<mat-dialog-content>
+  <div class="card border-0">
+    <div class="card-body">
+      <div class="row ">
+        <div class="col">
+          <h2><b>Selecciona una plantilla</b></h2>
+        </div>
+      </div>
+
+      <div class="row" >
+        <div class="col-md-6 clearfix g-box g-box-content gBgcGray5 mb-2" style="padding-bottom: 20px;">
+          <form [formGroup]="formGroupSearchTemplate">
+            <div class="row">
+              <mat-form-field class="col-md-12" appearance="standard" >
+                <mat-label>Busca por descripcion</mat-label>
+                <input type="text" formControlName="descripcion" matInput placeholder="Ingrese código"  autocomplete="off">
+              </mat-form-field>
+
+            </div>
+    
+            <div class="row">
+                <mat-form-field class="col-md-6" appearance="standard" >
+                  <mat-label>Especialidad</mat-label>
+                  <mat-select formControlName="especialidad" >
+                    <mat-option *ngFor="let especialidad of especialidadesData" [value]="especialidad.codigo">
+                      {{especialidad.descripcion}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="col-md-6" appearance="standard">
+                  <mat-label>Médico</mat-label>
+                  <input [formControl]="formGroupSearchTemplate.get('medico')" [readonly] = 'isMedic(profile)' type="text"
+                      autoActiveFirstOption placeholder="Médico" matInput
+                      class="g-text-uppercase" [matAutocomplete]="medicos">
+                  <mat-autocomplete #medicos="matAutocomplete"
+                      (optionSelected)="onSelectedSearch('M',$event)"
+                      [displayWith]="onDisplaySearch">
+                      <mat-option *ngFor="let medic of medicosData" [value]="medic">
+                          {{medic.descripcion}}
+                      </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+            </div>
+    
+            <div class="row">
+              <mat-form-field class="col-md-6" appearance="standard" >
+                  <mat-label>Tipo Exámen</mat-label>
+                  <mat-select formControlName="tipo_examen" (selectionChange)='selectedTipoExamen()' >
+                    <mat-option *ngFor="let tipo_examen of tipo_examenData" [value]="tipo_examen.codigo">
+                      {{tipo_examen.descripcion}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              <mat-form-field class="col-md-6" appearance="standard" >
+                  <mat-label>Clasificación</mat-label>
+                  <mat-select formControlName="clasificacion" required  >
+                    <mat-option *ngFor="let clasificacion of clasificacionsData" [value]="clasificacion.codigo">
+                      {{clasificacion.descripcion}}
+                    </mat-option>
+                  </mat-select>
+              </mat-form-field>
+            </div>
+    
+            <div class="row">
+              <button type="button" class="btn g-btn-verde pull-right" style="margin-right:15px " (click)="search()">BUSCAR</button>
+              <button type="button" class="btn g-btn-white pull-right" style="margin-right:15px " (click)='clear()'>LIMPIAR</button>
+            </div>
+          </form>  
+        </div >
+
+        <div class="col-md-6" >
+          <div class="row g-text-center-xs" *ngIf="!hasRecords && !notHasRecord" >
+            <div class="col-md-12 g-box-noresult-ico gCBlue1">
+                <span class="ico-mapfre_303_informacion" style="font-size: 36px;" ></span>
+            </div>
+            <div class="col-md-12 g-box-noresult-text">
+                Aún no haz realizado la búsqueda
+            </div>
+          </div>
+
+          <div class="row g-text-center-xs" *ngIf="notHasRecord" >
+            <div class="col-md-12 g-box-noresult-ico gCBlue1">
+                <span class="ico-mapfre_303_informacion" style="font-size: 36px;" ></span>
+            </div>
+            <div class="col-md-12 g-box-noresult-text">
+                Resultados no encontrados
+            </div>
+          </div>
+
+          <div class="row" *ngIf="hasRecords" >
+            <div *ngFor="let plantilla of dataSource" class="col-md-12 ">
+              <div class="g-box align-baseline col-md-12 template_item" [ngClass]="plantilla == selectedTemplate?'selected':''"
+                (click)='selectTemplate(plantilla)'>
+                <b>{{plantilla.descripcionPlantilla}}</b>
+              </div>
+            </div>
+            
+            <mapfre-pagination [currentPage]="pagination" [boundaryLinkNumbers]="true"
+              [totalItems]="totalItems" [itemsPerPage]="totalItemsPage" [totalPages]="totalPages"
+              [maxSize]="10" (onChangePage)="changePage($event)">
+            </mapfre-pagination>
+          </div>
+  
+        </div>
+        
+      </div>
+
+
+
+
+      
+      <div class="row">
+        <div class="col-md-12 text-right">
+            <button type="button" class="g-btn second-design g-btn-white" mat-dialog-close>CANCELAR</button>
+            <button type="button" class="g-btn second-design g-btn-verde" [mat-dialog-close]="selectedTemplate" [disabled]="!selectedTemplate">CONTINUAR</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>

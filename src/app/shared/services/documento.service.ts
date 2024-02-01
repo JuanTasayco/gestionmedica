@@ -11,10 +11,10 @@ export class DocumentoService {
   cargarDocumentos(infoDocumento) {
     const pathService = environment.urlService  + PATH_SERVICE.documento + 'cargar';
     this.dataService.set(pathService);
-    return this.dataService.execPostJson(infoDocumento);
+    return this.dataService.execPostJsonAndStatus(infoDocumento);
   }
   constructor(private dataService: DataService) { }
-  getBandejaDocumentos(request: any) {
+  getBandejaDocumentos(request) {
     const pathService = environment.urlService + PATH_SERVICE.documentosFiltro;
 
     this.dataService.set(pathService);
@@ -49,6 +49,12 @@ export class DocumentoService {
     const pathService = environment.urlService  +  PATH_SERVICE.documento +  idDetalle + PATH_SERVICE.detalle;
 
     this.dataService.set(pathService);
-    return this.dataService.execGetJson();
+    return this.dataService.execGetJsonAndStatus();
+  }
+  //
+  getHLSeven() {
+    const pathService = environment.urlService +  PATH_SERVICE.urlHLSeven;
+    this.dataService.set(pathService);
+    return this.dataService.execGetJsonAndStatus();
   }
 }

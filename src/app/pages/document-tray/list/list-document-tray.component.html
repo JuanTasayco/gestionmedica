@@ -7,7 +7,7 @@
         </div>
         <div class="col-md-6 col-sm-12 mb-xs-2 no-mb-md">
           <div class="col-md-4 mb-xs-1 no-mb-sm col-md-offset-8">
-            <a class="g-btn second-design g-btn-green-border block" (click)="uploadDocuments()">Cargar documentos</a>
+            <a *ngIf="searchElement('CARDOC', opciones)" class="g-btn second-design g-btn-green-border block" (click)="uploadDocuments()">Cargar documentos</a>
           </div>
         </div>
       </div>
@@ -46,7 +46,7 @@
                   <div class="row">
                     <div class="col-md-12">
                       <mat-form-field appearance="standard" class="form-group">
-                        <mat-label>Estado</mat-label>
+                        <mat-label>Estado de firma</mat-label>
                         <mat-select formControlName="estado">
                           <mat-option *ngFor="let estado of estadoData" [value]="estado.codigo">{{estado.descripcion}}
                           </mat-option>
@@ -56,20 +56,11 @@
                     <div class="col-md-12">
                       <mat-form-field appearance="standard" class="form-group">
                         <mat-label>Busca por paciente, consulta o historia clínica</mat-label>
-                        <input formControlName="paciente" matInput
-                          placeholder="Buscar no. de solicitud, asegurado o DNI" autocomplete="off">
+                        <input formControlName="codigo" matInput
+                          placeholder="Buscar paciente, consulta o historia clínica" autocomplete="off">
                       </mat-form-field>
                     </div>
-                    <div class="col-md-12">
-                      <mat-form-field appearance="standard" class="form-group">
-                        <mat-label>Sede</mat-label>
-                        <mat-select formControlName="sede">
-                          <mat-option *ngFor="let sede of sedesData" [value]="sede.codigo">{{sede.descripcion}}
-                          </mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                    </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12" *ngIf="!isMedico">
                       <mat-form-field appearance="standard" class="form-group">
                         <mat-label>Médico</mat-label>
                         <input [formControl]="formGroupSearchDocuments.get('medico')" type="text" autoActiveFirstOption
@@ -82,10 +73,28 @@
                         </mat-autocomplete>
                       </mat-form-field>
                     </div>
+                    <div class="col-md-12" *ngIf="isMedico">
+                      <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>Médico</mat-label>
+                        <input readonly [formControl]="formGroupSearchDocuments.get('medico')" type="text"
+                          placeholder="Médico" matInput class="g-text-uppercase" >
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-12">
+                      <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>Sede</mat-label>
+                        <mat-select formControlName="sede" (selectionChange)="getEspecialidadByMedico($event)">
+                          <mat-option value="">Todos</mat-option>
+                          <mat-option *ngFor="let sede of sedesData" [value]="sede.codigo">{{sede.descripcion}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
                     <div class="col-md-12">
                       <mat-form-field appearance="standard" class="form-group">
                         <mat-label>Especialidad</mat-label>
                         <mat-select formControlName="especialidad">
+                          <mat-option value="">Todos</mat-option>
                           <mat-option *ngFor="let especialidad of especialidadesData" [value]="especialidad.codigo">
                             {{especialidad.descripcion}}</mat-option>
                         </mat-select>
@@ -116,7 +125,7 @@
                     </div>
                     <div class="col-md-6" *ngIf="isFilterVisible">
                       <button type="button" (click)="search(1)" class="g-btn g-btn-verde block"
-                        [disabled]="disableButton">Buscar</button>
+                      [disabled]="!searchElement('BUSDOCPENFIR', opciones)">Buscar</button>
                     </div>
                   </div>
 
@@ -128,7 +137,7 @@
                       </div>
                       <div class="col-md-6 div-search">
                         <button type="button" (click)="search(1)" class="g-btn g-btn-verde block px-10"
-                          [disabled]="disableButton">Buscar</button>
+                          [disabled]="!searchElement('BUSDOCPENFIR', opciones)">Buscar</button>
                       </div>
                     </div>
                   </div>
@@ -158,7 +167,7 @@
               <div class="col-md-5 col-sm-12 mb-xs-2 no-mb-md size-but">
                 <div class="col-md-7 mb-xs-1 no-mb-sm col-md-offset-5">
                   <button class="g-btn second-design g-btn-verde block mg-l-15" (click)="signDocuments()"
-                  [disabled]="cantPendientes()==0"
+                  [disabled]="cantPendientes()==0 || !searchElement('FIRDOC', opciones)"
                   >Firmar
                     {{cantPendientes()}}
                     documentos</button>
@@ -173,7 +182,7 @@
                       <div class="col-md-12">
                         <h2 class="header-section">
                           <mat-checkbox class="form-group delivery-checkbox"  (change)="checkFirma(i,$event, data)" (change)="checkAllFirmados(i)"
-                            [checked]="arrDataSend[i].valCabecera ==true"><b>Consulta No. {{data.numeroConsulta}}</b>
+                           [disabled] = "!searchElement('FIRDOC', opciones)" [checked]="arrDataSend[i].valCabecera ==true"><b>Consulta No. {{data.numeroConsulta}}</b>
                           </mat-checkbox>
                           <a (click)="showDocuments(i)">
                             <span class="editSection mx-0">
@@ -218,7 +227,7 @@
                         <ul class="g-list-md g-box list-documents direction">
                           <li class="col-md-4 pt-0">
                             <span class="item-dato mr-10">
-                              <mat-checkbox  [checked] = "arrDataSend[i].arrDetCheckbox[idx].checked" (change)="checkDetCheckBox(i,idx,documento)"
+                              <mat-checkbox  [disabled] = "!searchElement('FIRDOC', opciones)" [checked] = "arrDataSend[i].arrDetCheckbox[idx].checked" (change)="checkDetCheckBox(i,idx,documento)"
                                  *ngIf="documento.estado  === 'PENDIENTE'"
                                 class="form-groups delivery-checkbox"></mat-checkbox>
                             </span>
@@ -236,15 +245,15 @@
                             <span class="item-dato mg-l-10">{{documento.fechaFirma  | customDate}}</span>
                           </li>
                           <li class="col-md-2 pt-0 contents">
-                            <a (click)="operationsDetail(data,'P', documento.codigoItem)" matTooltip="Imprimir"
+                            <a  *ngIf = "searchElement('IMPDOC', opciones)" (click)="operationsDetail(documento, data,'P', documento.codigoItem)" matTooltip="Imprimir"
                               matTooltipPosition='above'>
                               <mat-icon class="fz18">print</mat-icon>
                             </a>
-                            <a (click)="operationsDetail(data,'D', documento.codigoItem)" matTooltip="Descargar"
+                            <a  *ngIf= "searchElement('DESDOC', opciones)" (click)="operationsDetail(documento, data,'D', documento.codigoItem)" matTooltip="Descargar"
                               matTooltipPosition='above'>
                               <mat-icon class="fz18">file_download</mat-icon>
                             </a>
-                            <a (click)="operationsDetail(data,'V',documento.codigoItem,documento.numeroItem)" matTooltip="Ver Detalle"
+                            <a  *ngIf= "searchElement('VERDET', opciones)" (click)="operationsDetail(documento, data,'V',documento.codigoItem,documento.numeroItem)" matTooltip="Ver Detalle"
                               matTooltipPosition='right'>
                               <mat-icon class="fz18">arrow_forward</mat-icon>
                             </a>

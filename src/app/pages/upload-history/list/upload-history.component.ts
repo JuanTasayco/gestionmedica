@@ -1,20 +1,20 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { MatAutocompleteSelectedEvent, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
-
 import { startWith, debounceTime, tap } from 'rxjs/operators';
-
-import { environment } from '@environments/environment';
-
-import { AppDateAdapter, BASE_DATE_FORMAT, BASE_DATE_FORMAT_API, MIN_CHARACTERS_SEARCH, PATH_URL_DATA } from '@shared/helpers';
-import { AlertComponent } from '@shared/components/alert/alert.component';
+import { ALERT_MESSAGES, BASE_DATE_FORMAT_API, COMMON_TYPES, detailNewTab, getEvoProfile, getOptions, getProfile, HTTP_METHOD_NOT_ALLOWED, HTTP_NO_CONTENT, MIN_CHARACTERS_SEARCH, ROLE_ADMIN, ROLE_MEDIC, searchElementInArray, substractMonthFromDate } from '@shared/helpers';
 import { ComunService } from '@shared/services/comun.service';
-import { getSupportedInputTypes } from '@angular/cdk/platform';
 import { DocumentoService } from '@shared/services/documento.service';
 import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SignDocumentComponent } from '@pages/document-tray/modals/sign/sign-document.component';
+import { MedicoService } from '@shared/services/medico.service';
+import { UsuarioService } from '@shared/services/usuario.service';
+import { IComun } from '@shared/models/response/interfaces/comun.interface';
+import { IDocumentosResult } from '@shared/models/common/interfaces';
+import { ModalMessageService } from '@shared/services/modal-message.service';
+import { EventTrackerService } from '@shared/services/event-tracker.service';
 
 @Component({
   selector: 'mapfre-list-document-tray',
@@ -28,11 +28,11 @@ export class UploadHistoryComponent implements OnInit {
   disableButton: boolean;
   isFilterVisible: boolean;
   isVisible = false; // false
-  estadoData: any;
-  sedesData: any;
-  medicosData: any;
-  especialidadesData: any;
-  dataSource: any;
+  estadoData: IComun[];
+  sedesData: IComun[];
+  medicosData: IComun[];
+  especialidadesData: IComun[];
+  dataSource: IDocumentosResult[];
   title: string;
   posIndex: number = null;
   arrCheckbox = [];
@@ -45,44 +45,105 @@ export class UploadHistoryComponent implements OnInit {
   toggleAccordeon = true;
   cantRegistros: number;
   totalPendiente: number;
+  isMedico: boolean;
+  codMedico: number;
+  disableSearch= false;
+  opciones: any;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private medicoService: MedicoService,
+    private usuarioService: UsuarioService,
     private comunService: ComunService,
+    private modalService: ModalMessageService,
     private documentoService: DocumentoService,
-    private dialog: MatDialog) {
+    private dialog: MatDialog,
+    private eventTracker: EventTrackerService) {
     this.title = 'Historial de carga de documentos';
   }
 
   ngOnInit() {
+    this.eventTracker.postEventTracker("opc1", "").subscribe()
     this.setValuesFormBuilder();
     this.initComponents();
-    this.formGroupSearchDocumentsSubmit(this.formGroupSearchDocuments);
-    this.getComunes();
   }
-
+  searchElement(element, array){
+    return  searchElementInArray(element, array);
+  }
   getComunes() {
-    this.comunService.getComun('sedes')
-      .subscribe((response: any) => {
-        this.sedesData = response.data;
-      });
-    this.comunService.getComun('estados')
-      .subscribe((response: any) => {
-        this.estadoData = response.data;
+    this.comunService.getComun(COMMON_TYPES.estados)
+      .subscribe((response) => {
+        if(response.status == HTTP_NO_CONTENT){
+          return this.modalService.alert(false, '',ALERT_MESSAGES[9].message + COMMON_TYPES.estados);
+        }
+        this.estadoData = response.body.data;
         this.formGroupSearchDocuments.patchValue({
-          estado: this.estadoData[0].codigo,
+          estado: this.estadoData[1].codigo,
         });
       });
-    this.comunService.getComun('especialidades')
-      .subscribe((response: any) => {
-        this.especialidadesData = response.data;
-      });
-    this.search(1);
+
   }
+  checkRoles(){
+    this.isMedico = false;
+    this.opciones = getOptions();
+    if(getEvoProfile() == null){return;}
+    getEvoProfile().rolesCode.forEach(element => {
+        if(element.codigoRol == ROLE_MEDIC && element.codigoRol != ROLE_ADMIN){
+          this.isMedico = true;
+          this.formGroupSearchDocuments.patchValue({
+            medico: getProfile().name
+          });
+        }
+    });
+    if(this.isMedico){
+      this.usuarioService.getMedicoByUser(getProfile().username).subscribe((response) => {
+        if(response.status == HTTP_NO_CONTENT){
+          this.disableSearch = true;
+          return this.modalService.alert(false, '',ALERT_MESSAGES[9].message + COMMON_TYPES.medico);
+        }
+        this.codMedico = response.body.data.codMedico;
+        this.medicoService.getSedesByMedico(this.codMedico).subscribe((response) => {
+          this.sedesData = response.body.data;
+          const sedeTodos = this.sedesData.find((f: any) => f.codigo == 0);
+          this.formGroupSearchDocuments.get('sede').setValue(sedeTodos.codigo);
+        });
+        this.medicoService.getEspecialidadByMedico(this.codMedico, 0).subscribe((response) => {
+          this.especialidadesData = response.body.data;
+            // this.especialidadesData.unshift({codigo: "999", descripcion: "TODOS"})
+            this.formGroupSearchDocuments.get('especialidad').setValue('999')
+        });
 
+      //  this.search(1);
+      });
+    }else{
 
-
+      this.codMedico = 0;
+      this.medicoService.getSedesByMedico(0).subscribe((response) => {
+        this.sedesData = response.body.data;
+        const sedeTodos = this.sedesData.find((f: any) => f.codigo == 0);
+      this.formGroupSearchDocuments.get('sede').setValue(sedeTodos.codigo);
+      });
+      this.medicoService.getEspecialidadByMedico(this.codMedico, 0).subscribe((response) => {
+        this.especialidadesData = response.body.data;
+        // this.especialidadesData.unshift({codigo: "999", descripcion: "TODOS"})
+        this.formGroupSearchDocuments.get('especialidad').setValue('999')
+      });
+    }
+  }
+  getSedeByMedico(){
+    this.medicoService.getSedesByMedico(this.codMedico).subscribe((response) => {
+      this.sedesData = response.body.data;
+    });
+  }
+  getEspecialidadByMedico(event){
+    const especialidad = event.value;
+    this.medicoService.getEspecialidadByMedico(this.codMedico, especialidad).subscribe((response) => {
+      this.especialidadesData = response.body.data;
+      // this.especialidadesData.unshift({codigo: "999", descripcion: "TODOS"})
+      this.formGroupSearchDocuments.get('especialidad').setValue('999');
+    });
+  }
   initComponents() {
     const isDesktop = window.innerWidth > 991;
     const heightDevice = window.innerHeight;
@@ -92,6 +153,8 @@ export class UploadHistoryComponent implements OnInit {
     } else {
       element.style.top = heightDevice - 70 + 'px';
     }
+    this.getComunes();
+    this.checkRoles();
   }
 
   toggleFilter() {
@@ -166,11 +229,11 @@ export class UploadHistoryComponent implements OnInit {
   setValuesFormBuilder() {
     this.formGroupSearchDocuments = this.fb.group({
       estado: [''],
-      paciente: [''],
+      codigo: [''],
       sede: [''],
       medico: new FormControl(''),
       especialidad: [''],
-      fecha_desde: [new Date()],
+      fecha_desde: [substractMonthFromDate(new Date(),1)],
       fecha_hasta: [new Date()],
 
     });
@@ -179,46 +242,95 @@ export class UploadHistoryComponent implements OnInit {
       startWith(''),
       debounceTime(400),
       tap(value => {
-        if (value && value != null && value.length >= MIN_CHARACTERS_SEARCH) {
+        if (value && value != null && value.length >= MIN_CHARACTERS_SEARCH && !this.isMedico) {
           this.getMedicos(value);
         }
       })
     ).subscribe();
   }
 
-  onSelectedMedic(e: MatAutocompleteSelectedEvent) {
+  onSelectedMedic(event) {
+    this.codMedico = event.option.value.codigo;
     this.medicosData = [];
+    this.getSedeByMedico();
   }
 
   onDisplayMedic(medic) {
     return medic ? medic.descripcion : '';
   }
   clean() {
+    this.sedesData = [];
+    this.especialidadesData = [];
     this.formGroupSearchDocuments.reset();
     this.setValuesFormBuilder();
+    if(!this.isMedico){
+      this.codMedico = 0;
+    }else{
+      this.formGroupSearchDocuments.patchValue({
+        medico: getProfile().name
+      });
+      this.getSedeByMedico();
+    }
+    this.formGroupSearchDocuments.patchValue({
+      estado: this.estadoData[1].codigo,
+    });
     this.formGroupSearchDocumentsSubmit(this.formGroupSearchDocuments);
   }
   changePage(event) {
     this.search(event.page);
   }
   operationDetail(atencion, codigoItem, numeroItem) {
-    this.router.navigate(['historial-documentos/detalle-documentos/' + atencion.compania + '/' + atencion.numeroConsulta + '/' + codigoItem + '/' + numeroItem]);
+    const detail = {compania : atencion.compania, numeroConsulta: atencion.numeroConsulta, codigoItem: codigoItem, numeroItem: numeroItem}
+
+    const row = atencion.documentos.find(p => p.codigoItem == codigoItem);
+
+    const filtros = {
+      paciente: atencion.paciente,
+      historiaClinica: atencion.historiaClinica,
+      sede: atencion.sede,
+      ocurencia: atencion.ocurencia,
+      tipoDocumento: row.tipoDocumento,
+      fechaDocumento: row.fechaDocumento,
+      fechaFirma: row.fechaFirma
+    }
+    this.eventTracker.postEventTracker("opc5", JSON.stringify(filtros)).subscribe()
+
+    return detailNewTab(detail);
   }
 
 
   search(numPagina) {
     const request = {
-      sede: this.formGroupSearchDocuments.get('sede').value,
-      estado: this.formGroupSearchDocuments.get('estado').value,
-      medico: this.formGroupSearchDocuments.get('medico').value.codigo ? this.formGroupSearchDocuments.get('medico').value.codigo : '',
-      especialidad: this.formGroupSearchDocuments.get('especialidad').value,
+      sede: +this.formGroupSearchDocuments.get('sede').value,
+      codigo: this.formGroupSearchDocuments.get('codigo').value,
+      estado: this.formGroupSearchDocuments.get('estado').value ? this.formGroupSearchDocuments.get('estado').value : 'P',
+      medico: this.formGroupSearchDocuments.get('medico').value.codigo ? this.formGroupSearchDocuments.get('medico').value.codigo : this.codMedico ? this.codMedico : '',
+      especialidad: +this.formGroupSearchDocuments.get('especialidad').value,
       fechaInicio: this.formGroupSearchDocuments.get('fecha_desde').value ? moment(this.formGroupSearchDocuments.get('fecha_desde').value).format(BASE_DATE_FORMAT_API) : '',
       fechaFinal: this.formGroupSearchDocuments.get('fecha_hasta').value ? moment(this.formGroupSearchDocuments.get('fecha_hasta').value).format(BASE_DATE_FORMAT_API) : '',
       pagina: numPagina
     };
 
+    const dataFilter = {
+      "sede:" : request.sede,
+      "codigo:" : request.codigo,
+      "estado:" : request.estado,
+      "medico:" : request.medico,
+      "especialidad:" : request.especialidad,
+      "fechaInicio:" : request.fechaInicio,
+      "fechaFinal:" : request.fechaFinal
+    }
+
+    this.eventTracker.postEventTracker("opc2",JSON.stringify(dataFilter)).subscribe()
+
+    if(this.disableSearch){
+      return this.modalService.alert(false, '',ALERT_MESSAGES[9].message + COMMON_TYPES.documentosMedico);
+    }
     this.documentoService.getBandejaDocumentos(request)
-      .subscribe((response: any) => {
+      .subscribe((response) => {
+        if(response.status == HTTP_METHOD_NOT_ALLOWED){
+          return this.modalService.alert(false, '',ALERT_MESSAGES[13].message);
+        }
         this.dataSource = response.data;
         if (this.dataSource.length != 0) {
           this.pagination = numPagina;
@@ -226,7 +338,7 @@ export class UploadHistoryComponent implements OnInit {
           this.totalItems = response.numeroRegistros;
           const totalPages = response.numeroRegistros / this.totalItemsPage;
           if (totalPages < 1) { this.totalPages = 1; }
-          if (totalPages >= 1) { this.totalPages = totalPages; }
+          if (totalPages >= 1) { this.totalPages = Math.ceil(totalPages); }
           this.totalPendiente = this.dataSource.filter(x => x.estado == 'PENDIENTE').length;
           this.posIndex = null;
           for (let i = 0; i < this.dataSource.length; i++) {
@@ -246,9 +358,12 @@ export class UploadHistoryComponent implements OnInit {
 
   // Obtener información de los médicos
   getMedicos(text: string) {
-    this.comunService.getComun('medicos', '', text.toUpperCase(), '1', '10')
-      .subscribe((response: any) => {
-        this.medicosData = response.data;
+    this.comunService.getComun(COMMON_TYPES.medicos, '', text.toUpperCase(), '1', '10')
+      .subscribe((response) => {
+        if(response.status == HTTP_NO_CONTENT){
+          return this.modalService.alert(false, '',ALERT_MESSAGES[9].message + COMMON_TYPES.medicos);
+        }
+        this.medicosData = response.body.data;
       });
   }
 
@@ -258,8 +373,11 @@ export class UploadHistoryComponent implements OnInit {
   }
 
   signDocuments() {
+    if(!this.isMedico){
+      return this.modalService.alert(false, '',ALERT_MESSAGES[11].message);
+    }
     const dialogRef = this.dialog.open(SignDocumentComponent, {
-      width: '400px', data: { send: true }, panelClass: 'upload'
+      width: '400px', data: { codMedico: this.codMedico, send: true }, panelClass: 'upload'
     });
 
     dialogRef.afterClosed().subscribe(result => { });

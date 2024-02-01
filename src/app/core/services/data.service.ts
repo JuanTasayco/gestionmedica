@@ -23,6 +23,10 @@ export class DataService {
     return this.http.get(this._baseUri, { params: data });
   }
 
+  execGetByUrl(url: any, headers: HttpHeaders = this.headers): any {
+    return this.http.get(url, { headers });
+  }
+
   execGetJson(data?: any): any {
     return this.http.get(this._baseUri, { params: data, headers: this.headers });
   }
@@ -42,5 +46,9 @@ export class DataService {
 
   execDeleteJson(): any {
     return this.http.delete(this._baseUri, { headers: this.headers });
+  }
+  
+  execDelete(data?: any): any {
+    return this.http.delete(this._baseUri, { params: data, headers: this.headers });
   }
 }

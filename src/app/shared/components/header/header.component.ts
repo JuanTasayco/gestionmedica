@@ -4,8 +4,9 @@ import { Router, NavigationStart } from '@angular/router';
 import { environment } from '@environments/environment';
 
 import { ICrumb } from '@shared/models/common/interfaces';
-import { CRUMBS_LIST, PATH_URL_DATA, TYPE_LOGIN } from '@shared/helpers';
+import { APP_GESMED, CRUMBS_LIST, PATH_URL_DATA, TYPE_LOGIN } from '@shared/helpers';
 import { AuthenticationService } from '@shared/services/authentication.service';
+import { EventTrackerService } from '@shared/services/event-tracker.service';
 
 
 @Component({
@@ -19,28 +20,33 @@ export class HeaderComponent implements OnInit {
   isPopupPerfilDesktopVisible: boolean;
 
   token: string;
-  perfilEjecutivo: string;
+  perfilMedico: string;
   fullUsername: string;
 
   crumbs: ICrumb[];
 
-  constructor(private router: Router, private authService: AuthenticationService) {
+  constructor(private router: Router, private authService: AuthenticationService, private eventTracker: EventTrackerService) {
     router.events.subscribe(event => {
       if(event instanceof NavigationStart) {
         this.setBreadCrumbs(event.url);
       }
     });
+    console.log('SD05723971 => 07-11-2023 17:00')
+    console.log('SD05775469 => 28-11-2023 18:00')
+    console.log('SD05803355 => 06-12-2023 14:00')
   }
 
   ngOnInit() {
+    console.log('15-09-2023 11:35am')
+    console.log('Pase Odonto => 23-01-2024 18:00')
     var profile = JSON.parse(localStorage.getItem('evoProfile'));
     var roles = profile.rolesCode;
-    var loadTeCuidamos = false;
+    var loadGestionMedica = false;
     roles.forEach(role => {
-      if(role.nombreAplicacion == 'TCUID') loadTeCuidamos = true;
+      if(role.nombreAplicacion == APP_GESMED) loadGestionMedica = true;
     })
 
-    if(!loadTeCuidamos) {
+    if(!loadGestionMedica) {
       window.location.href = environment.oimHome;
     } else {
       var name = '';
@@ -50,12 +56,13 @@ export class HeaderComponent implements OnInit {
             TYPE_LOGIN[key].type == profile.userType)
             name = TYPE_LOGIN[key].headerName;
         }
-        this.perfilEjecutivo = '/ ' + name;
+        this.perfilMedico = '/ ' + name;
         this.fullUsername = profile ? profile.userName : '';
       } else {
         this.goLogin();
       }
     }
+
   }
 
   setBreadCrumbs(path: string) {
@@ -65,7 +72,7 @@ export class HeaderComponent implements OnInit {
     let pathDetalleDocumento = null;
     let crumbList = null
 
-    if(relativePath == 'detalle-documentos' ||  relativePath == 'cargar-documentos'){
+    if(relativePath == 'detalle-documentos' ||  relativePath == 'cargar-documentos' || relativePath == 'nuevo-informe' || relativePath == 'detalle-informe'){
      pathDetalleDocumento =basePath;
      crumbList = CRUMBS_LIST.filter(obj=> obj.href == relativePath);
     }else{
@@ -115,6 +122,8 @@ export class HeaderComponent implements OnInit {
   }
 
   signOut() {
+    this.eventTracker.postEventTracker("opc85", "").subscribe()
+
     this.authService.logout().subscribe((response: any) => {
       this.goLogin();
     });
@@ -122,9 +131,12 @@ export class HeaderComponent implements OnInit {
 
   openView(id) {
     switch(id){
+      case 3: this.router.navigate([PATH_URL_DATA.urlMedicalAppointments ]) ; break;
+      case 2: this.router.navigate([PATH_URL_DATA.urlMaintenance ]) ; break;
       case 0: this.router.navigate([PATH_URL_DATA.urlDefault]) ; break;
       case 20: this.router.navigate([PATH_URL_DATA.urlBandejaDocumento ]) ; break;
       case 5: this.router.navigate([PATH_URL_DATA.urlHistorialDocumento ]) ; break;
+      case 60: this.router.navigate([PATH_URL_DATA.urlInformesProcServ ]) ; break;
     }
   }
 

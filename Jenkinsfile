@@ -1,117 +1,168 @@
 #!groovy
-@Library('global-pipeline-library')
-@Library('pe-common-pipeline-config')
+import com.mapfre.pod.Container
+import com.mapfre.pod.ContainerType
+import com.mapfre.pod.ContainerTypeCustom
+import com.mapfre.pod.ContainerSize
+import com.mapfre.sonar.SonarScannerType
 
-def DEVOPS_PLATFORM_ORGANIZATION = 'mapfreperu'
+@Library(['global-pipeline-library', 'security_library','pe-common-pipeline-config']) _
+
+def DEVOPS_PLATFORM_ORGANIZATION = 'org-mapfreperu'
+
+def libModules = '.deploy/libModules.yml'
 
 pipeline {
     agent {
         kubernetes {
-            yaml getYmlBuildPod('node10')
+            yaml getPodTemplate(DEVOPS_PLATFORM_ORGANIZATION, [
+                    ['node', ContainerType.NODE_16_14_0, ContainerSize.EXTRA_LARGE],
+                    ['sonar', ContainerType.SONAR_SCANNER_CLI_STABLE, ContainerSize.LARGE],
+                    ['azure-cli', ContainerType.AZURE_CLI_2_25_0, ContainerSize.SMALL]
+            ] as Container[], true)
         }
     }
     options {
         timeout(time: 25, unit: 'MINUTES')
         timestamps()
-        parallelsAlwaysFailFast()
+        buildDiscarder(logRotator(daysToKeepStr: '30', numToKeepStr: '30', artifactNumToKeepStr: '30'))
     }
     environment {
         // Current version
         PACKAGE_VERSION        = getFieldFromPackage("version")
         PACKAGE_NAME           = getFieldFromPackage("name")
-
-
-        ACR_SERVER   = 'acrmapfredevops.azurecr.io'
-        ACR_CRED_ID  = 'RegistryDevOpsPro'
     }
     stages {
         stage('Prepare Environment') {
             steps {
-                initStageKPI()
-                showEnvironment()
-            }
-            post {
-                success {
-                    successStageKPI()
-                }
-                failure {
-                    failureStageKPI()
-                }
+                prepareEnvironment()
             }
         }
+        stage('Prepare sources') {
+            when {
+                anyOf {
+                    branch 'develop'
+                    branch 'release'
+                }
+            }            
+            steps {
+                script() {
+                    try {
+                        exitCode = prepareSource(params.LISTABRANCHE)
+                        if (exitCode != 0) {
+                            error('Error in prepareSource: ' + exitCode)
+                        }
+                    } catch (Exception err) {
+                        error('Error prepareSource : ' + err)
+                    }
+                }                
+            }
+        }         
         stage('Prepare Promotion') {
             when {
                 anyOf {
-                    branch 'release/*'
-                    branch 'master'
-                    branch 'hotfix/*'
+                    branch 'master';branch 'develop'; branch 'hotfix/*'
+                    expression {
+                        return env.BRANCH_NAME.startsWith('release') 
+                    }
                 }
             }
             steps {
-                initStageKPI()
                 container('node') {
                     promotionNpmPeru(env.BRANCH_NAME, env.PACKAGE_VERSION)
                 }
             }
-            post {
-                success {
-                    successStageKPI()
-                }
-                failure {
-                    failureStageKPI()
+        }
+        //This is a security stage that must be executed before building any code or image.
+        stage('Security pre-build'){
+            steps{
+                script{
+                    secPreBuild()
                 }
             }
-        }
-        stage('Build & Unit Test') {
-            environment {
-                PACKAGE_VERSION        = getFieldFromPackage("version")
-                PACKAGE_NAME           = getFieldFromPackage("name")
+        }   
 
-            }            
+        stage('Build & Unit Test') {
             steps {
-                initStageKPI()
                 container('node') {
-                    buildWithProfilesNpm(getBuildProfilePeru(BRANCH_NAME), PACKAGE_NAME,PACKAGE_VERSION, true)
+                    buildWithProfilesNpm(getBuildProfilePeru(BRANCH_NAME))
                 }                
             }
-            post {
-                success {
-                    successStageKPI()
+        }
+
+        stage('SonarQube Analysis') {
+            when {
+                not {
+                    branch 'PR*'
                 }
-                failure {
-                    failureStageKPI()
+            }      
+            environment {
+                PACKAGE_VERSION        = getFieldFromPackage("version")
+            }                  
+            steps {
+                container('sonar'){
+                     script {
+
+                        def sonarConfig = getSonarConfiguration(PACKAGE_NAME)
+
+                        if(sonarConfig.name==null) return
+
+                        def sonarProyectoKey = getSonarProyectoKey(sonarConfig, env.BRANCH_NAME)
+                        def sonarProyectName = getSonarProyectoName(sonarConfig, env.BRANCH_NAME)
+                        def sonarExtraParameters = "-Dsonar.projectVersion=${PACKAGE_VERSION}"
+
+                        sonarScanner(SONAR_ENVIRONMENT, sonarConfig.projectKey, sonarProyectoKey, sonarProyectName,
+                             SonarScannerType.NPM,sonarExtraParameters)
+                     }
                 }
             }
-        }
+        }       
+
+        stage("Quality Gate"){
+            when {
+                not {
+                    branch 'PR*'
+                }
+            }                 
+           
+            steps {
+
+                container('sonar'){
+                    script {
+                        
+                        def sonarConfig = getSonarConfiguration(PACKAGE_NAME)
+
+                        if(sonarConfig.name==null) return
+
+                        def sonarProyectoKey = getSonarProyectoKey(sonarConfig, env.BRANCH_NAME)
+
+                        def status = checkQualityGatesPeru(SONAR_ENVIRONMENT,sonarConfig.projectKey,sonarProyectoKey)
+
+                        if (status == "OK") {
+                            println "Pasa el Quality Gates"
+                        } else {
+                            println "No pasa el quality Gates -> FAILED"
+                            //error "Pipeline aborted due to quality gate failure: ${status}"
+                        }
+                        
+                        
+                    }
+                }
+            }
+        }          
 
         stage('Publish') {
             when {
                 anyOf {
                     branch 'develop'
-                    branch 'release/*'
+                    branch 'release'
                     branch 'master'
-                    branch 'hotfix/*'
                 }
-            }
-            environment {
-                PACKAGE_VERSION        = getFieldFromPackage("version")
-                PACKAGE_NAME           = getFieldFromPackage("name")
-                credentialIdPublishNPM = 'app-jenkins-artifacts'
             }
             steps {
-                initStageKPI()
                 container('node') {
                     script() {
-                        publishNPMPeru(env.PACKAGE_VERSION, credentialIdPublishNPM)
+                        publishNPMPeru()
                     }
-                }
-            }
-            post {
-                success {
-                    successStageKPI()
-                }
-                failure {
-                    failureStageKPI()
                 }
             }
         }
@@ -119,68 +170,72 @@ pipeline {
         stage('Commit and Tag Promotion') {
             when {
                 anyOf {
-                    branch 'release/*'
+                    branch 'develop'
+                    branch 'release'
                     branch 'master'
-                    branch 'hotfix/*'
                 }
             }
-            environment {
-                PACKAGE_VERSION        = getFieldFromPackage("version")
-                PACKAGE_NAME           = getFieldFromPackage("name")
-
-            }
             steps {
-                initStageKPI()
-                gitFetch('*')
+                gitFetch()
+                gitIgnoreChange()
                 gitCheckout env.BRANCH_NAME
 
                 script {
+                    def version = getFieldFromPackage("version")
+
                     def msg = 'release'
-                    if (BRANCH_NAME.startsWith('release/')) {
+                    if (BRANCH_NAME.startsWith('release')) {
                         msg = 'release candidate'
-                    } else if (BRANCH_NAME.startsWith('hotfix/')) {
-                        msg = 'hotfix'
+                    }                
+                    container('node') {
+                        promotionNpmPeru(env.BRANCH_NAME, version)
                     }                    
-                    gitCommit  "promotion to " + msg + " completed (" + PACKAGE_VERSION + ")"
+                    gitCommitPackage  "promotion to " + msg + " completed (" + version + ")"
                     gitPush()
-                    gitTag(PACKAGE_VERSION,  "New " + msg + " tag " + PACKAGE_VERSION)
+                    gitTag(version,  "New " + msg + " tag " + version)
                     gitPushTags()
                     
                 }
 
             }
-            post {
-                success {
-                    successStageKPI()
-                }
-                failure {
-                    failureStageKPI()
+
+        }
+
+        stage('Security post-build'){
+            steps {
+                script{
+                    secPostBuild()
                 }
             }
         }
 
 
+        stage('Security pre-deploy'){
+            steps{
+                script{
+                    secPreDeploy()
+                }
+            }
+        }        
+
         stage('Deploy to Frontal') {
             when {
                 anyOf {
                     branch 'develop'
-                    branch 'release/*'
+                    branch 'release'
                     branch 'master'
-                    branch 'hotfix/*'
                 }
             }
             environment {
                 PACKAGE_VERSION        = getFieldFromPackage("version")
                 PACKAGE_NAME           = getFieldFromPackage("name")
-                credentialIdPublishNPM = 'app-jenkins-artifacts'
             }
             steps {
-                initStageKPI()
                 retry(3) {
                     container('node') {
                         script() {
                             try {
-                                packNPMPeru(env.PACKAGE_NAME,env.PACKAGE_VERSION, credentialIdPublishNPM)
+                                packNPMPeru(env.PACKAGE_NAME,env.PACKAGE_VERSION)
                                 commandResult = deployCopyToFront(getProjectFromGit(GIT_URL),BRANCH_NAME, PACKAGE_NAME,PACKAGE_VERSION)
                                 if (commandResult != 0) {
                                     error('ERROR EXITCODE deployCopyToFrontal: ' + commandResult)
@@ -192,41 +247,70 @@ pipeline {
                     }
                 }                
             }
-            post {
-                success {
-                    successStageKPI()
-                }
-                failure {
-                    failureStageKPI()
-                }
-            }
         }        
 
-        stage('Next Snapshot Promotion') {
+        stage('Security post-deploy'){
+            steps{
+                script{
+                    secPostDeploy()
+                }
+            }
+        }  
+
+        stage ('Next Snapshot Promotion develop') {
             when {
-                branch 'release/*'
+				expression { return env.BRANCH_NAME == 'master' } 
             }
             environment {
                 developBranch = "develop"
                 PACKAGE_VERSION        = getFieldFromPackage("version")
-                PACKAGE_NAME           = getFieldFromPackage("name")
             }
             steps {
-                initStageKPI()
+                // promotion to snapshot after a release candidate is packaged and deployed
+                // git checkout development
                 gitCheckout developBranch
+
+                gitMergeWithResolveConflicts("master")
+
+               sh "cat .deploy/Jenkinsfile.NoProd > Jenkinsfile"
+
                 container('node') {
-                    promotionNpmPeru(developBranch, env.PACKAGE_VERSION)
+                    promotionNpmPeru(developBranch,PACKAGE_VERSION)
                 }
-                gitCommit "promotion to next SNAPSHOT completed (" + PACKAGE_VERSION  + ")"
+
+                // commit next snapshot in development branch
+                gitCommitPackage "promotion to next snapshot completed (" + PACKAGE_VERSION + ")"
+                // push all changes
                 gitPush()
             }
-            post {
-                success {
-                    successStageKPI()
+
+        }        
+
+        stage ('Next Snapshot Promotion release') {
+            when {
+                expression { return env.BRANCH_NAME == 'master' } 
+            }
+            environment {
+                developBranch = "release"
+                PACKAGE_VERSION        = getFieldFromPackage("version")
+            }
+            steps {
+                // promotion to snapshot after a release candidate is packaged and deployed
+                // git checkout development
+                gitCheckout developBranch
+
+                gitMergeWithResolveConflicts("master")
+
+                sh "cat .deploy/Jenkinsfile.NoProd > Jenkinsfile"
+
+                container('node') {
+                    promotionNpmPeru(developBranch,PACKAGE_VERSION)
                 }
-                failure {
-                    failureStageKPI()
-                }
+
+                // commit next snapshot in development branch
+                gitCommitPackage "promotion to next snapshot completed (" + PACKAGE_VERSION + ")"
+                // push all changes
+                gitPush()
             }
         }
        

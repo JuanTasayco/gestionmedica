@@ -189,6 +189,8 @@ export class RegularExpression {
     public static readonly SOLO_LETRA: RegExp = /^([A-Za-z]+)$/;
     public static readonly LETRAS_TILDE_ENIE: RegExp = /^([A-Za-zÑñáéíóúÁÉÍÓÚ ]+)$/;
     public static readonly LETRAS_TILDE_ENIE_NUMERO_SPACIO: RegExp = /^([A-Za-zÑñáéíóúÁÉÍÓÚ0-9]+\s)*[A-Za-zÑñáéíóúÁÉÍÓÚ0-9]*$/;
+    public static readonly LETRAS_TILDE_ENIE_NUMERO_SPACIO_CARACTERES: 
+    RegExp = /^([A-Za-zÑñáéíóúÁÉÍÓÚ0-9,\[\]\\()\'\"+:\-;*{}\_!¿=%$#/.-?|?&]+\s)*[A-Za-zÑñáéíóúÁÉÍÓÚ0-9,\[\]\\()\'\"+:-;*{}\_:!¿|=%$#/.\-?&]*$/;
     public static readonly LETRAS_TILDE_ENIE_PUNTO: RegExp = /^()([A-Za-zÑñáéíóúÁÉÍÓÚ.]+)$/;
     public static readonly LETRAS_TILDE_ENIE_NUMERO: RegExp = /^([A-Za-z0-9ÑñáéíóúÁÉÍÓÚ ]*)$/;
     public static readonly LETRAS_TILDE_ENIE_NUMERO_SIGNO: RegExp = /^([A-Za-z0-9ÑñáéíóúÁÉÍÓÚ ]*)$/;
@@ -207,6 +209,7 @@ export class RegularExpression {
     //public static readonly DECIMAL: RegExp = /\d+(\.\d{1,2})?/;
     public static readonly DECIMAL: RegExp = /^[0-9.]+$/;
     public static readonly DECIMAL_FORMAT: RegExp = /^\d+\.?\d{0,2}$/;
+    public static readonly CHARACTERES_FORMAT: RegExp = /^([A-Za-zÑñáéíóúÁÉÍÓÚ0-9,\[\]\\()\'\"+:\-;*{}\_!¿=%$#\/\.-?|?&]+\s)*[A-Za-zÑñáéíóúÁÉÍÓÚ0-9,\[\]\\()\'\"+:-;*{}\_:!¿|=%$#\/\.\-?&]*$/;
 }
 
 export class RegularExpressionMessage {

@@ -1,0 +1,187 @@
+<div class="container">
+  <div class="contenedor">
+    <div class="detalle">
+      <mat-accordion class="expansion_panel test" >
+        <br>
+        <mat-expansion-panel [expanded]="true" style="margin-bottom: 15px;">
+            <mat-expansion-panel-header>
+                <mat-panel-title style="font-weight: bold;">
+                    Datos de la Consulta Médica
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="clearfix g-box-content" >
+                <ul class="row g-list-md">
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">PACIENTE:</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{detalleConsulta?.nombrePaciente}}
+                        </div>
+                    </li>
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">DNI:</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{dataOdontograma?.numeroDocumentoIdent}}</div>
+                    </li>
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">CONSULTA:</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{detalleConsulta?.numeroConsulta}}</div>
+                    </li>
+                </ul>
+
+                <ul class="row g-list-md">
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">EDAD:</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{detalleConsulta?.edad}}
+                        </div>
+                    </li>
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">HC:</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{detalleConsulta?.historiaClinicaLocal}}</div>
+                    </li>
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">FECHA:</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{detalleConsulta?.fechaConsulta}}</div>
+                    </li>
+                </ul>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    </div>
+    <div class="cabecera">
+      <div class="titulozz">
+        <div fxLayout="row" fxLayoutAlign="space-between center" [ngStyle]="{'margin-top': '15px'}">
+          <div fxFlex="33.3%">
+            <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
+              <div style="font-size: 25px;">ODONTOGRAMA INI.</div>
+              <div>
+                <span class="material-icons hand" (click)="printOdonto()" matTooltip="Imprimir Odontograma"
+                  matTooltipPosition='right'>
+                  print
+                </span>
+              </div>
+            </div>
+          </div>
+          <div fxFlex="33.3%">
+            <div fxLayout="row" fxLayout.xs="column" fxFlexAlign="center center">
+              <div fxFlex="50%"  >
+                <mat-form-field>
+                  <mat-label>Versión</mat-label>
+                  <mat-select [(ngModel)]="primerValor" (ngModelChange)="versionChanged($event, false)">
+                    <ng-container>
+                      <mat-option *ngFor="let c of versiones" [value]="c">
+                        {{c.descripcion}}</mat-option>
+                    </ng-container>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div fxFlex="50%" [hidden]="primerValor && versiones.length > 0 && (primerValor?.codigo !== versiones[0]?.codigo)">
+                <button type="button" class="g-btn g-btn-verde block" (click)="saveOdontogram()">GUARDAR ODONTOGRAMA</button>
+              </div>
+            </div>
+          </div>
+          <div fxFlex="33.3%">
+            <div style="text-align: end;">
+              <span [ngClass]= "primerValor && versiones.length > 0 && (primerValor?.codigo === versiones[0]?.codigo) ? 'espera' : 'anulado'" style="padding:8px !important; border-radius: 3px;"> <strong>Estado: {{primerValor && versiones.length > 0 && (primerValor?.codigo === versiones[0]?.codigo) ? 'ACTIVO' : 'INACTIVO' | uppercase}}</strong>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+    </div>
+
+      <div class="diagnostico" style="padding-left:10px">
+        <fieldset [disabled]="primerValor && versiones.length > 0 && (primerValor?.codigo !== versiones[0]?.codigo)">
+          <h3 style="margin-top: 10px;margin-bottom: 10px;"><strong>DIAGNÓSTICOS (CIE10)</strong></h3>
+          <ng-container *ngIf="diagnosticos; else loading">
+            <ng-container *ngFor="let item of diagnosticos; let i=index">
+              <p style="font-size: 10px;">
+                <input type="checkbox" [checked]="item.checked" (change)="isChecked(item, diagnosticos)">
+                {{item.codigo}} - {{item.descripcion}}
+              </p>
+            </ng-container>
+          </ng-container>
+          <div class="col-md-12 mb-10" [hidden]="primerValor && versiones.length > 0 && (primerValor?.codigo !== versiones[0]?.codigo)">
+            <a (click)="modalDiagnosticos()">
+              <span>
+                <div>
+                  <b class="fz12 green-color">
+                    Ver más diagnósticos
+                  </b>
+                </div>
+              </span>
+            </a>
+          </div>
+          <hr>
+        </fieldset>
+      </div>
+      <div class="hallazgo" style="padding-left:10px;">
+        <fieldset [disabled]="primerValor && versiones.length > 0 && (primerValor?.codigo !== versiones[0]?.codigo)">
+          <h3 style="margin-top: 10px;margin-bottom: 10px;"><strong>HALLAZGOS</strong></h3>
+          <ng-container *ngIf="hallazgos; else loading">
+            <ng-container *ngFor="let item of hallazgos; let i=index">
+              <p style="font-size: 10px;">
+                <input type="checkbox" [checked]="item.checked" (change)="isChecked(item, hallazgos, true)">
+                {{item.descripcion}}
+              </p>
+            </ng-container>
+          </ng-container>
+          <div class="col-md-12 mb-10" [hidden]="primerValor && versiones.length > 0 && (primerValor?.codigo !== versiones[0]?.codigo)">
+            <a (click)="modalHallazgos()">
+              <span>
+                <div>
+                  <b class="fz12 green-color">
+                    Ver más hallazgos
+                  </b>
+                </div>
+              </span>
+            </a>
+          </div>
+        </fieldset>
+      </div>
+    <div class="odonto">
+        <div fxLayout="row" fxLayoutAlign="center center">
+          <div class="button-group" [ngStyle]="{'margin-bottom': '10px'}">
+            <button [ngClass]="btnPermanente ? 'boton-permanente' : 'boton-temporal'"
+              (click)="changeBtnColor(true)"><strong>PERMANENTE</strong></button>
+            <button [ngClass]="!btnPermanente ? 'boton-permanente' : 'boton-temporal'"
+              (click)="changeBtnColor(false)"><strong>TEMPORAL</strong></button>
+          </div>
+        </div>
+
+        <div fxLayout="row" fxLayoutAlign="center center" >
+          <canvas [hidden]="hide" (contextmenu)="onContextMenu($event)" id="canvas" #canvasRef width="648" height="500"></canvas>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center center">
+            <canvas [hidden]="!hide" (contextmenu)="onContextMenu($event)" id="canvasPrint" #canvasPrintRef width="648" height="500"></canvas>
+        </div>
+        <fieldset [disabled]="primerValor && versiones.length > 0 && (primerValor?.codigo !== versiones[0]?.codigo)">
+          <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between center" [ngStyle]="{'margin': '15px'}">
+            <div fxFlex="33.3%">
+              <label for="leyenda" class="form-label">Leyenda</label>
+              <textarea readonly class="form-control border border-primary-subtle" id="leyenda" rows="5" [(ngModel)]="leyendas"></textarea>
+            </div>
+            <div fxFlex="33.3%">
+              <label for="especificaciones" class="form-label">Especificaciones</label>
+              <textarea  class="form-control border border-primary-subtle" id="especificaciones" rows="5" [(ngModel)]="especificaciones" inputrestriction="8000"></textarea>
+            </div>
+            <div fxFlex="33.3%">
+              <label for="observaciones" class="form-label">Observaciones</label>
+              <textarea  class="form-control border border-primary-subtle" id="observaciones" rows="5" [(ngModel)]="observaciones" inputrestriction="8000"></textarea>
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between center" [ngStyle]="{'margin': '15px'}">
+            <div fxFlex="100%">
+              <label for="tratamiento" class="form-label">Plan de tratamiento</label>
+              <textarea  class="form-control border border-primary-subtle" id="tratamiento" rows="5" [(ngModel)]="planTratamiento" inputrestriction="8000"></textarea>
+            </div>
+          </div>
+        </fieldset>
+    </div>
+  </div>
+</div>
+<ng-template #loading>
+  <mapfre-card-loader class="col-12" [bars]="10" [barHeight]="8"></mapfre-card-loader>
+</ng-template>
+
+<div *ngIf="isLoading" class="protect">
+  <mat-spinner diameter="80"></mat-spinner>
+</div>

@@ -1,0 +1,31 @@
+<div mat-dialog-title>
+  <h3>SIGLAS</h3>
+  <div class="row">
+    <div class="col-12">
+      <fieldset>
+        <mat-form-field appearance="standard" class="form-group">
+          <mat-label>Seleccione sigla:</mat-label>
+          <mat-select [(ngModel)]="sigla" (ngModelChange)="siglaChanged($event)">
+            <ng-container>
+              <mat-option *ngFor="let s of siglas" [value]="s">
+                {{s.descripcion}}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+      </fieldset>
+    </div>
+  </div>
+</div>
+<div mat-dialog-content>
+  <div fxLayout="row wrap" fxLayout.sm="column" fxLayoutGap="10px grid">
+
+  </div>
+</div>
+
+<div class="row" style="margin-top: 20px;">
+  <div class="col-md-12 mb-xs-2 no-mb-md text-right">
+    <button class="g-btn second-design g-btn-white" mat-dialog-close>CANCELAR</button>
+    <button class="g-btn second-design g-btn-verde" (click)="valorSeleccionados()"
+      [mat-dialog-close]="data">AGREGAR</button>
+  </div>
+</div>

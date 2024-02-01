@@ -1,0 +1,105 @@
+<section>
+    <div class="g-title">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <span class="material-icons" style="margin-right: 8px;cursor: pointer;" (click)="volverConsulta()">close</span>
+                    <h1 style="font-weight: 400;">Consulta No. {{data_consulta?.numeroConsulta}}</h1>   
+                    <span [ngClass]="{'anulado': data_consulta?.estado == 'ANULADO', 
+                    'atendido' : data_consulta?.estado == 'ATENDIDO','atencion' : data_consulta?.estado == 'EN ATENCION', 'espera' : data_consulta?.estado == 'EN ESPERA',
+                    'triaje' : data_consulta?.estado == 'EN ESPERA TRIAJE'}"  style="padding: 2px 8px 2px 8px; margin-left: 8px;border-radius: 3px;">{{data_consulta?.estado}}</span>
+                    <span style="padding: 2px 8px 2px 8px; margin-left: 8px;border-radius: 3px;">
+                        <a matTooltipPosition='above'
+                            rel="noopener noreferrer"
+                            href="{{data_consulta?.urlGenesys}}" target="_blank"
+                            *ngIf="data_consulta?.urlGenesys">
+                            Ir a Genesys
+                        </a>
+                    </span>
+                </div>
+                <div class="col-sm-12 col-md-6" style="text-align: end;" *ngIf="!nurseValue">
+                    <button type="button" class="g-btn g-btn-transparent" (click)="showFormMedicalRest()"style="padding: 7px;margin-right: 10px;">
+                        <mat-icon matTooltip="Descanso Médico" matTooltipPosition='below'>assignment_ind</mat-icon>
+                    </button>
+                    <button type="button" class="g-btn g-btn-transparent" (click)="previewConstancia()"style="padding: 7px;margin-right: 10px;">
+                        <mat-icon matTooltip="Constancia" matTooltipPosition='below'>description</mat-icon>
+                    </button>
+                    <button type="button" class="g-btn g-btn-transparent" (click)="previewEpisodio()"style="padding: 7px;margin-right: 10px;">
+                        <mat-icon matTooltip="Episodio" matTooltipPosition='below'>pending_actions</mat-icon>
+                    </button>
+                    <button type="button" class="g-btn g-btn-transparent" (click)="previewHistoria()" style="padding: 7px;margin-right: 10px;">
+                        <mat-icon matTooltip="Historia" matTooltipPosition='below'>folder_shared</mat-icon>
+                    </button>
+                    <button type="button" class="g-btn g-btn-transparent" (click)="previewPDF()" style="padding: 7px;margin-right: 10px;">
+                        <mat-icon matTooltip="Guía Práctica" matTooltipPosition='below'>local_library</mat-icon>
+                    </button>
+                    <button type="button" class="g-btn g-btn-transparent" (click)="searchDocument()" style="padding: 7px;margin-right: 10px;">
+                        <mat-icon matTooltip="Buscar Guía Práctica" matTooltipPosition='below'>plagiarism</mat-icon>
+                    </button>
+                    <ng-container *ngIf="showOdontogramButton">
+                      <button type="button" class="g-btn g-btn-transparent btn-svg" (click)="openOdontogramaInicial()" style="padding: 7px;margin-right: 10px;">
+                          <mat-icon matTooltip="Odontograma Inicial" matTooltipPosition='below'>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48">
+                              <g id="Grupo_4765" data-name="Grupo 4765" transform="translate(7904 10591)">
+                                <rect id="Rectángulo_5958" data-name="Rectángulo 5958" width="48" height="48" transform="translate(-7904 -10591)" fill="#888383" opacity="0"/>
+                                <path id="Trazado_1822" data-name="Trazado 1822" d="M3111.156,5169.428h-.587c-2.743-.437-4.064-2.186-4.725-4.657-.48-1.8-1.138-3.549-1.714-5.322-.184-.566-.42-1.088-1.15-1.1s-.988.5-1.175,1.067c-.592,1.8-1.278,3.58-1.75,5.41-.646,2.5-2.011,4.2-4.758,4.6h-.587a5.19,5.19,0,0,1-4.484-4.055c-.591-2.3-1.239-4.579-1.777-6.887a27.23,27.23,0,0,0-3.516-8.569,12.455,12.455,0,0,1-1.8-8.75,11.247,11.247,0,0,1,17.831-7.461c1.773,1.265,2.267,1.283,3.967.027a11.205,11.205,0,0,1,17.547,5.915c1.207,4.108.11,7.916-2.147,11.492a15.074,15.074,0,0,0-1.739,3.573c-.994,3.269-1.924,6.562-2.689,9.884C3115.3,5167.21,3113.987,5168.971,3111.156,5169.428Z" transform="translate(-10982.975 -15717.428)" fill="#888383"/>
+                              </g>
+                            </svg>
+                          </mat-icon>
+                      </button>
+                      <button type="button" class="g-btn g-btn-transparent btn-svg" (click)="openOdontogramaEvolutivo()" style="padding: 7px;margin-right: 10px;">
+                          <mat-icon matTooltip="Odontograma Evolutivo" matTooltipPosition='below'>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48">
+                              <g id="Grupo_4764" data-name="Grupo 4764" transform="translate(7840 10591)">
+                                <rect id="Rectángulo_5957" data-name="Rectángulo 5957" width="48" height="48" transform="translate(-7840 -10591)" fill="#888383" opacity="0"/>
+                                <g id="Grupo_4763" data-name="Grupo 4763" transform="translate(-11584.47 -15548.711)">
+                                  <path id="Trazado_1818" data-name="Trazado 1818" d="M3790.459,5074.528a2.588,2.588,0,0,0-1.745-2.118q-3.135-1.01-6.266-2.031c-1.386-.452-2.78-.886-4.15-1.38a9.266,9.266,0,0,0-3.334-.534c-2.709.038-5.42.011-8.131.014a.579.579,0,0,1-.458-.167c-.807-.79-1.629-1.565-2.45-2.342q-2.671-2.528-5.345-5.053-2.254-2.136-4.5-4.281-1.394-1.323-2.792-2.643a3.622,3.622,0,0,0-1.605-1.048,2.532,2.532,0,0,0-3.166,2.9,3.14,3.14,0,0,0,1.123,1.685c1.29,1.206,2.558,2.435,3.839,3.651,1.137,1.078,2.282,2.148,3.418,3.226,1,.949,1.988,1.906,2.987,2.854q2.863,2.715,5.732,5.425a2.647,2.647,0,0,0,1.792.793c.3.008.6.025.9.013.23-.01.32.049.318.294q-.015,2.8,0,5.6c0,.224-.066.285-.3.283-.945-.013-1.89-.007-2.835,0-.374,0-.414.045-.415.41,0,.787,0,1.575,0,2.362a2.234,2.234,0,0,0,.068.383h15.513a1.783,1.783,0,0,0,.113-.422c.011-.74.005-1.481,0-2.222,0-.475-.038-.512-.527-.512-1.129,0-2.258-.005-3.386.006-.257,0-.327-.075-.323-.321.012-1.124.005-2.249.005-3.374,0-.741,0-1.481.006-2.221,0-.083.094-.235.144-.235a4.807,4.807,0,0,1,1.348.06c1.7.511,3.379,1.079,5.064,1.631,1.868.612,3.736,1.222,5.6,1.849a3,3,0,0,0,2.354-.016A2.5,2.5,0,0,0,3790.459,5074.528Z" transform="translate(0 -79.101)" fill="#888383"/>
+                                  <path id="Trazado_1819" data-name="Trazado 1819" d="M3857.619,5081.459c-.6-.272-1.223-.5-1.842-.733-2.246-.834-4.5-1.636-6.738-2.5a8.1,8.1,0,0,0-3.116-.566c-2.43.04-4.861.015-7.292.006a.8.8,0,0,1-.463-.158c-.318-.256-.609-.544-.906-.824q-2.456-2.319-4.908-4.638a2.639,2.639,0,0,0-2.954-.581,2.479,2.479,0,0,0-.724,4.109c1.22,1.156,2.451,2.3,3.678,3.452.958.9,1.933,1.776,2.87,2.691a3.142,3.142,0,0,0,2.334.97c2.681-.023,5.363,0,8.044-.014a4.618,4.618,0,0,1,1.744.286c1.605.626,3.229,1.209,4.846,1.808,1.114.412,2.226.83,3.344,1.231a2.542,2.542,0,0,0,3.474-2.3A2.374,2.374,0,0,0,3857.619,5081.459Z" transform="translate(-68.774 -94.709)" fill="#888383"/>
+                                  <path id="Trazado_1820" data-name="Trazado 1820" d="M3830.258,4964.041q1.61,1.015,3.225,2.023c.825.517,1.649,1.036,2.48,1.545.255.157.4.106.45-.144a3.893,3.893,0,0,0-.521-3.073.343.343,0,0,1-.021-.411c.442-.776.89-1.55,1.317-2.334a.441.441,0,0,1,.457-.25c2.585.006,5.17,0,7.755.007.594,0,.542-.111.542.517q0,8.958,0,17.914a2.8,2.8,0,0,0,.016.42.825.825,0,0,0,.523.717.883.883,0,0,0,1.213-.863c0-.4,0-.8,0-1.238h9.569c1.109,0,2.218-.005,3.328,0,.266,0,.4-.1.4-.356q0-1.631,0-3.262c0-.2-.105-.308-.327-.3-.347.005-.694,0-1.042,0-.691,0-.691,0-.714-.657l0-.085a.28.28,0,0,0-.325-.307c-.183,0-.367,0-.55,0-.417,0-.459.04-.467.449,0,.047,0,.094,0,.141,0,.479,0,.479-.5.459-.046,0-.093-.011-.173-.021v-.7c0-.219-.108-.328-.338-.323s-.482,0-.724,0c-.174,0-.268.079-.262.259s-.008.375,0,.562c.015.259-.168.227-.33.225s-.37.048-.353-.232c.011-.178,0-.356,0-.534s-.1-.275-.284-.279c-.251,0-.5,0-.752,0a.267.267,0,0,0-.3.3c0,.178.012.358-.008.534-.008.073-.081.192-.133.2-.255.021-.513.01-.792.01,0-.276-.007-.51,0-.742s-.092-.308-.311-.3-.425.007-.637,0c-.276-.01-.383.123-.376.377.005.212,0,.426,0,.655-.116.008-.2.009-.285.02-.278.038-.393-.072-.356-.346a3.252,3.252,0,0,0,0-.365c0-.228-.09-.353-.344-.341-.212.009-.425.007-.637,0-.241-.008-.359.092-.351.333.007.223,0,.447,0,.694H3847.7v-13.981c0-.132,0-.263,0-.393a.941.941,0,0,0-.926-.842q-4.876.039-9.752,0a1.106,1.106,0,0,0-1.1.648c-.476.865-.969,1.721-1.442,2.588-.1.185-.191.242-.4.162a4.532,4.532,0,0,0-3.784.342C3829.89,4963.652,3829.886,4963.808,3830.258,4964.041Z" transform="translate(-70.552)" fill="#888383"/>
+                                  <path id="Trazado_1821" data-name="Trazado 1821" d="M3793.288,5026.79a4.3,4.3,0,1,0,.007-8.6,4.3,4.3,0,1,0-.007,8.6Z" transform="translate(-35.813 -49.656)" fill="#888383"/>
+                                </g>
+                              </g>
+                            </svg>
+                          </mat-icon>
+                      </button>
+                    </ng-container>
+                    <button *ngIf="data_consulta?.flagEliminacion == 'S'" type="button" class="g-btn g-btn-transparent" (click)="anularConsulta()" style="padding-right: 35px;padding-left: 35px;">
+                        <span>ANULAR</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard-body g-border-top h-myd-border--top-0">
+        <div class="g-section-inner g-dashboard-section">
+            <div class="container">
+                <mat-tab-group #tabgroup mat-stretch-tabs (selectedTabChange)="buscarHistorial($event); change(tabgroup,$event)">
+                    <mat-tab  #tab  label="DETALLE DE CONSULTA">
+                        <mantenimiento-tab-detalle-clinica (evento)="getMensaje($event)" [data_consulta] = "data_consulta" [isNurseValue]="nurseValue" [buttonMedicalRest]="showButtonMedicalRest" [isDocSign]="signMedicalRest"></mantenimiento-tab-detalle-clinica>
+                    </mat-tab>
+                    <mat-tab  #tab  label="HISTORIAL DE ATENCIONES" >
+                        <ng-template #tab matTabContent>
+                            <mantenimiento-tab-historial [data_consulta] = "data_consulta"></mantenimiento-tab-historial>
+                        </ng-template>
+                        
+                    </mat-tab>
+                    <mat-tab  #tab  label="FILIACIÓN Y ANTECEDENTES">
+                        <ng-template matTabContent>
+                            <mantenimiento-tab-filiacion (historia)="getMensajeHistoria($event)" (antecedentes)="getMensajeAntecedentes($event)"  [isNurseValue]="nurseValue" [data_consulta] = "data_consulta"></mantenimiento-tab-filiacion>
+                        </ng-template>
+                        
+                    </mat-tab>
+                    <mat-tab  #tab  label="DECLARACIÓN SALUD">
+                        <mantenimiento-tab-declaracion-salud></mantenimiento-tab-declaracion-salud>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- <div id="print2"  style="display: none;">
+    <pdf-viewer id="pdf2" [src]=pdfBase64 [render-text]="true" [original-size]="false" [fit-to-page]="true" type="application/pdf" frameborder="0"></pdf-viewer>
+</div> -->
+
+

@@ -1,0 +1,468 @@
+h1 {
+    font-size: 24px;
+  }
+  
+  .mt-20 {
+    margin-top: 20px;
+  }
+  
+  .ml-30 {
+    margin-left: 30px;
+  }
+  
+  .margin-b-50 {
+    margin-bottom: 30px;
+  }
+  
+  .subtitle {
+    font-weight: bold;
+  }
+  
+  .dataContainer {
+    width: 100%;
+  }
+  
+  .input-time {
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    width: 100%;
+    background-color: transparent;
+    border-bottom: 1px solid gray;
+  }
+  
+  .grid-personalData{
+    display: grid;
+    gap: 2em;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+  
+     span {
+       font-weight: bold;
+     }
+  }
+  
+  .grid-horario{
+    display: grid;
+    gap: 1em;
+    margin-right: 100px;
+    grid-template-columns: 40% 15% 15% 10% 10%;
+    grid-template-rows: auto;
+  
+     span {
+       font-weight: bold;
+     }
+  }
+  
+  .headDetail {
+    padding: 12px 15px;
+    font-size: 14px;
+    border-radius: 6px 6px 0 0;
+    border: 1px solid #ddd;
+    line-height: 20px;
+  }
+  
+  
+  .cardDetail {
+    padding: 12px 15px;
+    font-size: 14px;
+    border-radius: 6px 6px 0 0;
+    border: 1px solid #ddd;
+  }
+  
+  
+  .cardHorario {
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 6px 6px 0 0;
+    border: 1px solid #ddd;
+  }
+  
+  .grid-data {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .grid-detail-sede {
+    display: grid;
+    grid-template-columns: 10% 90%;
+  }
+  
+  .flex-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  /* You can add global styles to this file, and also import other style files */
+  
+  body {
+    padding-bottom: 50px;
+  }
+  
+  .main-container {
+    margin-top: 20px;
+  }
+  
+  .card-columns {
+    display: inline-block;
+  }
+  
+  jumbotron
+  .img-logo {
+    width: 10rem;
+  }
+  
+  .animated {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+  }
+  
+  .fast {
+    -webkit-animation-duration: 0.4s;
+    animation-duration: 0.4s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+  }
+
+
+  section .dashboard-body .g-section-inner .container .expansion_panel .mat-expansion-panel {
+    justify-content: space-between;
+    align-items: center; 
+    box-shadow: none;
+    border: 1px solid rgb(231, 231, 231);
+    background-color: #f1f5f7;
+  }
+
+  
+
+  section .dashboard-body .g-section-inner .container .expansion_panel .mat-expansion-panel-header {
+    justify-content: space-between;
+    align-items: center;
+    //color: red;
+  }
+
+  section .dashboard-body .g-section-inner .container{
+    .mat-card{
+      .mat-elevation-z0{
+        .row{
+          .col-md-12{
+
+            table{
+              .mat-cell{
+                padding: 10px !important;
+              }
+            }
+          }
+        }
+      }
+    }
+    .row .col-md-12{
+          
+       .expansion_panel{
+        .mat-expansion-panel-header{
+          .mat-expansion-indicator::after {
+            color: white;
+          }
+        }
+        
+        
+        .mat-expansion-panel-body{
+          padding:  0px !important;
+        .row{
+          border-bottom: 1px solid rgb(223, 223, 223);
+    
+          .col-md-4{
+            padding: 28px 0px 28px 26px; 
+            background-color: #f5f5f5;
+            border-right: 1px solid rgb(223, 223, 223);
+          }
+
+          .itemdesc{
+            padding: 17px 0px 10px 26px; 
+            background-color: #f5f5f5;
+            border-right: 1px solid rgb(223, 223, 223);
+          }
+    
+          .col-md-2{
+            padding: 26px 0px 20px 24px; background-color: white;
+          }
+
+          .col-md-1{
+            padding: 17px 0px 10px 24px; background-color: white;
+          }
+          
+          .comentario{
+            padding: 17px 0px 10px 24px; background-color: white;
+          }
+
+          .col-md-6{
+            background-color: white;
+            /* mat-form-field{
+              padding: 0 20px 0 20px !important;
+            } */
+          }
+    
+          .col-md-8{
+            background-color: white;
+            mat-form-field{
+              padding: 0 20px 0 20px !important;
+            }
+          }
+    
+        }
+        }
+      }
+    }
+    
+    
+  }
+
+
+  
+  section .dashboard-body .g-section-inner .container .mat-card  {
+   
+    .row .col-sm-12 table{
+      overflow: hidden;
+      border-radius: 5px;
+      .mat-header-cell{
+        background-color: grey;
+        color: white;
+        font-size: 15px;
+        
+      }
+
+      .diagnostico{
+        padding-left: 12px !important;
+      }
+
+
+      .deleted{
+        padding-right: 1px !important;
+      }
+
+      .mat-cell{
+        padding: 10px;
+        .mat-icon{
+          cursor: pointer;
+          color: #8c8484;
+        }
+      }
+
+    }
+
+    .mat-card .row .col-md-12 table{
+      border-radius: 5px;
+      .mat-header-cell{
+        background-color: rgb(231, 231, 231);
+        color: black;
+      }
+
+      .diagnostico{
+        padding-left: 12px !important;
+      }
+
+      .deleted{
+        padding-right: 1px !important;
+      }
+
+      .mat-cell{
+        .mat-icon{
+          cursor: pointer;
+          color: #8c8484;
+        }
+      }
+
+    }
+    
+  }
+
+  ::ng-deep .mat-focused .mat-form-field-label {
+    /*change color of label*/
+    color: black !important;
+    font-weight: bold;
+   }
+  
+  section .dashboard-body .g-section-inner .container .expansion_panel .declaracion {
+    background-color: white;padding: 12px;
+    border-radius: 5px;
+    border: 1px solid gainsboro;
+    margin-bottom: 10px;
+    //color: red;
+  }
+
+  section .g-title .container .row .col-md-6{
+    .atencion{
+      background-color: #749806;
+      color: white;
+    }
+
+    .anulado{
+      background-color: red;
+      color: white;
+    }
+
+    .espera{
+      background-color: #008dfc;
+      color: white;
+    }
+
+    .atendido{
+      background-color: orange;
+      color: white;
+    }
+
+    .triaje{
+      background-color: yellow;
+      color: black;
+    }
+    
+  }
+
+
+
+  .expansion_panel .mat-expansion-panel-header-title,
+.expansion_panel .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.expansion_panel .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.expansion_panel .mat-form-field + .mat-form-field {
+  margin-left: 8px;
+}
+
+.count-result-search {
+  margin: 0 0 20px 0;
+}
+
+.imgContainer {
+  display: flex;
+  width: 160px;
+
+  img {
+      max-height: 140px;
+      max-width: 100%;
+  }
+}
+.fz20 {
+font-size: 20px
+}
+
+.vam{
+vertical-align: middle;
+}
+.green-color {
+color: #749806;
+}
+.mb-10 {
+margin-bottom: 10px
+}
+
+.fz12 {
+font-size: 12px
+}
+.dataContainer {
+  width: 100%;
+  border-left: 1px solid #d5d5d5;
+}
+
+.g-box {
+  display: flex;
+}
+
+.headReg {
+  padding: 12px 15px;
+  font-size: 14px;
+  border-radius: 6px 6px 0 0;
+  border-bottom: 1px solid #ddd;
+  line-height: 20px;
+}
+
+.icon-btn {
+  padding: 0 10px;
+
+  mat-icon {
+      vertical-align: bottom;
+      font-size: 20px;
+      height: 20px;
+  }
+}
+
+.label-item {
+  overflow-wrap: break-word;
+}
+
+.limit-lines {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  /* autoprefixer: off */
+  -webkit-box-orient: vertical;
+}
+
+#pdf-view-dialog{
+  display: block;
+  position: relative;
+  /* transform: translate(-50%, -50%)!important; */
+  //width: 50vw;
+  //height: 95vh;
+  overflow: hidden;
+
+  .ng2-pdf-viewer-container{
+      top: 0;
+      left: 0;
+  }
+}
+
+
+@media (min-width:992px) {
+  .count-result-search {
+      margin: 40px 0;
+  }
+}
+
+
+  
+  @keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+  }
+  
+  .fadeIn {
+    animation-name: fadeIn;
+  }
+  
+  .mat-option {
+    height: unset !important;
+    padding: 0 16px;
+    text-align: left;
+    font-size: 12px;
+    align-items: center;
+}
+
+.mat-option-text {
+    white-space: normal;
+    line-height: normal;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+svg:hover path {
+  fill: white !important;
+}
+
+.btn-svg:hover {
+    svg path {
+      fill: white !important;
+    }
+}

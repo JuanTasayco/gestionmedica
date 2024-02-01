@@ -1,0 +1,344 @@
+<section>
+    <div class="g-title">
+        <div class="container">
+            <div class="row g-row">
+                <div class="col-md-6 col-sm-12 mb-xs-2 no-mb-md">
+                    <h1>Bandeja de Consultas Médicas</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard-body g-border-top h-myd-border--top-0">
+        <div class="g-section-inner g-dashboard-section">
+            <div class="container">
+                <form class="form-validate col-md-3" style="padding-left: 0;">
+                    <div class="clearfix g-col-filter g-box-md fz14 gBgcGray5-md gBgcWhite1" id="filterBox"
+                        [ngClass]="isFilterVisible ? 'show' : ''">
+                        <div class="col-md-12 mb-ms-0 mb-xs-3 gH4 gCGray1">
+                            <h2 class="pb-xs-1 hidden-xs hidden-sm"><b>Filtros de búsqueda</b></h2>
+
+                            <div id="show-filter"
+                                class="row pt-xs-2 pb-xs-2 gBgcGray5 g-border-bottom-xs hidden-md hidden-lg"
+                                (click)="toggleFilter()">
+                                <div class="col-xs-10">
+                                    <h2><b>Filtros de búsqueda</b></h2>
+                                </div>
+
+                                <div class="col-xs-2 g-text-right-xs">
+                                    <span class="glyphicon"
+                                        [ngClass]="isFilterVisible ? 'glyphicon-chevron-down' : 'glyphicon-chevron-up'"></span>
+                                </div>
+
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+
+                        <form [formGroup]="formFiltroBandeja">
+                            <div class="g-col-filter__box">
+                                <div class="clearfix">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <mat-form-field appearance="standard" class="form-group">
+                                                    <mat-label>Médico</mat-label>
+                                                    <input [formControl]="formFiltroBandeja.get('medico')" type="text" [readonly]='isMedic(profile)'
+                                                        autoActiveFirstOption placeholder="Médico" matInput
+                                                        class="g-text-uppercase" [matAutocomplete]="medicos">
+                                                    <mat-autocomplete #medicos="matAutocomplete"
+                                                        (optionSelected)="onSelectedSearch('M',$event)"
+                                                        [displayWith]="onDisplaySearch">
+                                                        <mat-option *ngFor="let medic of medicosData" [value]="medic">
+                                                            {{medic.descripcion}}
+                                                        </mat-option>
+                                                    </mat-autocomplete>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <mat-form-field appearance="standard" class="form-group">
+                                                    <mat-label>Sede</mat-label>
+                                                    <mat-select formControlName="codSede" (selectionChange)="onSelectedSearch('S',$event)">
+                                                        <mat-option *ngFor="let s of sedes" [value]="s.codigo">
+                                                          {{s.descripcion}}</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <mat-form-field appearance="standard" class="form-group">
+                                                    <mat-label>Especialidad</mat-label>
+                                                    <mat-select formControlName="codEspecialidad" >
+                                                        <mat-option *ngFor="let e of especialidades" [value]="e.codigo">
+                                                          {{e.descripcion}}</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <mat-form-field appearance="standard" class="form-group">
+                                                    <mat-label>Estado</mat-label>
+                                                    <mat-select formControlName="estado">
+                                                        <mat-option *ngFor="let e of estado" [value]="e.codigo">{{e.descripcion}}</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <mat-label><b>Rango de fechas</b></mat-label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <mat-form-field appearance="standard" class="form-group">
+                                                    <input matInput [matDatepicker]="picker" placeholder="Desde"
+                                                        autocomplete="off" (click)="picker.open()" readonly formControlName="fecha_desde" >
+                                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                                    <mat-datepicker #picker></mat-datepicker>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <mat-form-field appearance="standard" class="form-group">
+                                                    <input matInput [matDatepicker]="pickerTwo" placeholder="Hasta"
+                                                        autocomplete="off" (click)="pickerTwo.open()" readonly formControlName="fecha_hasta" >
+                                                    <mat-datepicker-toggle matSuffix [for]="pickerTwo">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #pickerTwo></mat-datepicker>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-12 mb-10" [hidden]="mostrarFiltros">
+                                                <a (click)="verFiltros()">
+                                                    <span>
+                                                        <div>
+                                                            <b class="fz12 green-color">
+                                                                Ver más filtros
+                                                            </b>
+                                                            <i class="material-icons green-color fz20 vam">{{mostrarFiltros
+                                                                ? 'keyboard_arrow_up' :
+                                                                'keyboard_arrow_down'}}</i>
+                                                        </div>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                            <div [hidden]="!mostrarFiltros">
+                                                <div class="col-md-12">
+                                                    <mat-form-field appearance="standard" class="form-group">
+                                                        <mat-label>Busca por no. de cita o consulta</mat-label>
+                                                        <input formControlName="nroConsulta" matInput placeholder="Busca por no. de cita o consulta"
+                                                            autocomplete="off">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-12">
+
+                                                    <mat-form-field appearance="standard" class="form-group">
+                                                        <mat-label>Paciente</mat-label>
+                                                          <input matInput (keyup)="deleteInput(true)"
+                                                            [formControl]="formFiltroBandeja.get('paciente')"
+                                                            [matAutocomplete]="auto2" >
+                                                        <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="pacienteSeleccionado($event)">
+                                                          <mat-option *ngFor="let paciente of pacienteData" [value]="paciente.nombreAfiliado">
+                                                            {{paciente.nombreAfiliado}}
+                                                          </mat-option>
+                                                        </mat-autocomplete> 
+                                                    </mat-form-field>
+
+                                                    <!-- <mat-form-field appearance="standard" class="form-group">
+                                                        <mat-label>Paciente</mat-label>
+                                                        <input [formControl]="formFiltroBandeja.get('paciente')" type="text"
+                                                            autoActiveFirstOption placeholder="Buscar por nombre o no. de documento" matInput
+                                                            class="g-text-uppercase" [matAutocomplete]="pacientes">
+                                                        <mat-autocomplete #pacientes="matAutocomplete" (optionSelected)="pacienteSeleccionado($event)"
+                                                            [displayWith]="onDisplaySearch">
+                                                            <mat-option *ngFor="let paciente of pacienteData" [value]="paciente.nombreAfiliado">
+                                                                {{paciente.nombreAfiliado}}
+                                                            </mat-option>
+                                                        </mat-autocomplete>
+                                                    </mat-form-field> -->
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <mat-form-field appearance="standard" class="form-group">
+                                                        <mat-label>Financiador</mat-label>
+                                                          <input matInput (keyup)="deleteInput(false)"
+                                                            [formControl]="formFiltroBandeja.get('financiador')"
+                                                            [matAutocomplete]="auto3" >
+                                                        <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="financiadorSeleccionado($event)">
+                                                          <mat-option *ngFor="let finaciador of finaciadorData" [value]="finaciador.descripcionFinanciadora">
+                                                            {{finaciador.descripcionFinanciadora}}
+                                                          </mat-option>
+                                                        </mat-autocomplete> 
+                                                    </mat-form-field>
+
+                                                    <!-- <mat-form-field appearance="standard" class="form-group">
+                                                        <mat-label>Financiador</mat-label>
+                                                            <input [(ngModel)]="financiador" [formControl]="formFiltroBandeja.get('financiador')" type="text"
+                                                            autoActiveFirstOption placeholder="Buscar por nombre o no. de documento" matInput
+                                                            class="g-text-uppercase" [matAutocomplete]="auto">
+                                                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="financiadorSeleccionado($event)"
+                                                            [displayWith]="onDisplaySearch">
+                                                            <mat-option *ngFor="let finaciador of finaciadorData" [value]="finaciador.descripcionFinanciadora">
+                                                                {{finaciador.descripcionFinanciadora}}
+                                                            </mat-option>
+                                                        </mat-autocomplete>
+                                                    </mat-form-field> -->
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <mat-form-field appearance="standard" class="form-group">
+                                                        <mat-label>Beneficio</mat-label>
+                                                        <input matInput (keyup)="deleteInputBeneficio()"
+                                                            [formControl]="formFiltroBandeja.get('beneficio')"
+                                                            [matAutocomplete]="auto6" class="g-text-uppercase">
+                                                        <mat-autocomplete #auto6="matAutocomplete"
+                                                        [displayWith]="onDisplaySearchBeneficio">
+                                                            <mat-option *ngFor="let beneficio of beneficios"
+                                                                [value]="beneficio">
+                                                                {{beneficio.descripcionBeneficio}}
+                                                            </mat-option>
+                                                        </mat-autocomplete>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 mb-10" [hidden]="!mostrarFiltros">
+                                                <a (click)="verFiltros()">
+                                                    <span>
+                                                        <div>
+                                                            <b class="fz12 green-color">
+                                                                Ver menos filtros
+                                                            </b>
+                                                            <i class="material-icons green-color fz20 vam">{{mostrarFiltros
+                                                                ? 'keyboard_arrow_up' :
+                                                                'keyboard_arrow_down'}}</i>
+                                                        </div>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-6 mb-xs-2 mb-md-0">
+                                                <button type="button" class="g-btn g-btn-transparent block"
+                                                    (click)="clean()" [disabled]="disableButton">Limpiar</button>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <button type="button" class="g-btn g-btn-verde block" (click)="listarConsultasMedicas()"
+                                                    [disabled]="disableButton">Buscar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                       
+                    </div>
+                </form>
+                <div class="col-md-9">
+                    <div class="row mt-xs-1" *ngIf="(consultasMedica_data && consultasMedica_data.length > 0), else noData">
+                        <div *ngFor="let historia of consultasMedica_data">
+                            <div class="clearfix g-box mb-xs-2">
+                                <div class="dataContainer" style="border-left: none">
+                                    <div class="headReg clearfix g-box-content">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <b>Consulta No {{historia.numeroConsulta}}</b>
+                                                <span [ngClass]="{'anulado': historia.estado == 'ANULADO', 
+                                                'atendido' : historia.estado == 'ATENDIDO','atencion' : historia.estado == 'EN ATENCION', 'espera' : historia.estado == 'EN ESPERA',
+                                                'triaje' : historia.estado == 'EN ESPERA TRIAJE'}" style="color: white;font-size: 12px;padding: 2px 8px 2px 8px;
+                                                margin-left: 8px;border-radius: 3px;">{{historia.estado}}</span>
+                                                <div class="pull-right">
+                                                                                                                <!-- href="{{historia.urlGenesys}}" target="_blank" -->
+
+                                                    <span style="padding: 2px 8px 2px 8px;float: left;">
+                                                        <a matTooltipPosition='above'
+                                                            rel="noopener noreferrer"
+                                                            (click)="goToGenesys(historia)"
+                                                            *ngIf="historia.urlGenesys">
+                                                            Ir a Genesys
+                                                        </a>
+                                                    </span>
+                                                    <a matTooltipPosition='above'>
+                                                        <mat-icon class="fz18" *ngIf="historia?.flagEliminacion == 'S'" (click)="anularConsulta(historia)">delete</mat-icon>
+                                                    </a>
+                                                    <a matTooltipPosition='right' (click)="verDetalle(historia)">
+                                                        <mat-icon class="fz18">arrow_forward</mat-icon>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="clearfix g-box-content">
+                                        <ul class="row g-list-md">
+                                            <li class="col-md-4 clearfix cnt-item">
+                                                <div class="col-sm-5 col-xs-6 item-label">Sede</div>
+                                                <div class="col-sm-7 col-xs-6 item-dato">{{historia.sede}}
+                                                </div>
+                                            </li>
+                                            <li class="col-md-4 clearfix cnt-item">
+                                                <div class="col-sm-5 col-xs-6 item-label">No HC Local</div>
+                                                <div class="col-sm-7 col-xs-6 item-dato">{{historia.historiaClinicaLocal}}</div>
+                                            </li>
+                                            <li class="col-md-4 clearfix cnt-item">
+                                                <div class="col-sm-5 col-xs-6 item-label">No HC Global</div>
+                                                <div class="col-sm-7 col-xs-6 item-dato">{{historia.historiaClinicaGlobal}}</div>
+                                            </li>
+                                        </ul>
+
+                                        <ul class="row g-list-md">
+                                            <li class="col-md-4 clearfix cnt-item">
+                                                <div class="col-sm-5 col-xs-6 item-label">Financiador</div>
+                                                <div class="col-sm-7 col-xs-6 item-dato">{{historia.financiador}}
+                                                </div>
+                                            </li>
+                                            <li class="col-md-4 clearfix cnt-item">
+                                                <div class="col-sm-5 col-xs-6 item-label">Contrato</div>
+                                                <div class="col-sm-7 col-xs-6 item-dato">{{historia.nombreContrato}}</div>
+                                            </li>
+                                            <li class="col-md-4 clearfix cnt-item">
+                                                <div class="col-sm-5 col-xs-6 item-label">Tipo de Atención</div>
+                                                <div class="col-sm-7 col-xs-6 item-dato">{{historia.tipoAtencion}}</div>
+                                            </li>
+                                        </ul>
+
+                                        <ul class="row g-list-md">
+                                            <li class="col-md-4 clearfix cnt-item">
+                                                <div class="col-sm-5 col-xs-6 item-label">Producto</div>
+                                                <div class="col-sm-7 col-xs-6 item-dato">{{historia.producto}}
+                                                </div>
+                                            </li>
+                                            <li class="col-md-4 clearfix cnt-item">
+                                                <div class="col-sm-5 col-xs-6 item-label">Fecha de Consulta</div>
+                                                <div class="col-sm-7 col-xs-6 item-dato">{{historia.fechaConsulta}}</div>
+                                            </li>
+                                            <li class="col-md-4 clearfix cnt-item">
+                                                <div class="col-sm-5 col-xs-6 item-label">Tipo de Consulta</div>
+                                                <div class="col-sm-7 col-xs-6 item-dato">{{historia.tipoConsulta}}</div>
+                                            </li>
+                                        </ul>
+                                        <ul class="row g-list-md">
+                                            <li class="col-md-9 clearfix cnt-item">
+                                                <div class="col-sm-2 col-xs-6 item-label">Paciente</div>
+                                                <div class="col-sm-9 col-xs-6 item-dato">{{historia.nombrePaciente}} ({{historia.edad}} años)
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <ul class="row g-list-md">
+                                            <li class="col-md-9 clearfix cnt-item">
+                                                <div class="col-sm-2 col-xs-6 item-label">Beneficio</div>
+                                                <div class="col-sm-9 col-xs-6 item-dato">
+                                                    {{historia.nombreBeneficio}}
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <mapfre-pagination [currentPage]="pagination" [boundaryLinkNumbers]="true"
+                            [totalItems]="totalItems" [itemsPerPage]="totalItemsPage" [totalPages]="totalPages"
+                            [maxSize]="10" (onChangePage)="changePage($event)"></mapfre-pagination>
+                    </div>
+                    <ng-template #noData>
+                      <div class="row g-text-center-xs g-box-no-result">
+                        <div class="col-md-12 g-box-noresult-ico gCRed1">
+                            <span class="ico-mapfre_302_error"></span>
+                        </div>
+                        <div class="col-md-12 g-box-noresult-text">
+                            No hay resultados para los filtros escogidos.<br>Intenta de nuevo.
+                        </div>
+                    </div>
+                    </ng-template>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

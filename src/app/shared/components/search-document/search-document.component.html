@@ -1,0 +1,52 @@
+<div class="card-body">
+  <div class="row">
+    <div class="col-md-12">
+      <b> <p> Búsqueda de Guía Práctica</p></b>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 col-md-12">
+      <mat-form-field appearance="standard" class="form-group">
+          <mat-icon matSuffix>search</mat-icon>
+          <mat-label>Escriba la guía practica que desea buscar</mat-label>
+          <input matInput #fruitInput [formControl]="diagnostico_FormControl" [matAutocomplete]="auto" 
+          (keyup)="activarBusqueda($event.target.value)">
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="diagnosticoSeleccionado($event)">
+              <mat-option *ngFor="let d of diagnosticosFiltrados | async" [value]="d.codigo">
+                  {{d.descripcion}}
+              </mat-option>
+          </mat-autocomplete>
+      </mat-form-field>
+    </div>
+  </div>
+  <!-- <div class="row">
+    <div class="col-sm-12 col-md-3 col-md-offset-9">
+      <button type="button" class="g-btn g-btn-verde block" (click)="buscarGuia()">BUSCAR</button>
+    </div>
+  </div> -->
+  <div *ngIf="guiaVacia">
+    <div class="row" >
+        <div class="col-sm-12">
+          No existen guías prácticas para el valor ingresado. Por favor, intentelo nuevamente.
+        </div> 
+    </div>
+  </div>
+  <div *ngIf="guiasPracticas.length > 0">
+    <div class="row">
+      <div class="col-sm-12">
+         <b>Resultados encontrados</b>
+      </div>
+    </div>
+    <br>
+    <div class="row" *ngFor="let guia of guiasPracticas">
+        <div class="col-sm-10">
+          {{guia.codigoDiagnostico}} - {{guia.nombreDocumento}}
+        </div>
+        <div class="col-sm-2" style="text-align: center;">
+          <mat-icon (click)="verGuia(guia.codigoDiagnostico)"  matTooltip="Ver Guía Práctica" matTooltipPosition='below' style="cursor: pointer;">visibility</mat-icon>
+        </div>
+        <hr>
+        <hr>
+    </div>
+  </div>
+</div>

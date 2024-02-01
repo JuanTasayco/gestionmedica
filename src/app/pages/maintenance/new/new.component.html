@@ -1,0 +1,330 @@
+<section>
+  <div class="g-title">
+    <div class="container">
+      <div class="row g-row">
+        <div class="col-md-12 col-sm-12 mb-xs-2 no-mb-md">
+          <h1>{{ actionTODO }} Profesional de la Salud</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-body g-border-top h-myd-border--top-0">
+    <div class="g-section-inner g-dashboard-section">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="g-col-filter__box clearfix g-box-md mb-md-2 gBgcWhite1">
+              <div class="g-col-filter__box">
+                <div class="col-md-12 mb-md-1"></div>
+                <div class="col-md-12">
+                  <div class="row" [formGroup]="formNuevoProfesional">
+                    <!-- <form > -->
+                      <div class="col-md-12 mt-md-2 mb-md-2 ">
+                        <div class="col-md-12 mb-md-1">
+                          <span class="col-md-8 mg-top-15" style="font-size: 14px;">
+                            <b>Datos Generales del Médico
+                              </b>
+                          </span>
+                        </div>
+                        <div class="col-md-12" style="margin-top: 1rem;">
+                          <div class="col-md-2">
+                            <mat-form-field appearance="standard" class="form-group">
+                              <mat-label>Código del médico</mat-label>
+                              <input formControlName="codmedico" matInput (keypress)="onlyNumbers($event)"
+                                placeholder="Buscar no. de solicitud, asegurado o DNI" autocomplete="off">
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-2">
+                            <mat-form-field appearance="standard" class="form-group">
+                              <mat-label>Primer Nombre</mat-label>
+                              <input formControlName="primerNombre" matInput
+                                placeholder="Buscar no. de solicitud, asegurado o DNI" autocomplete="off">
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-2">
+                            <mat-form-field appearance="standard" class="form-group">
+                              <mat-label>Segundo Nombre</mat-label>
+                              <input formControlName="segundoNombre" matInput
+                                placeholder="Buscar no. de solicitud, asegurado o DNI" autocomplete="off">
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-2">
+                            <mat-form-field appearance="standard" class="form-group">
+                              <mat-label>Apellido Paterno</mat-label>
+                              <input formControlName="apellidoPaterno" matInput
+                                placeholder="Buscar no. de solicitud, asegurado o DNI" autocomplete="off">
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-2">
+                            <mat-form-field appearance="standard" class="form-group">
+                              <mat-label>Apellido Materno</mat-label>
+                              <input formControlName="apellidoMaterno" matInput
+                                placeholder="Buscar no. de solicitud, asegurado o DNI" autocomplete="off">
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-2">
+                            <mat-form-field appearance="standard" class="form-group">
+                              <input formControlName="fechaNacimiento" matInput [matDatepicker]="picker" placeholder="Fecha de nacimiento"
+                                autocomplete="off" (click)="picker.open()" readonly>
+                              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                              <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="col-md-2">
+                            <mat-form-field appearance="standard" class="form-group">
+                              <mat-label>Género</mat-label>
+                              <mat-select formControlName="genero">
+                                <mat-option *ngFor="let gen of ['F','M']" [value]="gen">{{gen}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-2">
+                            <mat-form-field appearance="standard" class="form-group">
+                              <mat-label>Tipo de Documento</mat-label>
+                              <mat-select formControlName="tipoDocumento" (selectionChange)="changeLongitudDoc($event.value)">
+                                <mat-option *ngFor="let t of tipoDocumentos" [value]="t.codigo">{{t.descripcion}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-2">
+                            <mat-form-field appearance="standard" class="form-group">
+                              <mat-label>Número de documento</mat-label>
+                              <input formControlName="numeroDocumento" matInput (keypress)="onlyNumbers($event)" [maxlength]="longitudDocumento"
+                                placeholder="Buscar no. de solicitud, asegurado o DNI" autocomplete="off">
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-2">
+                            <mat-form-field appearance="standard" class="form-group">
+                              <mat-label>Código de Usuario</mat-label>
+                              <input formControlName="codigoUsuario" matInput (keypress)="onlyNumbers($event)"
+                                placeholder="Buscar no. de solicitud, asegurado o DNI" autocomplete="off">
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-2">
+                            <mat-form-field appearance="standard" class="form-group">
+                              <mat-label>CMP</mat-label>
+                              <input formControlName="cpm" matInput (keypress)="onlyNumbers($event)"
+                                placeholder="Buscar no. de solicitud, asegurado o DNI" autocomplete="off">
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-2">
+                            <mat-form-field appearance="standard" class="form-group">
+                              <mat-label>Certificado</mat-label>
+                              <input formControlName="certificado" matInput 
+                                autocomplete="off">
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-2">
+                            <mat-form-field appearance="standard" class="form-group">
+                              <mat-label>Código</mat-label>
+                              <input formControlName="codigo" matInput 
+                                autocomplete="off">
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-2">
+                            <mat-form-field appearance="standard" class="form-group">
+                              <mat-label>Usuario</mat-label>
+                              <input formControlName="usuario" matInput 
+                                autocomplete="off">
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="col-md-12 mb-md-1" *ngIf="formNuevoProfesional.controls.codmedico.value != ''">
+                          <span class="col-md-8 mg-top-15" style="font-size: 14px;">
+                            <b>Especialidades - Sede
+                              </b>
+                          </span>
+                        </div>
+                        <!-- <div class="col-md-12 mb-md-1" style="margin-top: 1rem;">
+                          <span class="col-md-8 mg-top-15" style="font-size: 14px;">
+                            <b>Especialidades
+                              </b>
+                          </span>
+                        </div> -->
+                        <div class="col-md-12" style="margin-top: 1rem;" >
+                          <div class="col-md-4">
+                            <mat-form-field appearance="standard" class="form-group">
+                              <mat-icon matPrefix>add</mat-icon>
+                              <mat-label> Agregar por nombre o código</mat-label>
+                              <input matInput #fruitInput [formControl]="especialidad_FormControl" [matAutocomplete]="auto">
+                              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="especialidadSeleccionado($event)">
+                                  <mat-option *ngFor="let espec of especialidadFiltrados | async" [value]="espec">
+                                      {{espec.descripcion}}
+                                  </mat-option>
+                              </mat-autocomplete>
+                            </mat-form-field>
+                            
+                          </div>                     
+                        </div>
+                        <!-- AQUI -->
+                        <div class="col-md-12" style="margin-top: 1rem;" *ngIf="actionTODO==='Nuevo'">
+                          <div class="clearfix g-box-content">
+                            <form name="formUploadDocument" [formGroup]="formGroupUploadDocument">
+                              <div class="col-md-12">
+                                <div  class="drag-container" appDnd (fileDropped)="onFileDropped($event)">
+                                  <input accept="image/png, image/gif, image/jpeg"  [ngStyle]="{'cursor': 'pointer'}" type="file" #fileDropRef id="fileDropRef"
+                                    (change)="fileBrowseHandler($event.target.files, $event)" />
+                                  <h3>Agrega o arrastre aquí la Rúbrica</h3>
+                                </div>
+                              </div>
+                              <div class="col-md-12" *ngIf=" getArrayLength()>0">
+                                <div class="col-md-8">
+                                  <b> {{ getArrayLength() }} documento cargado</b>
+                                </div>
+                                <div class="col-md-4">
+                                </div>
+                              </div>
+                              <div class="col-md-12">
+                                <div class="files-list" formArrayName="items">
+                                  <div class="single-file" *ngFor="let item of formGroupUploadDocument.get('items')['controls']; let i = index;">
+                                    <div class="col-md-8">
+        
+                                      <div class="info">
+                                        <h4 class="name" >
+                                          {{ item.value.archivo.name }}
+                                        </h4>
+                                        <p class="size">
+                                          {{ formatBytes(item.value.archivo.size ) }}
+                                        </p>
+                                      </div>
+        
+                                    </div>
+                                    <div class="col-md-4">
+                                      <div class="col-md-6">
+                                        <div class="delete" (click)="deleteFile(i)">
+                                          <span class="material-icons-outlined">
+                                            
+                                            <mat-icon matTooltip="Eliminar" matTooltipPosition='right'>delete_forever</mat-icon>
+                                            </span>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-6" *ngIf="imageFile">
+                                        <div class="delete" (click)="openModalRubrica()">
+                                          <span class="material-icons-outlined">
+                                            <mat-icon matTooltip="Mostrar Rúbrica" matTooltipPosition='right'>description</mat-icon>
+                                            </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- <div class="col-md-12">
+                                <div class="col-md-6"></div>
+                                <div class="col-md-3">
+                                  <button type="button" class="g-btn g-btn-transparent block px-10"
+                                    [disabled]="" (click)="return()">Cancelar</button>
+                                </div>
+                                <div class="col-md-3">
+                                  <button type="button"  class="g-btn g-btn-verde block px-10"
+                                  [disabled]="disableButton() || imageFile" (click)="uploadDocuments()">Cargar</button>
+                                </div>
+                              </div> -->
+                            </form>
+      
+                          </div>
+                        </div>
+
+                        <ng-container formArrayName="especialidades">
+                          <ng-container *ngFor = "let especialidadForm of formNuevoProfesional.controls.especialidades['controls']; let i = index">
+                            <div class="col-md-12"  [formGroup]="especialidadForm"
+                            style="border: 1px solid rgb(216, 216, 216);border-radius: 5px;overflow: hidden;box-shadow: none;margin-bottom: 1.5rem;">
+                                
+                                    <div class="col-md-12" style="padding: 10px; background-color: white;color: black;display: flex;
+                                    justify-content: space-between;">
+                                        <b>({{especialidadForm.controls.codigoEspecialidad.value}}) {{especialidadForm.controls.descEspecialidad.value}}</b>
+                                        <mat-icon style="color: #8c8484;cursor: pointer;" (click)="eliminarEspecialidad(i,especialidadForm)">delete</mat-icon>
+                                    </div>
+                               
+                               
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                          <div class="col-sm-12 col-md-2">
+                                            <mat-form-field appearance="standard" class="form-group">
+                                              <mat-label>RNE</mat-label>
+                                              <input matInput formControlName="rne"
+                                                autocomplete="off">
+                                            </mat-form-field>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <mat-form-field appearance="standard" class="form-group">
+                                              <mat-label>Tiempo de atención</mat-label>
+                                              <input matInput formControlName="tiempoAtencion"
+                                                autocomplete="off">
+                                            </mat-form-field>
+                                          </div>   
+                                          <!-- (change)="agregarSede(spec , sede.codigo, $event )" -->
+                                          <div *ngFor="let sede of sedes" class="col-md-2" style="margin-top: 2rem;">
+                                            <mat-checkbox style="font-size: 11px;" [checked] = " especialidadForm.controls.sedes.value?.includes(sede.codigo) ? true : false"
+                                            (change)="agregarSede( i, especialidadForm.value , sede.codigo, $event )" >{{sede.descripcion}}</mat-checkbox>
+                                          </div>                                    
+                                        </div>
+                                    </div>                              
+                               </div>
+                          </ng-container>
+                        </ng-container>
+                              <!-- <div *ngFor="let spec of especialidadesSelected"  class="col-md-12" 
+                              style="border: 1px solid rgb(216, 216, 216);border-radius: 5px;overflow: hidden;box-shadow: none;margin-bottom: 1.5rem;">
+                                  
+                                      <div class="col-md-12" style="padding: 10px; background-color: white;color: black;display: flex;
+                                      justify-content: space-between;">
+                                          <b>({{spec.codigo}}) {{spec.descripcion}}</b>
+                                          <mat-icon style="color: #8c8484;cursor: pointer;">delete</mat-icon>
+                                      </div>
+                                 
+                                 
+                                      <div class="col-md-12">
+                                          <div class="row">
+                                            <div class="col-sm-12 col-md-2">
+                                              <mat-form-field appearance="standard" class="form-group">
+                                                <mat-label>RNE</mat-label>
+                                                <input matInput [(ngModel)]="spec.rne" formControlName="rne"
+                                                  autocomplete="off">
+                                              </mat-form-field>
+                                            </div>
+                                            <div class="col-md-2">
+                                              <mat-form-field appearance="standard" class="form-group">
+                                                <mat-label>Tiempo de atención</mat-label>
+                                                <input matInput [(ngModel)]="spec.tiempo" [ngModelOptions]="{standalone: true}"
+                                                  autocomplete="off">
+                                              </mat-form-field>
+                                            </div>   
+                                            <div *ngFor="let sede of sedes" class="col-md-2" style="margin-top: 2rem;">
+                                              <mat-checkbox style="font-size: 11px;" [checked] = " spec.sedes.includes(sede.codigo) ? true : false"
+                                               (change)="agregarSede(spec , sede.codigo, $event )">{{sede.descripcion}}</mat-checkbox>
+                                            </div>                                     
+                                          </div>
+                                      </div>                                  
+                        </div>
+                      -->
+
+                        <div class="col-md-12">
+                          <div class="col-md-8"></div>
+                          <div class="col-md-2">
+                            <button type="button" class="g-btn g-btn-transparent block px-10"
+                              [disabled]="" (click)="regresarProfesionales()">Cancelar</button>
+                          </div>
+                          <div class="col-md-2">
+                            <button type="button" [disabled]="!formNuevoProfesional?.valid" (click)="registrarProfesional()" class="g-btn g-btn-verde block px-10">Registrar</button>
+                          </div>
+                        </div>
+
+                      </div>
+                    <!-- </form> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>

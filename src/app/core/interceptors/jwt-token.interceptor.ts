@@ -17,7 +17,12 @@ export class JwtTokenInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         this.totalRequests++;
         this.loaderService.show();
-        if (request.url.startsWith(environment.urlService) || request.url.startsWith(environment.oimApiPath)) {
+        if (request.url.startsWith(environment.urlService) 
+        || request.url.startsWith(environment.oimApiPath) 
+        || request.url.startsWith(environment.urlService_cronicos) 
+        || request.url.startsWith(environment.urlEventTracker)
+        || request.url.startsWith(environment.urlVersion)
+        ) {
             var access_token = localStorage.getItem('jwtMapfreToken_jwtMapfreToken');
 
             if (access_token) {

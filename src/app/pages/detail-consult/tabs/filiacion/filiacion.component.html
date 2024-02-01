@@ -1,0 +1,353 @@
+<mat-accordion class="expansion_panel" *ngIf="data_consulta">
+    <br>
+    <mat-expansion-panel [expanded]="true" style="margin-bottom: 15px;">
+        <mat-expansion-panel-header>
+            <mat-panel-title style="font-weight: bold;">
+                Datos de la Consulta Médica
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="clearfix g-box-content">
+            <ul class="row g-list-md">
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">Sede</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{data_consulta.sede}}
+                    </div>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">No HC Local</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{data_consulta.historiaClinicaLocal}}</div>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">No HC Global</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{data_consulta.historiaClinicaGlobal}}</div>
+                </li>
+            </ul>
+
+            <ul class="row g-list-md">
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">Financiador</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{data_consulta.financiador}}
+                    </div>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">Fecha y Hora</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{data_consulta.fechaConsulta}}</div>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">Especialidad</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{data_consulta.nombreEspecialidad}}</div>
+                </li>
+            </ul>
+
+            <ul class="row g-list-md">
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">Médico</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{data_consulta.nombreMedico}}
+                    </div>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">Paciente</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{data_consulta.nombrePaciente}}
+                    </div>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">Edad paciente</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{data_consulta.edad}} años</div>
+                </li>
+            </ul>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>
+<div *ngIf="data_consulta && (historiaCaja || data_consulta?.estado == 'ANULADO')">
+    <mat-accordion class="expansion_panel">
+        <mat-expansion-panel [expanded]="true" style="margin-bottom: 15px;">
+            <mat-expansion-panel-header>
+                <mat-panel-title style="font-weight: bold;">
+                    Historia Clínica
+                </mat-panel-title>
+                <mat-panel-description style="display: contents;">
+                    <span class="material-icons" *ngIf="editarFiliacion && data_consulta.estado != 'ANULADO'" (click)="editarHistoria(false)" style="margin-right: 10px;">
+                        edit
+                    </span>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="clearfix g-box-content">
+                <ul class="row g-list-md">
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">Raza</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{filiacionOrdenado[0]?.subtitulos[0].data.detalle}}
+                        </div>
+                    </li>
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">Nacionalidad</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{filiacionOrdenado[0]?.subtitulos[1].data.detalle}}</div>
+                    </li>
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">Lugar de nacimiento</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{filiacionOrdenado[0]?.subtitulos[2].data.detalle}}</div>
+                    </li>
+                </ul>
+    
+                <ul class="row g-list-md">
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">Religión</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{filiacionOrdenado[0]?.subtitulos[3].data.detalle}}
+                        </div>
+                    </li>
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">Lugar de residencia</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{filiacionOrdenado[0]?.subtitulos[4].data.detalle}}</div>
+                    </li>
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">Distrito de residencia</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{filiacionOrdenado[0]?.subtitulos[6].data.detalle}}</div>
+                    </li>
+                </ul>
+    
+                <ul class="row g-list-md">
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">Domicilio</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{filiacionOrdenado[0]?.subtitulos[5].data.detalle}}
+                        </div>
+                    </li>
+                    <li class="col-md-4 clearfix cnt-item">
+                        <div class="col-sm-5 col-xs-6 item-label">Persona responsable</div>
+                        <div class="col-sm-7 col-xs-6 item-dato">{{filiacionOrdenado[0]?.subtitulos[7].data.detalle}}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+<mat-card *ngIf="data_consulta && !historiaCaja && data_consulta?.estado != 'ANULADO'" style="padding: 30px;box-shadow: none;border: 1px solid rgb(231, 231, 231);">
+    <div class="form-row">
+        <b>{{filiacionOrdenado[0]?.cabecera.textoPlanilla}}</b>
+    </div>
+    <br>
+    <form [formGroup]="formularioFiliacion">
+        <fieldset [disabled]="isNurseValue || data_consulta?.estado === 'ATENDIDO'">
+        <div class="row">
+            <div class="col-sm-12 col-md-2">
+                <mat-form-field appearance="standard" class="form-group">
+                    <mat-label>{{filiacionOrdenado[0]?.subtitulos[0].data.textoPlanilla}}</mat-label>
+                    <textarea matInput formControlName="raza" cdkTextareaAutosize autocomplete="off"  
+                        #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5"></textarea>
+                    <mat-error *ngIf="formularioFiliacion.controls['raza'].hasError('required')">
+                        Este campo es requerido
+                    </mat-error>
+                    <mat-error *ngIf="formularioFiliacion.controls['raza'].hasError('pattern')">
+                        Existen caracteres no permitidos.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-sm-12 col-md-2">
+                <mat-form-field appearance="standard" class="form-group">
+                    <mat-label>{{filiacionOrdenado[0]?.subtitulos[1].data.textoPlanilla}}</mat-label>
+                    <textarea matInput formControlName="nacionalidad" cdkTextareaAutosize autocomplete="off"  
+                        #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5"></textarea>
+                    <mat-error *ngIf="formularioFiliacion.controls['nacionalidad'].hasError('required')">
+                        Este campo es requerido
+                    </mat-error>
+                    <mat-error *ngIf="formularioFiliacion.controls['nacionalidad'].hasError('pattern')">
+                        Existen caracteres no permitidos.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-sm-12 col-md-2">
+                <mat-form-field appearance="standard" class="form-group">
+                    <mat-label>{{filiacionOrdenado[0]?.subtitulos[2].data.textoPlanilla}}</mat-label>
+                    <textarea matInput formControlName="lugar_nacimiento" cdkTextareaAutosize autocomplete="off"  
+                        #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5"></textarea>
+                    <mat-error *ngIf="formularioFiliacion.controls['lugar_nacimiento'].hasError('required')">
+                        Este campo es requerido
+                    </mat-error>
+                    <mat-error *ngIf="formularioFiliacion.controls['lugar_nacimiento'].hasError('pattern')">
+                        Existen caracteres no permitidos.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-sm-12 col-md-2">
+                <mat-form-field appearance="standard" class="form-group">
+                    <mat-label>{{filiacionOrdenado[0]?.subtitulos[3].data.textoPlanilla}}</mat-label>
+                    <textarea matInput formControlName="religion" cdkTextareaAutosize autocomplete="off"  
+                        #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5"></textarea>
+                    <mat-error *ngIf="formularioFiliacion.controls['religion'].hasError('required')">
+                        Este campo es requerido
+                    </mat-error>
+                    <mat-error *ngIf="formularioFiliacion.controls['religion'].hasError('pattern')">
+                        Existen caracteres no permitidos.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-sm-12 col-md-2">
+                <mat-form-field appearance="standard" class="form-group">
+                    <mat-label>{{filiacionOrdenado[0]?.subtitulos[4].data.textoPlanilla}}</mat-label>
+                    <textarea matInput formControlName="residencia" cdkTextareaAutosize autocomplete="off"  
+                        #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5"></textarea>
+                    <mat-error *ngIf="formularioFiliacion.controls['residencia'].hasError('required')">
+                        Este campo es requerido
+                    </mat-error><mat-error *ngIf="formularioFiliacion.controls['residencia'].hasError('pattern')">
+                        Existen caracteres no permitidos.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-sm-12 col-md-2">
+                <mat-form-field appearance="standard" class="form-group">
+                    <mat-label>{{filiacionOrdenado[0]?.subtitulos[6].data.textoPlanilla}}</mat-label>
+                    <textarea matInput formControlName="distrito" cdkTextareaAutosize autocomplete="off"  
+                        #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5"></textarea>
+                    <mat-error *ngIf="formularioFiliacion.controls['distrito'].hasError('required')">
+                        Este campo es requerido
+                    </mat-error>
+                    <mat-error *ngIf="formularioFiliacion.controls['distrito'].hasError('pattern')">
+                        Existen caracteres no permitidos.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-8">
+                <mat-form-field appearance="standard" class="form-group">
+                    <mat-label>{{filiacionOrdenado[0]?.subtitulos[5].data.textoPlanilla}}</mat-label>
+                    <textarea matInput formControlName="domicilio" cdkTextareaAutosize  autocomplete="off"  
+                        #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5"></textarea>
+                    <mat-error *ngIf="formularioFiliacion.controls['domicilio'].hasError('required')">
+                        Este campo es requerido
+                    </mat-error>
+                    <mat-error *ngIf="formularioFiliacion.controls['domicilio'].hasError('pattern')">
+                        Existen caracteres no permitidos.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <mat-form-field appearance="standard" class="form-group">
+                    <mat-label>{{filiacionOrdenado[0]?.subtitulos[7].data.textoPlanilla}}</mat-label>
+                    <textarea matInput formControlName="responsable" cdkTextareaAutosize autocomplete="off"  
+                        #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5"></textarea>
+                        <mat-error *ngIf="formularioFiliacion.controls['responsable'].hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
+                        <mat-error *ngIf="formularioFiliacion.controls['responsable'].hasError('pattern')">
+                            Existen caracteres no permitidos.
+                        </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="row" *ngIf="!isNurseValue">
+            <div class="col-sm-12 col-md-offset-10 col-md-2" *ngIf="data_consulta.estado !== 'ATENDIDO'">
+                <button type="button" class="g-btn g-btn-verde block"
+                   (click)="guardarHistoria(filiacionOrdenado[0].subtitulos, true)" >GUARDAR</button>
+            </div>
+        </div>
+        </fieldset>
+    </form>
+</mat-card>
+<br>
+<mat-card style="padding: 30px;box-shadow: none;border: 1px solid rgb(231, 231, 231);">
+    <div class="row">
+        <div class="col-sm-6">
+            <b>{{filiacionOrdenado[1]?.cabecera.textoPlanilla}}</b>
+        </div>
+        <div *ngIf="showPersonal && data_consulta.estado != 'ANULADO'" class="col-sm-6" style="text-align: end;">
+            <span class="material-icons" *ngIf="editarFiliacion" (click)="editarAntecedentes()" style="margin-right: 10px;">
+                edit
+            </span>
+        </div>
+    </div>
+    <div style="padding: 15px;">
+        <fieldset [disabled]="isNurseValue || data_consulta?.estado === 'ATENDIDO'">
+        <div class="row" *ngFor="let subtitulo of filiacionOrdenado[1]?.subtitulos" style="margin-bottom: 15px;">
+            <div class="col-md-12" style="border: 1px solid rgb(216, 216, 216);border-radius: 5px;overflow: hidden;
+                                        box-shadow: none;">
+                <div class="row">
+                    <div class="col-md-12" style="padding: 15px; background-color: #f1f5f7;color: black;display: flex;
+                                            justify-content: space-between;">
+                        <b>{{subtitulo.data.textoPlanilla}}</b>
+                    </div>
+                </div>
+                <div *ngIf="subtitulo.data.sgorgn == 2.1.1">
+                    <mat-accordion class="expansion_panel">
+                        <br>
+                        <mat-expansion-panel [expanded]="true" style="margin-bottom: 15px;">
+                            <mat-expansion-panel-header *ngIf="false" style="background-color: #888383;">
+                                <mat-panel-title style="color: white;">
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="row" id="item_filiacion">
+                                <div class="col-sm-12 col-md-4" [ngClass]="{'itemdesc': showPersonal === true}">
+                                    <b>{{subtitulo.cajas[0].data.textoPlanilla}}</b>
+                                </div>
+                                <div *ngIf="!showPersonal && data_consulta.estado != 'ANULADO'" class="col-sm-12 col-md-8">
+                                    <mat-form-field appearance="standard" class="form-group">
+                                                <input matInput [(ngModel)]="subtitulo.cajas[0].data.detalle" (ngModelChange)="onAntecedentesChange($event)" placeholder="Ingresa un comentario">
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="showPersonal || data_consulta.estado == 'ANULADO'" class="col-sm-12 col-md-8 comentario">
+                                    <span>{{subtitulo.cajas[0].data.detalle}}</span>
+                                </div>  
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+                <div *ngIf="subtitulo.data.sgorgn != 2.1.1 ">
+                    <mat-accordion *ngFor="let cajaSubtitulo of subtitulo.cajas" class="expansion_panel">
+                        <br>
+                        <mat-expansion-panel [expanded]="!showPersonal" style="background-color: white !important;">
+                            <mat-expansion-panel-header style="background-color: #888383;">
+                                <mat-panel-title style="color: white;">
+                                    <b>{{cajaSubtitulo.data.textoPlanilla}}</b>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="row" *ngFor="let itemsCaja of cajaSubtitulo.items" id="item_filiacion">
+                                <div class="col-sm-12 col-md-4 " [ngClass]="{'itemdesc': showPersonal === true}" >
+                                    <b>{{itemsCaja.textoPlanilla}}</b>
+                                </div>
+                                <div *ngIf="!showPersonal && data_consulta.estado != 'ANULADO' && itemsCaja.indicadorRespuestaPlantilla !='D'" class="col-sm-12 col-md-2">
+                                            <mat-radio-group  [(ngModel)]="itemsCaja.valorSiNo" (ngModelChange)="onAntecedentesChange($event)">
+                                        <mat-radio-button value="N" style="margin-right: 10px;">NO
+                                        </mat-radio-button>
+                                        <mat-radio-button value="S">SÍ</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                                <div *ngIf="showPersonal || data_consulta.estado == 'ANULADO'" class="col-sm-12 col-md-1">
+                                    <span *ngIf="showPersonal" style="font-weight: bold;">{{itemsCaja.valorSiNo == 'S' ? 'SÍ' : 'NO'}}</span>
+                                </div>
+                                <div *ngIf="!showPersonal && data_consulta.estado != 'ANULADO'" class="col-sm-12 col-md-6">
+                                    <mat-form-field  appearance="standard" class="form-group">
+                                                <input matInput [(ngModel)]="itemsCaja.detalle" (ngModelChange)="onAntecedentesChange($event)" placeholder="Ingresa un comentario">
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="showPersonal || data_consulta.estado == 'ANULADO'" class="col-sm-12 col-md-7 comentario">
+                                    <span>{{itemsCaja.detalle}}</span>
+                                </div>         
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                        <div *ngIf="!isNurseValue && !showPersonal && data_consulta.estado != 'ANULADO'" class="row" style="margin: 20px 0px 20px 0px;">
+                        <div class="col-sm-12 col-md-offset-10 col-md-2" style="padding-right: 0px !important;"  *ngIf="data_consulta.estado !== 'ATENDIDO'">
+                            <button type="button" class="g-btn g-btn-verde block" (click)="guardarAntecedentes()">GUARDAR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </fieldset>
+    </div>
+</mat-card>

@@ -1,0 +1,1216 @@
+<mat-accordion class="expansion_panel">
+    <br>
+    <mat-expansion-panel [expanded]="true" style="margin-bottom: 15px;">
+        <mat-expansion-panel-header>
+            <mat-panel-title style="font-weight: bold;">
+                Datos de la Consulta Médica
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="clearfix g-box-content">
+            <ul class="row g-list-md">
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">Sede</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{data_consulta?.sede}}
+                    </div>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">No HC Local</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{data_consulta?.historiaClinicaLocal}}</div>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">No HC Global</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{data_consulta?.historiaClinicaGlobal}}</div>
+                </li>
+            </ul>
+
+            <ul class="row g-list-md">
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">Financiador</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{data_consulta?.financiador}}
+                    </div>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">Fecha y Hora</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{data_consulta?.fechaConsulta}}</div>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">Especialidad</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{data_consulta?.nombreEspecialidad}}</div>
+                </li>
+            </ul>
+
+            <ul class="row g-list-md">
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">Médico</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{data_consulta?.nombreMedico}}
+                    </div>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">Paciente</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{data_consulta?.nombrePaciente}}
+                    </div>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">Edad paciente</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{data_consulta?.edad}}</div>
+                </li>
+            </ul>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>
+<mat-accordion *ngIf="inf_paciente || data_consulta?.estado == 'ANULADO'" class="expansion_panel">
+    <mat-expansion-panel [expanded]="true" style="margin-bottom: 15px;">
+        <mat-expansion-panel-header style="justify-content: space-between;">
+            <mat-panel-title style="font-weight: bold;">
+                Información del paciente
+            </mat-panel-title>
+            <mat-panel-description style="display: contents;" *ngIf="data_consulta?.estado !== 'ATENDIDO'">
+                <span class="material-icons" *ngIf="editarInformacion" (click)="editarInfoPaciente()" style="margin-right: 10px;">
+                    edit
+                </span>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="clearfix g-box-content">
+            <ul class="row g-list-md">
+                <li class="col-md-2 clearfix cnt-item">
+                    <div class="col-sm-7 col-xs-6 item-label">Peso (kg)</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['peso'].value | empty}}
+                    </div>
+                </li>
+                <li class="col-md-2 clearfix cnt-item">
+                    <div class="col-sm-7 col-xs-6 item-label">Talla (mt)</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['talla'].value | empty}}</div>
+                </li>
+                <li class="col-md-2 clearfix cnt-item">
+                    <div class="col-sm-7 col-xs-6 item-label">IMC</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['imc'].value | empty}}</div>
+                </li>
+                <li class="col-md-2 clearfix cnt-item">
+                    <div class="col-sm-7 col-xs-6 item-label">FR</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['frecuenciaRespiratoria'].value | empty}}
+                    </div>
+                </li>
+                <li class="col-md-2 clearfix cnt-item">
+                    <div class="col-sm-7 col-xs-6 item-label">FC</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['frecuenciaCardiaca'].value | empty}}</div>
+                </li>
+                <li class="col-md-2 clearfix cnt-item">
+                    <div class="col-sm-7 col-xs-6 item-label">Presión</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['presion'].value | empty}}</div>
+                </li>
+            </ul>
+
+            <ul class="row g-list-md">
+                <li class="col-md-2 clearfix cnt-item">
+                    <div class="col-sm-7 col-xs-6 item-label">T. Oral</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['temperaturaOral'].value | empty}}
+                    </div>
+                </li>
+                <li class="col-md-2 clearfix cnt-item">
+                    <div class="col-sm-7 col-xs-6 item-label">T. Otica</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['temperaturaOtica'].value | empty}}</div>
+                </li>
+                <li class="col-md-2 clearfix cnt-item">
+                    <div class="col-sm-7 col-xs-6 item-label">T. Rectal</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['temperaturaRectal'].value | empty}}</div>
+                </li>
+                <li class="col-md-2 clearfix cnt-item">
+                    <div class="col-sm-7 col-xs-6 item-label">T. Axilar</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['temperaturaAxilar'].value | empty}}</div>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-3 col-xs-6 item-label">Consultorio</div>
+                    <div class="col-sm-9 col-xs-6 item-dato">&nbsp;{{informacion_paciente.controls['nroConsultorio'].value | empty}}</div>
+                </li>
+            </ul>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>
+<mat-card *ngIf="!inf_paciente && data_consulta?.estado != 'ANULADO'"
+    style="padding: 30px;box-shadow: none;border: 1px solid rgb(231, 231, 231);margin-bottom: 15px;">
+    <form [formGroup]="informacion_paciente">
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+        <b>Completa la información del paciente</b>
+    </div>
+        <div class="col-sm-12 col-md-6" style="text-align: end;">
+            <ng-container *ngIf="consultoriosList.length > 0">
+                <mat-form-field>
+                    <mat-label>Consultorios</mat-label>
+                    <mat-select formControlName="consultorio" (selectionChange)="selectConsultorio($event)">
+                        <mat-option *ngFor="let c of consultoriosList" [value]="c.descripcion">
+                            {{c.descripcion}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="informacion_paciente.controls['consultorio'].hasError('required')">
+                        Este campo es requerido
+                    </mat-error>
+                </mat-form-field>
+            </ng-container>
+
+        </div>
+    </div>
+    <br><br>
+        <fieldset [disabled]="data_consulta?.estado === 'ATENDIDO'">
+            <div class="row">
+                <div class="col-sm-12 col-md-2">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>Peso (kg)</mat-label>
+                    <input matInput formControlName="peso" autocomplete="off"
+                        [readonly]="data_consulta?.estado == 'ANULADO'" (keypress)="onlyNumbersMedicaments($event)">
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>Talla (mt)</mat-label>
+                    <input matInput formControlName="talla" (keypress)="onlyNumbers($event)"
+                        (keyup)="formatDecimal($event,1)" [readonly]="data_consulta?.estado == 'ANULADO'"
+                         autocomplete="off">
+                        <mat-error *ngIf="informacion_paciente.controls['talla'].hasError('pattern')">
+                            Formato incorrecto(Ejm: 1.60)
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>IMC</mat-label>
+                    <input matInput formControlName="imc" (keypress)="onlyNumbers($event)" (keyup)="formatDecimal($event,2)"
+                        readonly autocomplete="off">
+                        <mat-error *ngIf="informacion_paciente.controls['imc'].hasError('pattern')">
+                            Formato incorrecto(Ejm: 10.20)
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>FR</mat-label>
+                        <input matInput formControlName="frecuenciaRespiratoria" [readonly]= "data_consulta?.estado == 'ANULADO'"
+                            (keypress)="onlyNumbersMedicaments($event)" autocomplete="off">
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>FC</mat-label>
+                        <input matInput formControlName="frecuenciaCardiaca" [readonly]= "data_consulta?.estado == 'ANULADO'"
+                            (keypress)="onlyNumbersMedicaments($event)" autocomplete="off">
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>Presión</mat-label>
+                        <input matInput formControlName="presion" [readonly]= "data_consulta?.estado == 'ANULADO'"
+                            (keypress)="onlyNumbersPresion($event)" autocomplete="off">
+                        <mat-error *ngIf="informacion_paciente.controls['presion'].hasError('pattern')">
+                            Formato incorrecto(Ejm: 100/60)
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-2">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>T. Oral</mat-label>
+                        <input matInput formControlName="temperaturaOral" [readonly]= "data_consulta?.estado == 'ANULADO'"
+                            (keypress)="onlyNumbers($event)" autocomplete="off" (keyup)="formatDecimal($event,3)" >
+                        <mat-error *ngIf="informacion_paciente.controls['temperaturaOral'].hasError('pattern')">
+                            Formato incorrecto(Ejm: 12.1)
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>T. Otica</mat-label>
+                        <input matInput formControlName="temperaturaOtica" [readonly]= "data_consulta?.estado == 'ANULADO'"
+                            (keypress)="onlyNumbers($event)" autocomplete="temperaturaOtica" (keyup)="formatDecimal($event,4)">
+                        <mat-error *ngIf="informacion_paciente.controls['temperaturaOtica'].hasError('pattern')">
+                            Formato incorrecto(Ejm: 12.1)
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>T. Rectal</mat-label>
+                        <input matInput formControlName="temperaturaRectal" [readonly]= "data_consulta?.estado == 'ANULADO'"
+                            (keypress)="onlyNumbers($event)" autocomplete="temperaturaRectal" (keyup)="formatDecimal($event,5)">
+                        <mat-error *ngIf="informacion_paciente.controls['temperaturaRectal'].hasError('pattern')">
+                            Formato incorrecto(Ejm: 12.1)
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>T. Axilar</mat-label>
+                    <input matInput formControlName="temperaturaAxilar" (keyup)="formatDecimal($event,6)"
+                        [readonly]="data_consulta?.estado == 'ANULADO'" (keypress)="onlyNumbers($event)" autocomplete="off">
+                        <mat-error *ngIf="informacion_paciente.controls['temperaturaAxilar'].hasError('pattern')">
+                            Formato incorrecto(Ejm: 12.1)
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row" *ngIf = "data_consulta?.estado != 'ANULADO'">
+                <div class="col-sm-12 col-md-2 col-md-offset-10">
+                <button type="button" (click)="guardarCabeceraConsulta(null,null,null,null, 'informacion')" class="g-btn g-btn-verde block"
+                    >GUARDAR</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</mat-card>
+<mat-accordion *ngIf="detalle_paciente && !isNurseValue" class="expansion_panel">
+    <mat-expansion-panel [expanded]="true" style="margin-bottom: 15px;">
+        <mat-expansion-panel-header style="justify-content: space-between;">
+            <mat-panel-title style="font-weight: bold;">
+                Detalle de la atención
+            </mat-panel-title>
+            <mat-panel-description style="display: contents;" *ngIf="data_consulta?.estado !== 'ATENDIDO'">
+                <span class="material-icons" *ngIf="editarInformacion && data_consulta?.estado != 'ANULADO'"  style="margin-right: 10px;" (click)="editarDetalle()">
+                    edit
+                </span>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="row">
+            <div class="col-sm-12 col-md-2">
+                <b>Signos y síntomas</b>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <p>{{data_consulta?.signosSintomas}}
+                </p>
+            </div>
+            <div class="col-sm-12 col-md-2">
+                <b>Anamnesis</b>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <p>{{data_consulta?.anamesis}}
+                </p>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm-12 col-md-2">
+                <b>Examen preferencial</b>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <p>{{data_consulta?.examenPreferencial}}</p>
+            </div>
+            <div class="col-sm-12 col-md-2">
+                <b>Apoyo al diagnóstico</b>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <p>{{data_consulta?.apoyoDiagnostico}}</p>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm-12 col-md-2">
+                <b>Tratamiento</b>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <p>{{data_consulta?.tratamiento}}
+                </p>
+            </div>
+            <div class="col-sm-12 col-md-2">
+                <b>Procedimientos</b>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <p>{{data_consulta?.procedimientos}}</p>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm-12 col-md-2">
+                <b>Recomendaciones</b>
+            </div>
+            <div class="col-sm-12 col-md-10">
+                <p>{{data_consulta?.recomendaciones}}</p>
+            </div>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>
+<mat-card *ngIf="!detalle_paciente && !isNurseValue" style="padding: 30px;box-shadow: none;border: 1px solid rgb(231, 231, 231);
+margin-bottom: 15px;">
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+        <b>Detalle de la atención</b>
+    </div>
+        <div class="col-sm-12 col-md-6" style="text-align: end;">
+            <button type="button"
+            *ngIf ="!isDocSign && data_consulta && data_consulta?.estado === 'EN ATENCION' || data_consulta?.estado === 'EN ESPERA' || data_consulta?.estado === 'EN ESPERA TRIAJE'"
+             (click)="openMedicalRestModal()" class="g-btn g-btn-green-border">+ DESCANSO
+                MEDICO</button>
+        </div>
+    </div>
+    <br><br>
+    <form [formGroup]="formCreate" *ngIf ="data_consulta?.estado != 'ANULADO'">
+        <fieldset [disabled]="data_consulta?.estado === 'ATENDIDO'">
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>Signos y síntomas</mat-label>
+                        <textarea matInput formControlName="signosSintomas" cdkTextareaAutosize autocomplete="off"
+                        #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5"></textarea>
+                        <mat-error *ngIf="formCreate.controls['signosSintomas'].hasError('required')">
+                            Este campo es requerido.
+                        </mat-error>
+                        <mat-error *ngIf="formCreate.controls['signosSintomas'].hasError('pattern')">
+                            Existen caracteres no permitidos.
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>Anamnesis</mat-label>
+                        <textarea matInput formControlName="anamesis" cdkTextareaAutosize autocomplete="off"
+                        #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5"></textarea>
+                        <mat-error *ngIf="formCreate.controls['anamesis'].hasError('required')">
+                            Este campo es requerido.
+                        </mat-error>
+                        <mat-error *ngIf="formCreate.controls['anamesis'].hasError('pattern')">
+                            Existen caracteres no permitidos.
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>Examen preferencial</mat-label>
+                        <textarea matInput formControlName="examenPreferencial" cdkTextareaAutosize autocomplete="off"
+                        #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5"></textarea>
+                        <mat-error *ngIf="formCreate.controls['examenPreferencial'].hasError('required')">
+                            Este campo es requerido.
+                        </mat-error>
+                        <mat-error *ngIf="formCreate.controls['examenPreferencial'].hasError('pattern')">
+                            Existen caracteres no permitidos.
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>Apoyo al diagnóstico</mat-label>
+                        <textarea matInput formControlName="apoyoDiagnostico" cdkTextareaAutosize autocomplete="off"
+                        #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5"></textarea>
+                        <mat-error *ngIf="formCreate.controls['apoyoDiagnostico'].hasError('required')">
+                            Este campo es requerido.
+                        </mat-error>
+                        <mat-error *ngIf="formCreate.controls['apoyoDiagnostico'].hasError('pattern')">
+                            Existen caracteres no permitidos.
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>Tratamiento</mat-label>
+                        <textarea matInput formControlName="tratamiento" cdkTextareaAutosize autocomplete="off"
+                        #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5"></textarea>
+                        <mat-error *ngIf="formCreate.controls['tratamiento'].hasError('required')">
+                            Este campo es requerido.
+                        </mat-error>
+                        <mat-error *ngIf="formCreate.controls['tratamiento'].hasError('pattern')">
+                            Existen caracteres no permitidos.
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>Procedimientos</mat-label>
+                        <textarea matInput formControlName="procedimientos" cdkTextareaAutosize autocomplete="off"
+                        #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5"></textarea>
+                        <mat-error *ngIf="formCreate.controls['procedimientos'].hasError('required')">
+                            Este campo es requerido.
+                        </mat-error>
+                        <mat-error *ngIf="formCreate.controls['procedimientos'].hasError('pattern')">
+                            Existen caracteres no permitidos.
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <mat-form-field class="form-group">
+                        <mat-label>Recomendaciones</mat-label>
+                        <textarea matInput formControlName="recomendaciones" cdkTextareaAutosize autocomplete="off"
+                        #autosize="cdkTextareaAutosize"
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5"></textarea>
+                        <mat-error *ngIf="formCreate.controls['recomendaciones'].hasError('required')">
+                            Este campo es requerido.
+                        </mat-error>
+                        <mat-error *ngIf="formCreate.controls['recomendaciones'].hasError('pattern')">
+                            Existen caracteres no permitidos.
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-2 col-md-offset-10">
+                    <button type="button" class="g-btn g-btn-verde block" (click)="guardarCabeceraConsulta(null,null,null,null, 'detalle')"
+                        [disabled]="formCreate.pristine">GUARDAR</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</mat-card>
+<mat-card style="padding: 30px;box-shadow: none;border: 1px solid rgb(231, 231, 231);" *ngIf="!isNurseValue">
+    <div class="form-row">
+        <div class="row">
+            <div class="col-sm-12 col-md-11"><p><b>Diagnósticos</b></p></div>
+            <!-- <div *ngIf="listaServicios"  class="col-sm-12 col-md-2">
+                <button type="button" class="g-btn g-btn-verde block">GENERAR OA</button>
+            </div> -->
+            <div *ngIf="listaServicios"  class="col-sm-12 col-md-1" style="text-align: center;" >
+                <ng-container *ngIf="data_consulta?.estado !== 'ATENDIDO'">
+                <span class="material-icons" *ngIf="editarInformacion"  (click)="editarDiagnosticos()" style="padding-top: 10px;cursor: pointer;">
+                    edit
+                </span>
+                </ng-container>
+
+            </div>
+        </div>
+        <mat-hint *ngIf="!listaServicios && data_consulta?.estado != 'ANULADO'" style="font-size: 12px;">
+            <ng-container *ngIf="data_consulta?.estado !== 'ATENDIDO'">
+                Los diagnósticos agregados son tomados como
+            <b>"Presuntivo"</b>, si deseas iniciar que son <b>"Definitivo"</b> debes activar la
+            casilla correspondiente.
+            </ng-container>
+
+        </mat-hint>
+    </div>
+    <div class="row" *ngIf="!listaServicios && data_consulta?.estado != 'ANULADO'" >
+        <div class="col-sm-12 col-md-8" *ngIf="data_consulta?.estado !== 'ATENDIDO'">
+            <fieldset [disabled]="data_consulta?.estado === 'ATENDIDO'">
+                <mat-form-field appearance="standard" class="form-group">
+                    <mat-icon matPrefix>add</mat-icon>
+                    <mat-label>Agregar diagnóstico por nombre o CIE10</mat-label>
+                    <input matInput #diagnosticoSearch [formControl]="diagnostico_FormControl" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="diagnosticoSeleccionado($event)">
+                        <mat-option *ngFor="let d of diagnosticosFiltrados | async" [value]="d.codigo">
+                            {{d.descripcion}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </fieldset>
+        </div>
+    </div>
+    <div class="row" *ngIf="listaServicios">
+        <div *ngFor="let data of dataSource.data; let i = index">
+            <div class="col-sm-12 col-md-2" style="font-weight: bold;">
+                {{i+1}}. {{ data.indicador == 'P' ? 'Presuntivo' : 'Definitivo'  }}
+            </div>
+            <div class="col-sm-12 col-md-10">
+                {{data.value}}
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="dataSource.data.length > 0 && !listaServicios">
+        <div class="col-sm-12 col-md-8">
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z1" style="width: 100%;">
+                <ng-container matColumnDef="diagIdentificado">
+                    <th mat-header-cell *matHeaderCellDef> Diagnósticos Identificados </th>
+                    <td mat-cell class="diagnostico" *matCellDef="let element">
+                        {{element.value}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="checkbox">
+                    <th mat-header-cell *matHeaderCellDef> </th>
+                    <td mat-cell *matCellDef="let element">
+                        <mat-checkbox (change)="cambiarIndicador($event, element)" [checked]="element.indicador == 'D' ? true : false ">Diagnóstico definitivo</mat-checkbox>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef> </th>
+                    <td mat-cell class="deleted" *matCellDef="let element">
+                        <mat-icon (click)="deleteDiagnostico(element)" style="margin-right: 2rem;">delete</mat-icon>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="columnsDiagnosticos"></tr>
+                <tr mat-row class="table-row" *matRowDef="let row; columns: columnsDiagnosticos;"></tr>
+            </table>
+        </div>
+    </div>
+    <br><br>
+
+    <mat-expansion-panel [expanded]="itemsDiagnosticos" class="mat-elevation-z0" style="margin-bottom: 2rem;border: 1px solid rgb(228, 228, 228);">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                <b style="font-size: 14px;">Servicios de Apoyo al Diagnóstico</b>
+            </mat-panel-title>
+            <mat-panel-description style="display: contents;" (click)="$event.stopPropagation();" *ngIf="listaServicios && dataSourceServicio.data.length > 0">
+                <!-- <span class="material-icons" style="margin-right: 10px;"  matTooltip="Ficha de consentimiento" matTooltipPosition='right' >
+                    fact_check
+                </span> -->
+                <span class="material-icons" style="margin-right: 10px;" (click)="imprimirApoyoDiag()" matTooltip="Imprimir Servicios de Apoyo al Diagnóstico" matTooltipPosition='right'>
+                    print
+                </span>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="row" *ngIf="dataSource.data.length > 0 && !listaServicios">
+            <div class="col-sm-12 col-md-4">
+                <mat-form-field appearance="standard" class="form-group">
+                    <mat-label>Diagnóstico Identificado</mat-label>
+                    <mat-select [(ngModel)]="diagSeleccionado_Serv"
+                        (selectionChange)="listarServDiagSeleccionado($event)">
+                        <mat-option *ngFor="let serv of cboservDiag" [value]="serv">
+                            {{serv.value}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <fieldset [disabled]="data_consulta?.estado === 'ATENDIDO'">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-icon matPrefix>add</mat-icon>
+                        <mat-label>Agregar servicio por nombre o código</mat-label>
+                        <input matInput #diagnosticoInput [formControl]="servDiag_FormControl" [matAutocomplete]="auto2">
+                        <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="servDiagSeleccionado($event)">
+                            <mat-option *ngFor="let d of servDiagFiltrados | async" [value]="d.codigo">
+                                {{d.descripcion}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </fieldset>
+            </div>
+        </div>
+        <div class="row" *ngIf="dataSourceServicio.data.length > 0">
+            <div class="col-md-12">
+              <form #frmServicio="ngForm">
+                <fieldset [disabled]="listaServicios">
+                <table mat-table [dataSource]="dataSourceServicio" class="mat-elevation-z1" style="width: 100%;">
+                    <ng-container matColumnDef="diagnostico">
+                        <th mat-header-cell *matHeaderCellDef width ="30%"> Diagnóstico</th>
+                        <td mat-cell class="diagnostico" *matCellDef="let element">
+                            {{element.diagnosticoSeleccionado}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="servicio">
+                        <th mat-header-cell *matHeaderCellDef width ="30%"> Servicio</th>
+                        <td mat-cell *matCellDef="let element"> {{element.servicio}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="cantidad">
+                        <th mat-header-cell *matHeaderCellDef width ="8%"> Cantidad</th>
+                        <td mat-cell *matCellDef="let element; index as i">
+                          <mat-form-field appearance="standard" class="form-group">
+                          <input integerInput matInput type="text" maxlength="2" #cantidad="ngModel" [(ngModel)]="element.cantidad" name="cantidad_{{i}}" required
+                            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                          oninput="javascript: if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                            <mat-hint class="mat-error">
+                              <ng-container *ngIf="cantidad.invalid && (cantidad.dirty || cantidad.touched)">
+                                  <div *ngIf="cantidad.errors.required">
+                                  Ingrese Cantidad.
+                                  </div>
+                                  <div *ngIf="cantidad.errors.zeroError">
+                                  Ingrese valores numericos.
+                                  </div>
+                              </ng-container>
+                            </mat-hint>
+                        </mat-form-field>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="numOA">
+                        <th mat-header-cell *matHeaderCellDef width ="8%"> No. de OA</th>
+                        <td mat-cell *matCellDef="let element"> {{element.numeroOrden > 0 ? element.numeroOrden : '-'}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="realizado">
+                        <th mat-header-cell *matHeaderCellDef width ="8%"> Realizado</th>
+                        <td mat-cell *matCellDef="let element"> {{element.realizado}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="interno">
+                        <th mat-header-cell *matHeaderCellDef width ="12%"> Interno</th>
+                        <td mat-cell *matCellDef="let element; index as i">
+                            <mat-radio-group style="display: flex;flex-direction: row;" (change)="changeInterno($event, element)" name="interno_{{i}}"
+                            [(ngModel)]="element.interno" [disabled]="listaServicios">
+                                <mat-radio-button value="S" style="margin-right: 5px;">SI</mat-radio-button>
+                                <mat-radio-button value="N">NO</mat-radio-button>
+                            </mat-radio-group>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef [hidden]="listaServicios" width ="4%"> </th>
+                        <td mat-cell class="deleted" *matCellDef="let element" [hidden]="listaServicios">
+                            <mat-icon (click)="deleteServDiag(element)" *ngIf="!listaServicios" style="cursor: pointer;">delete</mat-icon>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="columnsServicios"></tr>
+                    <tr mat-row *matRowDef="let row; columns: columnsServicios; let in = index" ngModelGroup="item{{in}}"></tr>
+                </table>
+                </fieldset>
+              </form>
+            </div>
+        </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel [expanded]="itemsDiagnosticos" class="mat-elevation-z0" style="margin-bottom: 2rem;border: 1px solid rgb(228, 228, 228);">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                <b style="font-size: 14px;">Procedimientos</b>
+            </mat-panel-title>
+            <mat-panel-description style="display: contents;" (click)="$event.stopPropagation();" *ngIf="listaServicios && dataSourceProcedimiento.data.length > 0">
+                <!-- <span class="material-icons" style="margin-right: 10px;" (click)="previewFichaConsentimiento()"
+                 matTooltip="Ficha de consentimiento" matTooltipPosition='right'>
+                    fact_check
+                </span> -->
+                <span class="material-icons" style="margin-right: 10px;" (click)="imprimirProcedimientos()" matTooltip="Imprimir Procedimientos" matTooltipPosition='right'>
+                    print
+                </span>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="row" *ngIf="dataSource.data.length > 0 && !listaServicios">
+            <div class="col-sm-12 col-md-4">
+                <mat-form-field appearance="standard" class="form-group">
+                    <mat-label>Diagnóstico Identificado</mat-label>
+                    <mat-select [(ngModel)]="diagSeleccionado_Proc"
+                        (selectionChange)="listarProcedimientoSeleccionado($event)">
+                        <mat-option *ngFor="let serv of cboservDiag" [value]="serv">
+                            {{serv.value}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <fieldset [disabled]="data_consulta?.estado === 'ATENDIDO'">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-icon matPrefix>add</mat-icon>
+                        <mat-label>Agregar servicio por nombre o código</mat-label>
+                        <input matInput #procedimientoInput [formControl]="procedimiento_FormControl" [matAutocomplete]="auto3">
+                        <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="procedimientoSeleccionado($event)">
+                            <mat-option *ngFor="let p of procedimientosFiltrados | async" [value]="p.codigo">
+                                {{p.descripcion}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </fieldset>
+            </div>
+        </div>
+        <div class="row" *ngIf="dataSourceProcedimiento.data.length > 0">
+            <div class="col-md-12">
+              <form #frmProcedimiento="ngForm">
+                <fieldset [disabled]="listaServicios">
+                <table mat-table [dataSource]="dataSourceProcedimiento" class="mat-elevation-z1" style="width: 100%;">
+
+                    <ng-container matColumnDef="diagnostico">
+                        <th mat-header-cell *matHeaderCellDef width ="30%"> Diagnóstico</th>
+                        <td mat-cell class="diagnostico" *matCellDef="let element">
+                            {{element.procedimientoSeleccionado}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="procedimiento">
+                        <th mat-header-cell *matHeaderCellDef width ="30%"> Procedimiento</th>
+                        <td mat-cell *matCellDef="let element"> {{element.procedimiento}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="cantidad">
+                        <th mat-header-cell *matHeaderCellDef width ="8%"> Cantidad</th>
+                        <td mat-cell *matCellDef="let element; index as i">
+                          <mat-form-field appearance="standard" class="form-group">
+                            <input integerInput matInput type="text" maxlength="2" #cantidadProc="ngModel" [(ngModel)]="element.cantidad" name="cantidadProc_{{i}}" required
+                              onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                            oninput="javascript: if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                              <mat-hint class="mat-error">
+                                <ng-container *ngIf="cantidadProc.invalid && (cantidadProc.dirty || cantidadProc.touched)">
+                                    <div *ngIf="cantidadProc.errors.required">
+                                    Ingrese Cantidad.
+                                    </div>
+                                    <div *ngIf="cantidadProc.errors.zeroError">
+                                    Ingrese valores numericos.
+                                    </div>
+                                </ng-container>
+                              </mat-hint>
+                          </mat-form-field>
+                         </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="numOA">
+                        <th mat-header-cell *matHeaderCellDef width ="8%"> No. de OA</th>
+                        <td mat-cell *matCellDef="let element"> {{element.numeroOrden > 0 ? element.numeroOrden : '-'}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="realizado">
+                        <th mat-header-cell *matHeaderCellDef width ="8%"> Realizado</th>
+                        <td mat-cell *matCellDef="let element"> {{element.realizado}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="interno">
+                        <th mat-header-cell *matHeaderCellDef width ="12%"> Interno</th>
+                        <td mat-cell *matCellDef="let element; index as i">
+                            <mat-radio-group style="display: flex;flex-direction: row;" (change)="changeInternoProc($event, element)" name="internoProc_{{i}}"
+                            [(ngModel)]="element.interno" [disabled]="listaServicios">
+                                <mat-radio-button value="S" style="margin-right: 5px;">SI</mat-radio-button>
+                                <mat-radio-button value="N">NO</mat-radio-button>
+                            </mat-radio-group>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef width ="4%" [hidden]="listaServicios"> </th>
+                        <td mat-cell class="deleted" *matCellDef="let element" [hidden]="listaServicios">
+                            <mat-icon (click)="deleteProcedimiento(element)" *ngIf="!listaServicios" style="cursor: pointer;">delete</mat-icon>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="columnsProcedimiento"></tr>
+                    <tr mat-row *matRowDef="let row; columns: columnsProcedimiento; let in = index" ngModelGroup="procedimiento_{{in}}"></tr>
+                </table>
+                </fieldset>
+              </form>
+            </div>
+        </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel [expanded]="itemsDiagnosticos"  class="mat-elevation-z0" style="margin-bottom: 2rem;border: 1px solid rgb(228, 228, 228);">
+        <mat-expansion-panel-header>
+            <mat-panel-title >
+                <b style="font-size: 14px;">Receta</b>
+            </mat-panel-title>
+            <mat-panel-description style="display: contents;" (click)="$event.stopPropagation();" *ngIf="listaServicios && dataSourceMedicamento.data.length > 0">
+
+                <span class="cnt-ico ico-mapfre_341_delivery-medicamentos" *ngIf="data_consulta?.estado === 'ATENDIDO'"
+                    matTooltip="Generar Pedido" matTooltipPosition='right'
+                    style="margin-right: 10px; font-size: 23px;font-weight: bold;"
+                    (click)="generarPedido()">
+                </span>
+
+                <span class="material-icons" (click)="imprimirReceta()" style="margin-right: 10px;" matTooltip="Imprimir Recetas" matTooltipPosition='right'>
+                    print
+                </span>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="row" *ngIf="dataSource.data.length > 0 && !listaServicios ">
+            <div class="col-sm-12 col-md-4">
+                <mat-form-field appearance="standard" class="form-group">
+                    <mat-label>Diagnóstico Identificado</mat-label>
+                    <mat-select [(ngModel)]="medicamentoSeleccionado_Proc"
+                        (selectionChange)="listarRecetaSeleccionado($event)">
+                        <mat-option *ngFor="let serv of cboservDiag" [value]="serv">
+                            {{serv.value}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <fieldset [disabled]="data_consulta?.estado === 'ATENDIDO'">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-icon matPrefix>add</mat-icon>
+                        <mat-label>Agregar medicamento por nombre o DCI</mat-label>
+                        <input matInput #medicamentoInput [formControl]="medicamento_FormControl" [matAutocomplete]="auto3">
+                        <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="medicamentoSeleccionado($event)">
+                            <mat-option *ngFor="let m of medicamentosFiltrados | async" [value]="m.codigo">
+                                <span>{{m.descripcion}}</span>
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </fieldset>
+            </div>
+        </div>
+        <div *ngIf="dataSourceMedicamento.data.length > 0 && !listaServicios" style="padding: 15px;">
+          <form #formularioMedicamento="ngForm">
+            <div class="row" *ngFor="let dm of dataSourceMedicamento.data ; let i = index " [ngModelGroup]="'item' + i" style="margin-bottom: 15px;">
+                <div class="col-md-12" style="border: 1px solid rgb(216, 216, 216);border-radius: 5px;overflow: hidden;
+                    box-shadow: none;">
+                    <div class="row">
+                        <div class="col-md-12" style="padding: 10px; background-color: rgb(231, 231, 231);color: black;display: flex;
+                        justify-content: space-between;">
+                            <b>({{dm.code}}) {{dm.medicamentoSelecionado}}</b>
+                            <mat-icon style="color: #8c8484;cursor: pointer;" (click)="deleteMedicamento(dm)">delete
+                            </mat-icon>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                                <div class="row">
+                                        <ng-container *ngIf="dm.code.length < 7">
+                                    <div class="col-sm-12 col-md-1">
+                                        <mat-form-field appearance="standard" class="form-group">
+                                            <mat-label>Dosis</mat-label>
+                                                <input  matInput [(ngModel)]="dm.dosis" name="dosis" (keypress)="onlyNumbersMedicaments($event)" #medDosis="ngModel"
+                              (keyup)="calcularCantidad($event.target.value, i)" required >
+                                        </mat-form-field>
+                            <div class="row" *ngIf="medDosis.invalid && (medDosis.dirty || medDosis.touched)">
+                              <div class="col-md-12"  *ngIf="medDosis.errors.required">
+                                  <mat-error>
+                                      El campo es requerido.
+                                  </mat-error>
+                              </div>
+
+                            </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-2">
+                                        <mat-form-field appearance="standard" class="form-group">
+                                            <mat-label>UM Dosis</mat-label>
+                            <mat-select [(ngModel)]="dm.unidadMedidaDosis" name="unidadMedidaDosis" required
+                              (selectionChange)="calcularCantidad($event.value, i)">
+                                                <!-- <mat-option value="">Todos</mat-option> -->
+                                                <mat-option *ngFor="let d of listaDosis" [value]="d.codigo">
+                                                    {{d.descripcion}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-sm-12 col-md-1">
+                                        <mat-form-field appearance="standard" class="form-group">
+                                            <mat-label>Cada</mat-label>
+                            <input matInput [(ngModel)]="dm.frecuencia" name="frecuencia" required #medFrec="ngModel"
+                              (keypress)="onlyNumbersMedicaments($event)" (keyup)="calcularCantidad($event.target.value, i)">
+                                        </mat-form-field>
+                                        <div class="row" *ngIf="medFrec.invalid && (medFrec.dirty || medFrec.touched)">
+                                          <div class="col-md-12"  *ngIf="medFrec.errors.required">
+                                              <mat-error>
+                                                  El campo es requerido.
+                                              </mat-error>
+                                          </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-2">
+                                        <mat-form-field appearance="standard" class="form-group">
+                                            <mat-label>UM Frecuencia</mat-label>
+                            <mat-select [(ngModel)]="dm.unidadMedidaFrecuencia" name="unidadMedidaFrecuencia" required
+                              (selectionChange)="calcularCantidad($event.value, i)">
+                                                <mat-option *ngFor="let f of listaFrecuencias" [value]="f.codigo">
+                                                    {{f.descripcion}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-sm-12 col-md-1">
+                                        <mat-form-field appearance="standard" class="form-group">
+                                            <mat-label>Duración</mat-label>
+                            <input matInput [(ngModel)]="dm.duracion" name="duracion" (keypress)="onlyNumbersMedicaments($event)" required #medDur="ngModel"
+                              (keyup)="calcularCantidad($event.target.value, i)">
+                                        </mat-form-field>
+                                        <div class="row" *ngIf="medDur.invalid && (medDur.dirty || medDur.touched)">
+                                          <div class="col-md-12"  *ngIf="medDur.errors.required">
+                                              <mat-error>
+                                                  El campo es requerido.
+                                              </mat-error>
+                                          </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-2">
+                                        <mat-form-field appearance="standard" class="form-group">
+                                            <mat-label>UM Duración</mat-label>
+                            <mat-select [(ngModel)]="dm.unidadMedidaDuracion" name="unidadMedidaDuracion" required
+                              (selectionChange)="calcularCantidad($event.value, i)">
+                                                <mat-option *ngFor="let r of listaDuracion" [value]="r.codigo">
+                                                    {{r.descripcion}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                        </ng-container>
+                                    <div class="col-sm-12 col-md-1">
+                                        <mat-form-field appearance="standard" class="form-group">
+                                            <mat-label>Cantidad</mat-label>
+                          <input matInput #cantidadProducto="ngModel" [(ngModel)]="dm.cantidadProducto" name="cantidadProducto" required
+                            pattern="^[+]?(\d*|\d{1,3}(,\d{3})*)(\.\d+)?\b$">
+                                        </mat-form-field>
+                                        <div class="row" *ngIf="cantidadProducto.invalid && (cantidadProducto.dirty || cantidadProducto.touched)">
+                                          <div class="col-md-12"  *ngIf="cantidadProducto.errors.required">
+                                              <mat-error>
+                                                  El campo es requerido.
+                                              </mat-error>
+                                          </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <mat-form-field appearance="standard" class="form-group">
+                                            <mat-label>Indicaciones médicas</mat-label>
+                                                <textarea inputrestriction="800" matInput [(ngModel)]="dm.indicacionMedica" name="indicacionMedica" cdkTextareaAutosize autocomplete="off"
+                                                #autosize="cdkTextareaAutosize"
+                                                cdkAutosizeMinRows="1"
+                                                cdkAutosizeMaxRows="5"> </textarea>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                    <div class="row" *ngIf="dm.cantidadProducto > 999">
+                                        <div class="col-md-12">
+                                            <mat-error>
+                                                El campo cantidad no debe ser mayor a 999.
+                                            </mat-error>
+                                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+          </form>
+        </div>
+
+        <div class="row" *ngIf="listaServicios && dataSourceMedicamento.data.length > 0">
+            <div class="col-md-12">
+                <table mat-table [dataSource]="dataSourceMedicamento" class="mat-elevation-z1" style="width: 100%;">
+
+                    <ng-container matColumnDef="medicamentos">
+                        <th mat-header-cell *matHeaderCellDef> Medicamentos</th>
+                        <td mat-cell class="diagnostico" *matCellDef="let element">
+                            {{element.medicamentoSelecionado}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="frecuencia">
+                        <th mat-header-cell *matHeaderCellDef> Frecuencia</th>
+                        <td mat-cell *matCellDef="let element"> {{element.indicaciones}}
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="columnsMedicamentos"></tr>
+                    <tr mat-row *matRowDef="let row; columns: columnsMedicamentos;"></tr>
+                </table>
+            </div>
+        </div>
+    </mat-expansion-panel>
+
+    <!-- <mat-card style="margin-bottom: 20px;box-shadow: none; border: 1px solid rgb(231, 231, 231);padding: 25px;">
+        <b>Receta</b>
+        <div class="row" *ngIf="dataSource.data.length > 0">
+            <div class="col-sm-12 col-md-4">
+                <mat-form-field appearance="standard" class="form-group">
+                    <mat-label>Diagnóstico Identificado</mat-label>
+                    <mat-select [(ngModel)]="medicamentoSeleccionado_Proc"
+                        (selectionChange)="listarRecetaSeleccionado($event)">
+                        <mat-option *ngFor="let serv of cboservDiag" [value]="serv">
+                            {{serv.value}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <mat-form-field appearance="standard" class="form-group">
+                    <mat-icon matPrefix>add</mat-icon>
+                    <mat-label>Agregar medicamento por nombre o DCI</mat-label>
+                    <input matInput #fruitInput [formControl]="medicamento_FormControl" [matAutocomplete]="auto3">
+                    <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="medicamentoSeleccionado($event)">
+                        <mat-option *ngFor="let m of medicamentosFiltrados | async" [value]="m.codigo">
+                            <span>{{m.descripcion}}</span>
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+        </div>
+
+    </mat-card> -->
+
+    <div class="row" *ngIf="!listaServicios">
+        <div class="col-sm-12 col-md-2 col-md-offset-10" style="margin-bottom: 10px;">
+            <button type="button" class="g-btn g-btn-verde block" [disabled]="data_diagnosticos"
+                (click)="guardarTodo()">GUARDAR</button>
+        </div>
+    </div>
+</mat-card>
+<br>
+<mat-card style="box-shadow: none;" *ngIf="!agregarReferencia && !isNurseValue && data_consulta?.estado != 'ANULADO'">
+    <div class="row" *ngIf="data_consulta?.estado !== 'ATENDIDO'">
+        <div class="col-md-2">
+            <button type="button" (click)="formReferencia(true)" class="g-btn g-btn-green-border block">+ AGREGAR
+                REFERENCIA</button>
+        </div>
+    </div>
+</mat-card>
+<mat-card style="margin-bottom: 20px;box-shadow: none; border: 1px solid rgb(231, 231, 231);padding: 25px;"
+    *ngIf="agregarReferencia && !datos_referencia && !isNurseValue">
+    <form [formGroup]="formularioReferencia">
+        <fieldset [disabled]="data_consulta?.estado === 'ATENDIDO'">
+            <div class="row">
+                <div class="col-sm-12 col-md-2">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>No. de Referencia</mat-label>
+                        <input matInput autocomplete="off" formControlName="nroReferencia">
+                        <mat-error *ngIf="formularioReferencia.controls['nroReferencia'].hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <!-- <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>Fecha de Referencia</mat-label>
+                        <input matInput autocomplete="off" formControlName="anamnesis">
+                        <mat-error *ngIf="formCreate.controls['anamnesis'].hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
+                    </mat-form-field> -->
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>Fecha de Referencia</mat-label>
+                        <input matInput [matDatepicker]="picker2" autocomplete="off" (click)="picker2.open()" readonly
+                            formControlName="fechaReferencia">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                        <mat-error *ngIf="formularioReferencia.controls['fechaReferencia'].hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-12 col-md-4">
+                    <!-- <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>Establecimiento de Origen</mat-label>
+                        <input matInput autocomplete="off" formControlName="origen">
+                        <mat-error *ngIf="formularioReferencia.controls['origen'].hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
+                    </mat-form-field> -->
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>Establecimiento Origen</mat-label>
+                        <mat-select formControlName="origen">
+                            <mat-option *ngFor="let d of destinos" [value]="d.descripcion">
+                                {{d.descripcion}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="formularioReferencia.controls['origen'].hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-12 col-md-4">
+                   <!--  <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>Establecimiento Destino</mat-label>
+                        <input matInput autocomplete="off" formControlName="destino">
+                        <mat-error *ngIf="formularioReferencia.controls['destino'].hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
+                    </mat-form-field> -->
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>Establecimiento Destino</mat-label>
+                        <mat-select formControlName="destino">
+                            <mat-option *ngFor="let d of destinos" [value]="d.descripcion">
+                                {{d.descripcion}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="formularioReferencia.controls['destino'].hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-4">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>UPS Destino de la Referencia</mat-label>
+                        <mat-select formControlName="upsReferencia" (selectionChange)="setUPS($event)">
+                            <mat-option *ngFor="let u of ups" [value]="u.codigo + '|' + u.descripcion ">
+                                {{u.descripcion}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="formularioReferencia.controls['upsReferencia'].hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-12 col-md-4" *ngIf="formularioReferencia.controls['upsReferencia_desc'].value == 'APOY. DIAGNOSTICO'">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>Examen Especial</mat-label>
+                        <mat-select formControlName="examenEspecial" (selectionChange)="setExamenEspecial($event)">
+                            <mat-option *ngFor="let proc of dataSourceProcedimiento.data" [value]="proc.code + '|' + proc.procedimiento">
+                                {{proc.procedimiento}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="formularioReferencia.controls['examenEspecial'].hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-12 col-md-4" *ngIf="formularioReferencia.controls['upsReferencia_desc'].value != 'APOY. DIAGNOSTICO'">
+                    <mat-form-field appearance="standard" class="form-group">
+                        <mat-label>Especialidades</mat-label>
+                        <mat-select formControlName="especialidades">
+                            <mat-option value="1">Medicina General</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="formularioReferencia.controls['especialidades'].hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-12 col-md-4">
+                    <div style="display: flex;flex-direction: column;">
+                        <mat-label style="margin-bottom: 5px;">Condición del establecimiento del
+                            Traslado</mat-label>
+                        <mat-radio-group formControlName="condicion">
+                            <mat-radio-button value="1" style="margin-right: 10px;">Estable
+                            </mat-radio-button>
+                            <mat-radio-button value="2">Mal estado</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-2 col-md-offset-8" style="margin-bottom: 10px;">
+                    <button type="button" class="g-btn g-btn-gris block" (click)="formReferencia(false)">CANCELAR</button>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                    <button type="button" class="g-btn g-btn-verde block" (click)="enviarReferencia()" [disabled]="!formularioReferencia?.valid">REGISTAR
+                        REFERENCIA</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</mat-card>
+<mat-accordion class="expansion_panel">
+    <mat-expansion-panel [expanded]="true" *ngIf="datos_referencia && !isNurseValue" style="margin-bottom: 15px;">
+        <mat-expansion-panel-header>
+            <mat-panel-title style="font-weight: bold;">
+                Referencia
+            </mat-panel-title>
+            <mat-panel-description style="display: contents;" *ngIf="data_consulta?.estado !== 'ATENDIDO'">
+                <span class="material-icons" *ngIf="editarInformacion"  (click)="registrarReferencia(false)" style="margin-right: 10px;">
+                    edit
+                </span>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="clearfix g-box-content">
+            <ul class="row g-list-md">
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">No. de Referencia</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{formularioReferencia.controls['nroReferencia'].value}}
+                    </div>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">Fecha de Referencia</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{formularioReferencia.controls['fechaReferencia'].value}}</div>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">Establec. de Origen</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{formularioReferencia.controls['origen'].value}}</div>
+                </li>
+            </ul>
+
+            <ul class="row g-list-md">
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">Establec. de Destino</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{formularioReferencia.controls['destino'].value}}
+                    </div>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">UPS Destino de la Ref.</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{formularioReferencia.controls['upsReferencia_desc'].value}}</div>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">Examen Especial</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{formularioReferencia.controls['examenEspecial_desc'].value}}</div>
+                </li>
+            </ul>
+
+            <ul class="row g-list-md">
+                <li class="col-md-4 clearfix cnt-item">
+                    <div class="col-sm-5 col-xs-6 item-label">Condición Inicial</div>
+                    <div class="col-sm-7 col-xs-6 item-dato">{{formularioReferencia.controls['condicion'].value == 1 ? 'Estable' : 'Mal estado'}}</div>
+                </li>
+            </ul>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>
+<mat-card style="box-shadow: none;">
+    <div class="row" *ngIf="!isNurseValue ">
+        <div class="col-sm-12 col-md-2 col-md-offset-10" *ngIf="data_consulta?.estado !== 'ATENDIDO'">
+            <button type="button" class="g-btn g-btn-verde block" *ngIf ="(data_consulta && data_consulta?.estado !== 'ANULADO' && data_consulta?.estado !== 'EN ESPERA TRIAJE')" (click)="finalizarAtencion()">FINALIZAR
+                ATENCION</button>
+        </div>
+    </div>
+</mat-card>
+
+

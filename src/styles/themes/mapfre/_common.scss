@@ -1122,3 +1122,7 @@ a.sectiontab:hover {
 .hidden-overflow {
   overflow: hidden
 }
+
+.mat-tab-label.mat-tab-label-active {
+  color: red;
+}
