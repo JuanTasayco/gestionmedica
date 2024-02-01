@@ -21,6 +21,9 @@ pipeline {
             ] as Container[], true)
         }
     }
+    parameters {
+        text(name: 'LISTABRANCHE', defaultValue: '', description: 'Ingrese la lista de branches a integrar')
+    }  	   
     options {
         timeout(time: 25, unit: 'MINUTES')
         timestamps()
