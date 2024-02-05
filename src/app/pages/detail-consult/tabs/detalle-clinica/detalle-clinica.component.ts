@@ -18,6 +18,7 @@ import { debounceTime, map, mergeMap, startWith, take, tap } from "rxjs/operator
 import { downloadBase64Async, downloadBase64, markFormGroupTouched } from '@shared/helpers/utils';
 import { MedicalRestComponent } from "@shared/components/medical-rest/medical-rest.component";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
+import { ReferenciaService } from "@shared/services/referencia.service";
 import { EventTrackerService } from "@shared/services/event-tracker.service";
 
 //diagnostico identificado
@@ -182,6 +183,7 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   establecimiento: any;
   ups: any;
   datos_referencia = false;
+  data_referencia: any;
 
   //
   pesoValueChanges:Subscription;
@@ -202,7 +204,7 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   consultoriosList: any = [];
   codConsultorio: any;
   subscription : Subscription;
-  constructor(private consultaMedService: ConsultaMedicaService, private route: ActivatedRoute, private _ngZone: NgZone,
+  constructor(private consultaMedService: ConsultaMedicaService, private route: ActivatedRoute, private _ngZone: NgZone, private referenciaService: ReferenciaService,
     private dialog: MatDialog, private profesionalservice: ProfesionalService, private router:Router,  private eventTracker: EventTrackerService,
     private odontogramaService: OdontogramaService) { }
 
@@ -218,7 +220,8 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
     this.getDetalleConsultaMedica(this.numeroConsulta);
     this.updateDiagnosticos();
     this.getDiagnosticosIdentificados(this.numeroConsulta);
-    this.getReferencia(this.numeroConsulta);
+    //this.getReferencia(this.numeroConsulta);
+    this.getNewReferencia(this.numeroConsulta);
     this.getCodUsuario();
     this.cargarDosis();
     this.cargarFrecuencia();
@@ -2390,4 +2393,106 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
     });
   }
 
+  guardarNewReferencia(event: any) {
+    if (!this.formCreate.valid) {
+      markFormGroupTouched(this.formCreate);
+      
+      const mensaje = {
+        title : 'Mensaje del sistema',
+        message : 'Los datos del formulario Detalle de la atención, no son válidos.'
+      };
+
+      this.dialog.open(AlertComponent, {
+        width: '400px', data: { alert: mensaje }
+      });
+    } else {
+      this.guardarReferencia(event.request, event.data, event.diagnostico);
+    }
+  }
+
+  guardarReferencia(request: any, referencia: any, diagnostico: any) {
+    this.guardarDiagnosticoReferencia(diagnostico);
+    
+    this.referenciaService.nuevaReferencia(request)
+    .subscribe((response) => {
+      if (response && response.codErr == 0) {
+        const data = {
+          title: 'Éxito',
+          message: 'Referencia registrada con éxito.',
+          type: 4
+        };
+
+        const dialogRef = this.dialog.open(SuccessComponent, {
+          width: '400px', data: { alert: data }
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+          this.enviarNuevaReferencia(response.idReferencia, referencia);
+        });
+      }
+    });
+  }
+
+  cargarReferencia(idReferencia: any) {
+    const request = { CReferencia: idReferencia };
+
+    this.referenciaService.detalleReferencia(request)
+    .subscribe(response => {
+      if(response && response.codErr == 0) {
+        this.data_referencia = response.referencia;
+        
+        this.datos_referencia = true;
+        this.agregarReferencia = true;
+      }
+    })
+  }
+
+  enviarNuevaReferencia(referenciaId: string, data: any) {
+    const request = {
+      referenciaIdOim: referenciaId,
+      fecha: moment().format(BASE_DATE_FORMAT_API),
+      establecimientoOrigen: data.establecimientoOrigen,
+      establecimientoDestino: data.establecimientoDestino,
+      codigoProcedimiento: data.codigoProcedimiento,
+      codigoSede: data.codigoSede,
+      codigoUpsDestino: data.codigoUpsDestino,
+      codigoEspecialidadDestino: data.codigoEspecialidadDestino,
+      codigoCondicionInicial: data.codigoCondicionInicial,
+      observaciones: data.observaciones
+    };
+
+    this.consultaMedService.enviarReferencia(request, parseInt(this.numeroConsulta))
+    .subscribe((response: any) => {
+      if (response.operacion == 201) {
+        this.cargarReferencia(referenciaId);
+      }
+    });
+  }
+
+  getNewReferencia(numeroConsulta: string) {
+    this.consultaMedService.getReferencia(numeroConsulta)
+    .subscribe((response: any) => {
+      if (response && response.mensaje == 'OK' && response.operacion == 200 && response.data) {
+        const idReferencia = response.data.numeroReferencia;
+        this.cargarReferencia(idReferencia);
+      }
+    });
+  }
+
+  guardarDiagnosticoReferencia(diagnostico: any) {
+    ELEMENT_DATA.push({ code: diagnostico.code, value: diagnostico.value, indicador: 'P' });
+    this.dataSource.data = ELEMENT_DATA;
+    this.itemsDiagnosticos = true;
+
+    const data = {
+      diagnosticos: [
+        {
+          codigoDiagnostico: diagnostico.code,
+          indicador: 'P'
+        }
+      ]
+    };
+
+    this.consultaMedService.guardarDiagnosticos(data, this.numeroConsulta).subscribe((response: any) => {});
+  }
 }

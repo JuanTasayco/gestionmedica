@@ -1,0 +1,98 @@
+.requerimientos-container {
+    border: 1px solid #e6e6e6; 
+    border-radius: 5px 5px 5px 5px; 
+    min-height: 50px;
+    background-color: #ffffff;
+    padding-bottom: 2px;
+}
+
+.requerimiento-nombre {
+    font-weight: bold;
+    padding: 8px;
+    border-radius: 5px;
+    color: #fff;
+    text-transform: uppercase;
+
+    a {
+        vertical-align: middle;
+    }
+}
+
+.btn-requerimientos {
+    margin-top: 7px;
+    margin-left: 7px;
+    margin-bottom: 5px;
+}
+
+.chip-core-item {
+    display: inline-block;
+    margin-left: 7px;
+    margin-top: 7px;
+}
+
+.remove-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    margin-left: 10px;
+    vertical-align: sub;
+}
+
+.filter-proveedores-container {
+    margin-top: 16px;
+}
+
+.proveedor-icon {
+    color:white;
+    background: black;
+    border-radius: 5px;
+    padding: 6px;
+    font-size: 16px;
+}
+
+.border-right-container {
+    border-right: 1px solid #d5d5d5;
+}
+
+.border-right {
+    border-right: 1px solid #E1E1E1
+}
+
+.container-data {
+    border-top: 1px solid #E1E1E1;
+    background-color: #fafafa;
+}
+
+.ubicacion-label {
+    color: crimson;
+}
+
+.detail-proveedor-icon {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+    margin-top: 8px;
+}
+
+.check-req-icon {
+    font-size: 16px; 
+    width: 16px;
+    height: 16px;
+    color: #749806;
+    vertical-align: top;
+}
+
+.option-container {
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+
+    .option-data {
+        width: 100%;
+    }
+}
+
+.select-result {
+    border: 2px solid #749806;
+}

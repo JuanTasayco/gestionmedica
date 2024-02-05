@@ -1,0 +1,287 @@
+<mat-dialog-content>
+    <div class="row">
+        <div class="col-xs-10">
+            <h2 class="lbl-title modal-title">Detalle del proveedor</h2>
+        </div>
+    
+        <div class="col-xs-2 text-right">
+            <a class="gCGray3 glyphicon glyphicon-remove" (click)="close()"></a>
+        </div>
+    </div>
+
+    <div class="row ">
+        <!--
+        <div class="clearfix g-list-lg mb-xs-2">
+            <div class="col-md-12 col-xs-12 clearfix item-dato">
+                <div class="mt-xs-1">
+                    <a class="col-md-6 col-xs-12 tab-label"
+                        [ngClass]="showPaciente ? 'tab-label-active' : 'tab-label-default'"
+                        (click)="setShowPaciente(true)">Cobertura del asegurado</a>
+
+                    <a class="col-md-12 col-xs-12 tab-label"
+                        [ngClass]="!showPaciente ? 'tab-label-active' : 'tab-label-default'"
+                        (click)="setShowPaciente(false)">Informacion basica del Proveedor</a>
+                </div>
+            </div>
+        </div>
+        -->
+
+        <!--
+        <ng-container *ngIf="showPaciente">
+            <div class="col-md-12 col-xs-12 clearfix">
+                <b>Datos del asegurado</b>
+            </div>
+
+            <div class="col-md-12 col-sm-12 clearfix cnt-item g-box-content">
+                <div class="col-md-6 col-xs-12 item-label">
+                    <div><b>Nombre completo</b></div>
+                    <div>
+                        {{paciente.nombre}} {{paciente.apellidoP}}
+                        {{paciente.apellidoM}}
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xs-12 item-label">
+                    <div><b>Doc de identidad</b></div>
+                    <div>{{paciente.numDoc}}</div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-sm-12 clearfix cnt-item g-box-content">
+                <div class="col-md-2 col-xs-12 item-label">
+                    <div><b>Estado</b></div>
+                    <div>{{paciente.estado}}</div>
+                </div>
+
+                <div class="col-md-2 col-xs-12 item-label">
+                    <div><b>Parentesco</b></div>
+                    <div>{{paciente.parentesco}}</div>
+                </div>
+
+                <div class="col-md-2 col-xs-12 item-label">
+                    <div><b>Género</b></div>
+                    <div>{{paciente.genero}}</div>
+                </div>
+
+                <div class="col-md-2 col-xs-12 item-label">
+                    <div><b>Compañía</b></div>
+                    <div>{{paciente.nomCompania}}</div>
+                </div>
+
+                <div class="col-md-2 col-xs-12 item-label">
+                    <div><b>Producto</b></div>
+                    <div>{{paciente.producto}}</div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-xs-12 clearfix mt-xs-2">
+                <b>Datos del titular</b>
+            </div>
+
+            <div class="col-md-12 col-sm-12 clearfix cnt-item g-box-content">
+                <div class="col-md-6 col-xs-12 item-label">
+                    <div><b>Nombre</b></div>
+                    <div>{{paciente.oTitular.nombre}}</div>
+                </div>
+
+                <div class="col-md-2 col-xs-12 item-label">
+                    <div><b>Fecha de afiliación</b></div>
+                    <div>{{paciente.oTitular.fechAfiliacion | date:'dd/MM/yyyy'}}</div>
+                </div>
+
+                <div class="col-md-2 col-xs-12 item-label">
+                    <div><b>Tipo de afiliación</b></div>
+                    <div>{{paciente.oTitular.tipoAfiliacion}}</div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-sm-12 clearfix cnt-item g-box-content">
+                <div class="col-md-6 col-xs-12 item-label">
+                    <div><b>Contratante</b></div>
+                    <div>{{paciente.oTitular.contratante}}</div>
+                </div>
+
+                <div class="col-md-2 col-xs-12 item-label">
+                    <div><b>{{paciente.oTitular.tipDocCont}}</b></div>
+                    <div>{{paciente.oTitular.numDocCont}}</div>
+                </div>
+
+                <div class="col-md-2 col-xs-12 item-label">
+                    <div><b>No. de contrato</b></div>
+                    <div>{{paciente.numContrato}}</div>
+                </div>
+            </div>
+
+            <div *ngIf="tieneCobertura()">
+                <div class="col-md-3  col-xs-12 clearfix mt-xs-2">
+                    <b>Detalle de la cobertura</b>
+                </div>
+
+                <div class="col-md-12 col-sm-12 clearfix cnt-item g-box-content" *ngFor="let item of cobertura">
+                    <div class="col-sm-12">
+                        <div style="border-bottom: 1px solid #E1E1E1;" class="row">
+                            <div class="col-md-5 col-xs-12 item-label">
+                                <b>{{item.text}}</b>
+                            </div>
+
+                            <div class="col-md-4 col-xs-12 item-label">
+                                <span>{{item.value}}</span>
+                            </div>
+
+                            <div class="col-md-3">
+                                <b>Carencia</b>
+                                <span style="color: red"> {{item.fechCarencia | date:'dd/MM/yyyy'}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        -->
+
+        <ng-container *ngIf="!showPaciente">
+            <div class="col-md-12 col-xs-12 clearfix">
+                <b>Datos generales</b>
+            </div>
+
+            <div class="col-md-12 col-sm-12 clearfix cnt-item g-box-content">
+                <div class="col-md-8 col-xs-12 item-label">
+                    <div><b>Nombre</b></div>
+                    <div>{{proveedor.nombre}}</div>
+                </div>
+
+                <div class="col-md-4 col-xs-12 item-label">
+                    <div><b>Categoría</b></div>
+                    <div>{{proveedor.categoria}}</div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-sm-12 clearfix cnt-item g-box-content">
+                <div class="col-md-4 col-xs-12 item-label">
+                    <div><b>Institución</b></div>
+                    <div>
+                        <span>{{proveedor.institucion}}</span>
+                        <span [ngStyle]="getStyle(proveedor.convenio)">{{proveedor.convenio}}</span>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-xs-12 item-label">
+                    <div><b>Tipo de establecimiento</b></div>
+                    <div>{{proveedor.establecimiento}}</div>
+                </div>
+
+                <div class="col-md-4 col-xs-12 item-label">
+                    <div><b>Clasificación</b></div>
+                    <div>{{proveedor.entidad}}</div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-sm-12 clearfix cnt-item g-box-content">
+                <div class="col-md-6 col-xs-12 item-label">
+                    <div><b>Nombre del director médico</b></div>
+                    <div>{{proveedor.nomDirtrMedico}}</div>
+                </div>
+
+                <div class="col-md-6 col-xs-12 item-label">
+                    <div><b>Dirección fiscal</b></div>
+                    <div>{{proveedor.direccionFiscal}}</div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-sm-12 clearfix cnt-item g-box-content">
+                <div class="col-md-6 col-xs-12 item-label">
+                    <div><b>Razón social</b></div>
+                    <div>{{proveedor.razonSocial}}</div>
+                </div>
+
+                <div class="col-md-6 col-xs-12 item-label">
+                    <div><b>Nombre del representante legal</b></div>
+                    <div>{{proveedor.nomRepLegal}}</div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-sm-12 clearfix cnt-item g-box-content">
+                <div class="col-md-6 col-xs-12 item-label">
+                    <div><b>Aforo</b></div>
+                    <div>{{proveedor.aforo}}</div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-xs-12 clearfix mt-xs-2">
+                <b>Datos de contacto</b>
+            </div>
+
+            <div class="col-md-12 col-sm-12 clearfix cnt-item g-box-content">
+                <div class="col-md-8 col-xs-12 item-label">
+                    <div><b>Dirección sede principal</b></div>
+                    <div>{{proveedor.direccionPrincipal}}</div>
+                </div>
+
+                <div class="col-md-4 col-xs-12 item-label">
+                    <div><b>Teléfono</b></div>
+                    <div>{{proveedor.telefono}}</div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-sm-12 clearfix cnt-item g-box-content">
+                <div class="col-md-8 col-xs-12 item-label">
+                    <div><b>Correo electrónico</b></div>
+                    <div>{{proveedor.email}}</div>
+                </div>
+
+                <div class="col-md-4 col-xs-12 item-label">
+                    <div><b>Horario de atención</b></div>
+                    <div>{{proveedor.horarioAtencion}}</div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-xs-12 clearfix mt-xs-2">
+                <b>Datos del responsable de la referencia</b>
+            </div>
+
+            <div class="col-md-12 col-sm-12 clearfix cnt-item g-box-content">
+                <div class="col-md-8 col-xs-12 item-label">
+                    <div><b>Nombre</b></div>
+                    <div>{{proveedor.nombre}}</div>
+                </div>
+
+                <div class="col-md-4 col-xs-12 item-label">
+                    <div><b>Teléfono</b></div>
+                    <div>{{proveedor.telRspRef}}</div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-sm-12 clearfix cnt-item g-box-content">
+                <div class="col-md-8 col-xs-12 item-label">
+                    <div><b>Correo electrónico</b></div>
+                    <div>{{proveedor.mailRspRef}}</div>
+                </div>
+            </div>
+
+            <div *ngIf="tieneCobertura()">
+                <div class="col-md-3  col-xs-12 clearfix mt-xs-2">
+                    <b>Detalle de la cobertura</b>
+                </div>
+
+                <div class="col-md-12 col-sm-12 clearfix cnt-item g-box-content" *ngFor="let item of cobertura">
+                    <div class="col-sm-12">
+                        <div style="border-bottom: 1px solid #E1E1E1;" class="row">
+                            <div class="col-md-5 col-xs-12 item-label">
+                                <b>{{item.text}}</b>
+                            </div>
+
+                            <div class="col-md-4 col-xs-12 item-label">
+                                <span>{{item.value}}</span>
+                            </div>
+
+                            <div class="col-md-3">
+                                <b>Carencia</b>
+                                <span style="color: red"> {{item.fechCarencia | date:'dd/MM/yyyy'}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</mat-dialog-content>

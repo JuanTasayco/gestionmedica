@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit {
     console.log("Version V2023-06-27 13:00");
     console.log("Pase V2023-08-04 09:00");
     console.log("Pase historial V2023-08-29 17:00");
-    console.log("Pase 00425656 V2024-02-02 17:00");
+    console.log("Pase 00425656 V2024-02-05 15:00");
   }
 
   checkRoles(){
