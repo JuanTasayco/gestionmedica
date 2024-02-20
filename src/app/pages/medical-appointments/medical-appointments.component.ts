@@ -49,6 +49,7 @@ export class MedicalAppointmentsComponent implements OnInit {
     private comunService: ComunService, private profesionalService : ProfesionalService, private eventTracker: EventTrackerService, private usuarioService: UsuarioService) { }
 
   ngOnInit() {
+    console.log("Sprint2-2024-02-20 0900");
     this.eventTracker.postEventTracker("opc32", "").subscribe()
 
     this.initComponents();
