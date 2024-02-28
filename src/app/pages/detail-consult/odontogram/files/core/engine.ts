@@ -9478,6 +9478,15 @@ export class Engine {
       14,
       5
     );
+    this.renderer.renderText("------------------------------------------------------------------------------------------******", 320, 1650, "#000000");
+    this.renderer.wrapText(
+     'FIRMA Y SELLO DEL PROFESIONAL TRATANTE',
+      338,
+      1672,
+      this.renderer.width - 8,
+      14,
+      5
+    );
     /**/
   }
 
