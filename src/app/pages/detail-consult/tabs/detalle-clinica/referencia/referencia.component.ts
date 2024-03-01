@@ -155,7 +155,9 @@ export class ReferenciaComponent implements OnInit {
     return paciente.trim() !== '' ? paciente : this.datosConsulta.nombrePaciente;
   }
 
-  descargarPdf() {
+  descargarPdf(event: any) {
+    event.stopPropagation();
+    
     const numeroConsulta = this.datosConsulta['numeroConsulta'];
 
     const requestValidar: any = {
