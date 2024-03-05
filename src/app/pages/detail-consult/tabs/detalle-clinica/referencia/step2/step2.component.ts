@@ -395,7 +395,7 @@ export class ReferenciaStep2Component implements OnInit {
     if(hasError){
       this.dialog.open(AlertComponent, { width: '400px', data: { alert: data } });
     } else {
-      const CProveedorDestino = this.formularioStep2.get('proveedor').value !== '' ? this.formularioStep2.get('proveedor').value : null;
+      const CProveedorDestino = this.formularioStep2.get('proveedor').value !== '' ? (this.formularioStep2.get('proveedor').value ? this.formularioStep2.get('proveedor').value.value : null): null;
       const CProveedorOrigen = this.paciente.centroOrigen;
       const CDepartamento = this.formularioStep2.get('departamento').value !== '' ? this.formularioStep2.get('departamento').value : null;
       const CProvincia = this.formularioStep2.get('provincia').value !== '' ? this.formularioStep2.get('provincia').value : null;
@@ -432,9 +432,9 @@ export class ReferenciaStep2Component implements OnInit {
 
       this.referenciaService.searchProveedores(filters)
       .subscribe((response: any) => {
-        if (response && response.codErr == 0) {
           this.noSearch = false;
 
+        if (response && response.codErr == 0) { 
           this.listResultsAll = response.listaProveedores.map((element) => {
             const list = element.requerimientosCumple.filter((req) => {
               return req.cumpleRequerimiento;
