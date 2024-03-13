@@ -47,7 +47,7 @@ export class ConsultaMedicaService {
     this.dataService.set(pathService);
     return this.dataService.execGetByUrl(pathUrl);
   }
-  
+
   listarRecetaSeleccionado(valor : string ,tipo : string, tamanio : string, numeroConsulta:string ) {
     const pathService = environment.urlService_cronicos + PATH_SERVICE.urlListaRecetas;
     const params = {
@@ -194,7 +194,7 @@ export class ConsultaMedicaService {
     this.dataService.set(pathService);
     return this.dataService.execDeleteJson();
   }
-  
+
   eliminarApoyoDiagnostico(numeroConsulta:string, numeroOrden: number){
     const pathService = environment.urlService_cronicos + PATH_SERVICE.urlGuardarDetalle+ numeroConsulta+ '/procedimiento/' + numeroOrden;
     this.dataService.set(pathService);
@@ -212,13 +212,13 @@ export class ConsultaMedicaService {
     this.dataService.set(pathService);
     return this.dataService.execPostJson(data);
   }
-  
+
   anularConsulta(numeroConsulta:number){
     const pathService = environment.urlService_cronicos + PATH_SERVICE.urlGuardarDetalle+ numeroConsulta+ '/anula';
     this.dataService.set(pathService);
     return this.dataService.execPostJson();
   }
-  
+
   actualizarReferencia(data:any, nroReferencia : number , numeroConsulta : number){
     const pathService = environment.urlService_cronicos + PATH_SERVICE.urlGuardarDetalle + numeroConsulta + '/referencia/' + nroReferencia;
     this.dataService.set(pathService);
@@ -374,6 +374,7 @@ export class ConsultaMedicaService {
 
   // Pedido
   generarPedido(numeroConsulta: string, data: any){
+    data.tipoDocumento = data.tipoDocumento.toUpperCase();
     const pathService = environment.urlService_cronicos + PATH_SERVICE.urlGuardarPedido + numeroConsulta + '/generaPedido';
     this.dataService.set(pathService);
     return this.dataService.execPostJson(data);
