@@ -2473,7 +2473,7 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
     this.consultaMedService.getReferencia(numeroConsulta)
     .subscribe((response: any) => {
       if (response && response.mensaje == 'OK' && response.operacion == 200 && response.data) {
-        const idReferencia = response.data.numeroReferencia;
+        const idReferencia = response.data.codigoReferencia;
         this.cargarReferencia(idReferencia);
       }
     });
