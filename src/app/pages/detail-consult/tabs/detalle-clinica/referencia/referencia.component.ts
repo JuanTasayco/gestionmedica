@@ -216,7 +216,7 @@ export class ReferenciaComponent implements OnInit {
       establecimientoOrigen: this.datosConsulta.codPrestadora,
       establecimientoDestino: data.CProveedorDestino,
       codigoProcedimiento: idRequerimientos.length > 0 ? idRequerimientos[0] : 0,
-      codigoSede: data.CProveedorOrigen,
+      codigoSede: this.sede.value,
       codigoUpsDestino: data.CTReferencia,
       codigoEspecialidadDestino: idRequerimientos.length > 0 ? idRequerimientos[0] : 0,
       codigoCondicionInicial: data.CCondicionIngr,
