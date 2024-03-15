@@ -103,8 +103,10 @@ export class ReferenciaComponent implements OnInit {
 
     if (this.paciente) refsCrear.CAsegurado = this.paciente.idAfiliado;
 
+    refsCrear.CProveedorOrigen = this.datosConsulta.codPrestadora;
+
     if (data) {
-      if (data[1].proveedorOrigen) refsCrear.CProveedorOrigen = data[1].proveedorOrigen;
+      //if (data[1].proveedorOrigen) refsCrear.CProveedorOrigen = data[1].proveedorOrigen;
       if (data[1].tipoReferencia) refsCrear.CTReferencia = data[1].tipoReferencia;
       if (data[1].condicionPaciente) refsCrear.CCondicionIngr = data[1].condicionPaciente;
       if (data[1].diagnosticoIngreso) refsCrear.CDiagnosticoIngr = data[1].diagnosticoIngreso;
