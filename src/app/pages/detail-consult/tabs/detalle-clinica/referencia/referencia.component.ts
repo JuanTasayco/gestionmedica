@@ -35,7 +35,7 @@ export class ReferenciaComponent implements OnInit {
   ngOnInit() {
     if(this.datosConsulta) {
       this.sede = {
-        value: this.datosConsulta.codPrestadora,
+        value: this.datosConsulta.codigoSede,
         text: this.datosConsulta.sede
       }
 
@@ -211,7 +211,7 @@ export class ReferenciaComponent implements OnInit {
     });
 
     const request = {
-      establecimientoOrigen: data.CProveedorOrigen,
+      establecimientoOrigen: this.datosConsulta.codPrestadora,
       establecimientoDestino: data.CProveedorDestino,
       codigoProcedimiento: idRequerimientos.length > 0 ? idRequerimientos[0] : 0,
       codigoSede: data.CProveedorOrigen,
