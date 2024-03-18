@@ -69,6 +69,16 @@ export const PATH_SERVICE: BaseUrlConstants = {
     urlListaSiglas: 'consultaMedica/comun/SIGLAS'
 };
 
+export const PATH_SERVICE_REFERENCIA = {
+    nuevaReferencia: 'api/referencia/nueva',
+    detalleReferencia: 'api/referencia/detalle',
+    getReferenciaPDF: 'api/referencia/detallePDF',
+
+    filtros: 'api/filtro',
+    filtrarProveedor: 'api/proveedor/filtro',
+    buscarProveedores: 'api/proveedor/buscar',
+    detalleProveedor: 'api/proveedor/detalle'
+};
 
 export const PATH_URL_DATA_AUX: Array<string> = [
     'professionals-detail/:codMedico',

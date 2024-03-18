@@ -447,4 +447,10 @@ export class ConsultaMedicaService {
     this.dataService.set(pathService);
     return this.dataService.execGetJson(parameters);
   }
+
+  getOtrosDatosReferencia(codigo: string) {
+    const pathService = environment.urlService_cronicos + 'consultaMedica/' + codigo + '/otrosDatos';
+    this.dataService.set(pathService);
+    return this.dataService.execGetJson();
+  }
 }

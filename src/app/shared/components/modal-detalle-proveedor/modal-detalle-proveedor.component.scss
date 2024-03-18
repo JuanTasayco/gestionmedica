@@ -1,0 +1,19 @@
+.modal-title {
+    font-weight: bold;
+    padding-bottom: 20px;
+}
+
+.tab-label {
+    font-weight: bold;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.tab-label-default {
+    border-bottom: 1px solid #ddd;
+}
+
+.tab-label-active {
+    border-bottom: 2px solid red;
+    color: red;
+}

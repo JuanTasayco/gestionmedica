@@ -1,0 +1,417 @@
+<mat-card class="nueva-referencia-container mt-xs-2" *ngIf="isEdit">
+    <div class="form-row">
+        <div class="row">
+            <div class="col-sm-12 col-md-11">
+                <span>
+                    <mat-icon class="gCGray6 check-icon">check</mat-icon><b>Destino</b>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <ng-container *ngIf="currentStep > 1">
+        <mat-card class="nueva-referencia-container editable mt-xs-2">
+            <div class="form-row">
+                <div class="row mb-xs-2">
+                    <div class="col-md-6"><p><b>Selecciona un proveedor y requermientos de destino</b></p></div>
+                    <div class="col-md-3 col-md-offset-3 text-right">
+                        <mat-slide-toggle [(ngModel)]="forceDestino" (change)="forzarProveedor()">
+                            <b>Forzar proveedor destino</b>
+                        </mat-slide-toggle>
+                    </div>
+                </div>
+            </div>
+
+            <form [formGroup]="formularioStep2">
+                <div class="row" *ngIf="!forceDestino">
+                    <div class="col-sm-12 col-md-4">
+                        <mat-form-field appearance="standard" class="form-group">
+                            <mat-label>Departamento</mat-label>
+                            <mat-select formControlName="departamento" (selectionChange)="selectDepartamento($event)">
+                                <mat-option *ngFor="let d of departamentos" [value]="d.value">
+                                    {{d.text}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+        
+                    <div class="col-sm-12 col-md-4">
+                        <mat-form-field appearance="standard" class="form-group">
+                            <mat-label>Provincia</mat-label>
+                            <mat-select formControlName="provincia">
+                                <mat-option *ngFor="let p of provincias" [value]="p.value">
+                                    {{p.text}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+        
+                    <div class="col-sm-12 col-md-4">
+                        <mat-form-field appearance="standard" class="form-group">
+                            <mat-label>Entidad</mat-label>
+                            <mat-select formControlName="entidad">
+                                <mat-option *ngFor="let e of entidades" [value]="e.value">
+                                    {{e.text}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-sm-12 col-md-2">
+                        <mat-form-field appearance="standard" class="form-group">
+                            <mat-label>Categoría</mat-label>
+                            <mat-select formControlName="categoria">
+                                <mat-option *ngFor="let c of categorias" [value]="c.value">
+                                    {{c.text}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                        <mat-form-field appearance="standard" class="form-group">
+                            <mat-label>Institución</mat-label>
+                            <mat-select formControlName="institucion">
+                                <mat-option *ngFor="let i of instituciones" [value]="i.value">
+                                    {{i.text}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-sm-12 col-md-2">
+                        <mat-form-field appearance="standard" class="form-group">
+                            <mat-label>Convenios</mat-label>
+                            <mat-select formControlName="convenio">
+                                <mat-option *ngFor="let c of convenios" [value]="c.value">
+                                    {{c.text}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4">
+                        <mat-form-field appearance="standard" class="form-group">
+                            <mat-label>Cobertura</mat-label>
+                            <mat-select formControlName="cobertura">
+                                <mat-option *ngFor="let c of coberturas" [value]="c.value">
+                                    {{c.text}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="forceDestino">
+                    <div class="col-sm-12 col-md-2">
+                        <mat-form-field appearance="standard" class="form-group">
+                            <mat-label>Departamento</mat-label>
+                            <mat-select formControlName="departamento" (selectionChange)="selectDepartamento($event)">
+                                <mat-option *ngFor="let d of departamentos" [value]="d.value">
+                                    {{d.text}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+        
+                    <div class="col-sm-12 col-md-2">
+                        <mat-form-field appearance="standard" class="form-group">
+                            <mat-label>Provincia</mat-label>
+                            <mat-select formControlName="provincia" (selectionChange)="selectProvincia($event)">
+                                <mat-option *ngFor="let p of provincias" [value]="p.value">
+                                    {{p.text}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    
+                    <div class="col-sm-12 col-md-8">
+                        <mat-form-field appearance="standard" class="form-group">
+                            <mat-label>Proveedor</mat-label>
+                            <input matInput #proveedorInput [formControl]="formularioStep2.get('proveedor')" [matAutocomplete]="proveedor">
+                            <mat-autocomplete #proveedor="matAutocomplete" (optionSelected)="centroDestinoSeleccionada($event)" [displayWith]="onDisplaySearchCentroDestino">
+                                <mat-option *ngFor="let p of proveedores" [value]="p">
+                                    {{p.text}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </form>
+
+            <div class="row mb-xs-2">
+                <div class="col-sm-12">
+                    <div class="requerimientos-container">
+                        <div class="chip-core-item" *ngFor="let item of selectedItems; let i = index">
+                            <label class="requerimiento-nombre gBgcGray3">{{item.nombreRequerimiento}}
+                                <a (click)="removeRequerimiento(i, item)">
+                                    <mat-icon class="remove-icon">close</mat-icon>
+                                </a>
+                            </label>
+                        </div>
+
+                        <button type="button" class="g-btn g-btn-green-border second-design btn-requerimientos" (click)="showModalRequerimientos()">
+                            <mat-icon class="add-referencia-icon">add</mat-icon> AGREGAR REQUERIMIENTOS
+                        </button>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="row">
+                <div class="col-sm-12 col-md-2 col-md-offset-6" *ngIf="showCancel()">
+                    <button type="button" class="g-btn g-btn-gris block" (click)="cancel()">CANCELAR</button>
+                </div>
+
+                <div class="col-sm-12 col-md-2" [ngClass]="{'col-md-offset-8': !showCancel() === true}">
+                    <button type="button" class="g-btn g-btn-transparent block" (click)="cleanSearch()">LIMPIAR</button>
+                </div>
+                
+                <div class="col-sm-12 col-md-2">
+                    <button type="button" class="g-btn g-btn-verde block" (click)="searchProveedor()">BUSCAR</button>
+                </div>
+            </div>
+        </mat-card>
+
+        <div class="row g-text-center-xs g-box-noresult" *ngIf="listResultsAll.length == 0 && !noSearch">
+            <div class="col-md-12 g-box-noresult-ico gCRed1">
+                <span class="ico-mapfre_302_error"></span>
+            </div>
+            <div class="col-md-12 g-box-noresult-text">
+                No hay resultados para los filtros escogidos.<br>Intenta de nuevo.
+            </div>
+        </div>
+
+        <div class="row g-text-center-xs g-box-noresult" *ngIf="noSearch">
+            <div class="col-md-12 g-box-noresult-ico gCBlue1">
+                <span class="ico-mapfre_303_informacion"></span>
+            </div>
+            <div class="col-md-12 g-box-noresult-text">
+                Aún no haz aplicado los filtros de búsqueda.
+            </div>
+        </div>
+
+        <div class="cleaner container" *ngIf="listResults.length > 0">
+            <div class="row">
+                <div class="row">
+                    <div class="col-md-6 g-text-left-md filter-proveedores-container">
+                        <b>{{listResultsAll.length + (listResultsAll.length > 1 ? ' resultados encontrados' : ' resultado encontrado')}}</b>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-sm-6 text-right filter-proveedores-container">
+                                <b>Ver por</b>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <mat-form-field class="form-group">
+                                    <mat-select [(value)]="filterView" (selectionChange)="selectFilter($event)">
+                                        <mat-option *ngFor="let f of filters" [value]="f.value">
+                                            {{f.text}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="clearfix g-box g-overflow-hidden-xs mb-xs-2" [ngClass]="{'select-result' : item.showProveedor === true }" *ngFor="let item of listResults">
+                    <div class="row">
+                        <div class="col-sm-9 pt-xs-2 border-right-container">
+                            <div class="row">
+                                <div class="col-sm-12 mb-xs-2 pr-xs-0">
+                                    <div class="col-sm-11 col-xs-12">
+                                        <span class="glyphicon glyphicon-plus proveedor-icon"></span>
+                                        <span class="ml-xs-1"><b>{{item.nombre}}</b></span>
+                                    </div>
+
+                                    <div class="col-sm-1 col-xs-12">
+                                        <a (click)="showModalDetalled(item)">
+                                            <span class="gCGray3">
+                                                <mat-icon class="detail-proveedor-icon">visibility</mat-icon>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                    
+                                <div class="col-sm-12 mb-xs-2 pr-xs-0">
+                                    <div class="col-md-4 border-right" *ngIf="item.distancia != null">
+                                        &nbsp; A {{item.distancia}} Km.
+                                    </div>
+
+                                    <div class="col-md-4 ubicacion-label border-right" *ngIf="item.distancia == null">
+                                        Ubicación no disponible
+                                    </div>
+                    
+                                    <div class="col-md-5 border-right">
+                                        <span>
+                                            <mat-icon class="check-req-icon">check</mat-icon>
+                                        </span>
+                                        <span class="gCGray3 ml-xs-1">
+                                            <span>{{item.cumple}} de {{selectedItems.length}} requerimientos solicitados</span>
+                                        </span>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <b>{{item.deducible}}</b>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 pr-xs-0">
+                                    <div class="col-md-12 col-sm-12 container-data">
+                                        <div class="row g-list-md mt-xs-3">
+                                            <div class="col-md-2 col-xs-12 item-label g-text-capitalize">
+                                                <b>Dirección</b>
+                                            </div>
+
+                                            <div class="col-md-10">
+                                                <span>{{item.direccion}}-{{item.departamento}}-{{item.provincia}}</span>
+                                            </div>
+                                        </div>
+                    
+                                        <div class="row g-list-md mt-xs-2">
+                                            <div class="col-md-2 col-xs-12 item-label g-text-capitalize">
+                                                <b>Categoría</b>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <span>{{item.categoria}}</span>
+                                            </div>
+
+                                            <div class="col-md-2 col-xs-12 item-label g-text-capitalize">
+                                                <b>Entidad </b>
+                                            </div>
+
+                                            <div class="col-md-5">
+                                                <span>{{item.entidad}}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row g-list-md mt-xs-2 mb-xs-2">
+                                            <div class="col-md-2 col-xs-12 item-label g-text-capitalize">
+                                                <b>Institución</b>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                               <span>{{item.institucion}}</span> <span class="ml-xs-1" [ngStyle]="getStyle(item.convenio)"><b>{{item.convenio}}</b></span>
+                                            </div>
+
+                                            <div class="col-md-2 col-xs-12 item-label g-text-capitalize">
+                                                <b>Teléfono</b>
+                                            </div>
+
+                                            <div class="col-md-5">
+                                                <span>{{item.telefono}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="col-sm-3 col-xs-12 option-container">
+                            <div class="option-data" *ngIf="item.showProveedor">
+                                <form [formGroup]="formularioStep2_2">
+                                    <div class="col-md-12 pl-xs-0">
+                                        <mat-form-field appearance="standard" class="form-group">
+                                            <mat-label>Medio de traslado</mat-label>
+                                            <mat-select formControlName="medioTraslado">
+                                                <mat-option *ngFor="let m of mediosTraslado" [value]="m.value">
+                                                    {{m.text}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-12 pl-xs-0">
+                                        <mat-form-field appearance="standard" class="form-group">
+                                            <mat-label>Tipo de traslado</mat-label>
+                                            <mat-select formControlName="tipoTraslado" (selectionChange)="selectTipoTraslado($event)">
+                                                <mat-option *ngFor="let t of tiposTraslado" [value]="t.value">
+                                                    {{t.text}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-12 pl-xs-0" *ngIf="!hideProveedor">
+                                        <mat-form-field appearance="standard" class="form-group">
+                                            <mat-label>Proveedor</mat-label>
+                                            <input matInput #proveedor2Input [formControl]="formularioStep2_2.get('proveedorTraslado')" [matAutocomplete]="proveedorTraslado">
+                                            <mat-autocomplete #proveedorTraslado="matAutocomplete" (optionSelected)="proveedorTraladoSeleccionada($event)" [displayWith]="onDisplaySearchProveedorTralado">
+                                                <mat-option *ngFor="let p of proveedoresTrasladoFilter" [value]="p">
+                                                    {{p.text}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-12 pl-xs-0 mb-xs-1">
+                                        <button class="col-md-3 g-btn g-btn-verde second-design block"
+                                                (click)="saveStep(item)" [disabled]="!formularioStep2_2?.valid">Continuar</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="option-data" *ngIf="!item.showProveedor">
+                                <div class="col-md-12 pl-xs-0">
+                                    <a class="g-btn g-btn-verde second-design block" (click)="selectProveedorResult(item)" *ngIf="!item.showProveedor">Seleccionar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="row">
+                    <div class="col-md-12">
+                        <mapfre-pagination [currentPage]="mPagination" [boundaryLinkNumbers]="true"
+                                [totalItems]="totalItems" [itemsPerPage]="itemPerPage" [totalPages]="totalPages"
+                                [maxSize]="totalItemsPage" (onChangePage)="changePage($event)"></mapfre-pagination>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+</mat-card>
+
+<mat-card class="nueva-referencia-container lectura mt-xs-2" *ngIf="!isEdit">
+    <div class="form-row">
+        <div class="row">
+            <div class="col-sm-12 col-md-11">
+                <span>
+                    <mat-icon class="gCGreen1 check-icon">check</mat-icon><b>Destino</b>
+                </span>
+            </div>
+
+            <div class="col-sm-12 col-md-1 text-right">
+                <span class="material-icons cursor-pointer" (click)="showEdit()">
+                    edit
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix g-box-content">
+        <ul class="row g-list-md">
+            <li class="col-md-4 clearfix cnt-item">
+                <span class="item-label mr-xs-1">Proveedor</span>
+                <span class="item-dato">{{form.Nombre}}</span>
+            </li>
+
+            <li class="col-md-4 clearfix cnt-item">
+                <span class="item-label mr-xs-1">Dirección</span>
+                <span class="item-dato">{{form.Direccion}}</span>
+            </li>
+
+            <li class="col-md-4 clearfix cnt-item">
+                <span class="item-label mr-xs-1">Categoría</span>
+                <span class="item-dato">{{form.Categoria}}</span>
+            </li>
+        </ul>
+
+        <ul class="row g-list-md">
+            <li class="col-md-4 clearfix cnt-item">
+                <span class="item-label mr-xs-1">Institución</span>
+                <span class="item-dato">{{form.Institucion}} <span class="ml-xs-1" [ngStyle]="getStyle(form.Convenio)"><b>{{form.Convenio}}</b></span></span>
+            </li>
+        </ul>
+    </div>
+</mat-card>

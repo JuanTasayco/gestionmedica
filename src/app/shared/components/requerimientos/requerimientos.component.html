@@ -1,0 +1,116 @@
+<mat-dialog-content>
+    <div class="row">
+        <div class="col-xs-10">
+            <h2 class="lbl-title modal-title">Requerimientos de destino</h2>
+        </div>
+    
+        <div class="col-xs-2 text-right">
+            <a class="gCGray3 glyphicon glyphicon-remove" (click)="close()"></a>
+        </div>
+    </div>
+
+    <div class="container u-br-5 re">
+        <div class="row mb-xs-2">
+            <div class="col-md-12">
+                <h3 class="lbl-title"><b>Servicios</b></h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4" *ngFor="let item of servicios">
+                <div>
+                    <ul class="chk__list">
+                        <li class="chk__item">
+                            <label class="chk__lbl">
+                                <mat-checkbox [(ngModel)]="item.checkTest">
+                                    <span class="normal-text">{{item.text}}</span>
+                                </mat-checkbox>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-xs-2 mt-xs-2">
+            <div class="col-md-12">
+                <h3 class="lbl-title"><b>Imagenología</b></h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4" *ngFor="let item of imagenes">
+                <div>
+                    <ul class="chk__list">
+                        <li class="chk__item">
+                            <mat-checkbox [(ngModel)]="item.checkTest">
+                                <span class="normal-text">{{item.text}}</span>
+                            </mat-checkbox>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-xs-2 mt-xs-2">
+            <div class="col-md-12">
+                <h3 class="lbl-title"><b>Emergencias</b></h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4" *ngFor="let item of emergencias">
+                <div>
+                    <ul class="chk__list">
+                        <li class="chk__item">
+                            <mat-checkbox [(ngModel)]="item.checkTest">
+                                <span class="normal-text">{{item.text}}</span>
+                            </mat-checkbox>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mt-xs-2 mb-xs-2">
+                <h3 class="lbl-title"><b>Especialidades</b></h3>
+            </div>
+
+            <div class="col-md-8">
+                <mat-form-field class="form-group" floatLabel="never">
+                    <mat-icon matPrefix>add</mat-icon>
+                    <input matInput #especialidadSearch [formControl]="especialidadFormControl" [matAutocomplete]="especialidad" placeholder="Agregar especialidad">
+                    <mat-autocomplete #especialidad="matAutocomplete" (optionSelected)="especialidadSeleccionada($event)">
+                        <mat-option *ngFor="let e of especialidadesFilter" [value]="e.value">
+                            {{e.text}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="chipCore" *ngFor="let item of especialidadesSelected; let i = index">
+                    <label class="requerimiento-nombre gBgcGray3">
+                        <span>{{item.text}}</span>
+                        <a (click)="removeRequerimiento(i)">
+                            <mat-icon class="remove-icon">close</mat-icon>
+                        </a>
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-sm-12 col-md-2 col-md-offset-8">
+                <button type="button" class="g-btn g-btn-transparent block" (click)="close()">CANCELAR</button>
+            </div>
+
+            <div class="col-md-2">
+                <button class="g-btn g-btn-verde block" [disabled]="disabledSelect()" (click)="save()">AGREGAR</button>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>

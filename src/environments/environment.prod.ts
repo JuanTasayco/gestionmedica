@@ -7,4 +7,5 @@ export const environment = {
   logoutPath: 'api/seguridad/acceso/logout',
   urlEventTracker: 'https://api.mapfre.com.pe/legacy/salud/wsGestionMedica/eventTracker',
   urlVersion: 'https://api.mapfre.com.pe/legacy/salud/wsGestionMedica/gestionMedica/',
+  oimReferencia: 'https://oim.mapfre.com.pe/oim_referencias/'
 };

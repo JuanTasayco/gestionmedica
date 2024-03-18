@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatInputModule, MatSelectModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule,
   MatExpansionModule, MatCardModule, MatTabsModule, MatNativeDateModule, 
-  MatDatepickerModule, MatChipsModule, MatAutocompleteModule, MatTableModule, MatCheckboxModule, MatRadioModule, MatTooltipModule, MatDialogModule } from '@angular/material';
+  MatDatepickerModule, MatChipsModule, MatAutocompleteModule, MatTableModule, MatCheckboxModule, MatRadioModule, MatTooltipModule, MatDialogModule, MatSlideToggleModule } from '@angular/material';
 import { SharedModule } from '@shared/shared.module';
 import { DetailConsultRoutingModule } from './detail-consult-routing.module';
 import { DetailConsultComponent } from './detail-consult.component';
@@ -13,6 +13,10 @@ import { TabDeclaracionSaludComponent } from './tabs/declaracion salud/declaraci
 import { TabDetalleClinicaComponent } from './tabs/detalle-clinica/detalle-clinica.component';
 import { TabFiliacionComponent } from './tabs/filiacion/filiacion.component';
 import { TabHistorialComponent } from './tabs/historial/historial.component';
+import { ReferenciaComponent } from './tabs/detalle-clinica/referencia/referencia.component';
+import { ReferenciaStep1Component } from './tabs/detalle-clinica/referencia/step1/step1.component';
+import { ReferenciaStep2Component } from './tabs/detalle-clinica/referencia/step2/step2.component';
+import { ReferenciaStep3Component } from './tabs/detalle-clinica/referencia/step3/step3.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { CardLoaderComponent } from './card-loader/card-loader.component';
 import { OdontogramEvolComponent } from './odontogram/odontogram-evol/odontogram-evol.component';
@@ -31,6 +35,8 @@ import { CharacteresFormatDirective } from './characteres-format.directive';
 import { IntegerInputDirective } from './zero.directive';
 import { InputRestrictionDirective } from './limit-characteres.directive';
 import { MinDirective } from './min.directive';
+import { RequerimientosComponent } from '@shared/components/requerimientos/requerimientos.component';
+import { ModalDetalleProveedorComponent } from '@shared/components/modal-detalle-proveedor/modal-detalle-proveedor.component';
 
 
 @NgModule({
@@ -49,6 +55,12 @@ import { MinDirective } from './min.directive';
     SignDocumentComponent,
     PdfViewerComponent,
     MedicalRestComponent,
+    ReferenciaComponent,
+    ReferenciaStep1Component,
+    ReferenciaStep2Component,
+    ReferenciaStep3Component,
+    RequerimientosComponent,
+    ModalDetalleProveedorComponent,
     CharacteresFormatDirective,
     IntegerInputDirective,
     InputRestrictionDirective,
@@ -78,12 +90,15 @@ import { MinDirective } from './min.directive';
     MatTabsModule,
     MatExpansionModule,
     MatCardModule,
+    MatSlideToggleModule,
     SharedModule,
     CalendarModule,
     DetailConsultRoutingModule,
     TextFieldModule
   ],
   entryComponents : [
+    RequerimientosComponent,
+    ModalDetalleProveedorComponent,
     SearchDocumentComponent,
     SignDocumentComponent,
     SuccessComponent,

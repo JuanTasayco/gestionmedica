@@ -12,6 +12,7 @@ export const environment = {
   urlEventTracker: 'https://api.pre.mapfre.com.pe/legacy/salud/wsGestionMedica/eventTracker',
   // urlEventTracker: 'http://10.160.120.214/oim_peca/api/eventTracker'
   urlVersion: 'https://api.pre.mapfre.com.pe/legacy/salud/wsGestionMedica/gestionMedica/',
+  oimReferencia: 'https://oim.pre.mapfre.com.pe/oim_referencias/'
 };
 
 /*

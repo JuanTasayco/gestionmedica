@@ -464,7 +464,7 @@ margin-bottom: 15px;">
         </fieldset>
     </form>
 </mat-card>
-<mat-card style="padding: 30px;box-shadow: none;border: 1px solid rgb(231, 231, 231);" *ngIf="!isNurseValue">
+<mat-card style="padding: 30px;box-shadow: none;border: 1px solid rgb(231, 231, 231);margin-bottom: 15px;" *ngIf="!isNurseValue">
     <div class="form-row">
         <div class="row">
             <div class="col-sm-12 col-md-11"><p><b>Diagnósticos</b></p></div>
@@ -1009,208 +1009,26 @@ margin-bottom: 15px;">
         </div>
     </div>
 </mat-card>
-<br>
+
 <mat-card style="box-shadow: none;" *ngIf="!agregarReferencia && !isNurseValue && data_consulta?.estado != 'ANULADO'">
     <div class="row" *ngIf="data_consulta?.estado !== 'ATENDIDO'">
-        <div class="col-md-2">
-            <button type="button" (click)="formReferencia(true)" class="g-btn g-btn-green-border block">+ AGREGAR
-                REFERENCIA</button>
-        </div>
-    </div>
+        <div class="col-md-2 row">
+            <button type="button" (click)="formReferencia(true)" class="g-btn g-btn-green-border block">
+                <mat-icon class="add-referencia-icon">add</mat-icon><span>AGREGAR REFERENCIA</span>
+            </button>
+                </div>
+                </div>
 </mat-card>
-<mat-card style="margin-bottom: 20px;box-shadow: none; border: 1px solid rgb(231, 231, 231);padding: 25px;"
-    *ngIf="agregarReferencia && !datos_referencia && !isNurseValue">
-    <form [formGroup]="formularioReferencia">
-        <fieldset [disabled]="data_consulta?.estado === 'ATENDIDO'">
-            <div class="row">
-                <div class="col-sm-12 col-md-2">
-                    <mat-form-field appearance="standard" class="form-group">
-                        <mat-label>No. de Referencia</mat-label>
-                        <input matInput autocomplete="off" formControlName="nroReferencia">
-                        <mat-error *ngIf="formularioReferencia.controls['nroReferencia'].hasError('required')">
-                            Este campo es requerido
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-                <div class="col-sm-12 col-md-2">
-                    <!-- <mat-form-field appearance="standard" class="form-group">
-                        <mat-label>Fecha de Referencia</mat-label>
-                        <input matInput autocomplete="off" formControlName="anamnesis">
-                        <mat-error *ngIf="formCreate.controls['anamnesis'].hasError('required')">
-                            Este campo es requerido
-                        </mat-error>
-                    </mat-form-field> -->
-                    <mat-form-field appearance="standard" class="form-group">
-                        <mat-label>Fecha de Referencia</mat-label>
-                        <input matInput [matDatepicker]="picker2" autocomplete="off" (click)="picker2.open()" readonly
-                            formControlName="fechaReferencia">
-                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                        <mat-datepicker #picker2></mat-datepicker>
-                        <mat-error *ngIf="formularioReferencia.controls['fechaReferencia'].hasError('required')">
-                            Este campo es requerido
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-                <div class="col-sm-12 col-md-4">
-                    <!-- <mat-form-field appearance="standard" class="form-group">
-                        <mat-label>Establecimiento de Origen</mat-label>
-                        <input matInput autocomplete="off" formControlName="origen">
-                        <mat-error *ngIf="formularioReferencia.controls['origen'].hasError('required')">
-                            Este campo es requerido
-                        </mat-error>
-                    </mat-form-field> -->
-                    <mat-form-field appearance="standard" class="form-group">
-                        <mat-label>Establecimiento Origen</mat-label>
-                        <mat-select formControlName="origen">
-                            <mat-option *ngFor="let d of destinos" [value]="d.descripcion">
-                                {{d.descripcion}}</mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="formularioReferencia.controls['origen'].hasError('required')">
-                            Este campo es requerido
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-                <div class="col-sm-12 col-md-4">
-                   <!--  <mat-form-field appearance="standard" class="form-group">
-                        <mat-label>Establecimiento Destino</mat-label>
-                        <input matInput autocomplete="off" formControlName="destino">
-                        <mat-error *ngIf="formularioReferencia.controls['destino'].hasError('required')">
-                            Este campo es requerido
-                        </mat-error>
-                    </mat-form-field> -->
-                    <mat-form-field appearance="standard" class="form-group">
-                        <mat-label>Establecimiento Destino</mat-label>
-                        <mat-select formControlName="destino">
-                            <mat-option *ngFor="let d of destinos" [value]="d.descripcion">
-                                {{d.descripcion}}</mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="formularioReferencia.controls['destino'].hasError('required')">
-                            Este campo es requerido
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12 col-md-4">
-                    <mat-form-field appearance="standard" class="form-group">
-                        <mat-label>UPS Destino de la Referencia</mat-label>
-                        <mat-select formControlName="upsReferencia" (selectionChange)="setUPS($event)">
-                            <mat-option *ngFor="let u of ups" [value]="u.codigo + '|' + u.descripcion ">
-                                {{u.descripcion}}</mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="formularioReferencia.controls['upsReferencia'].hasError('required')">
-                            Este campo es requerido
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-                <div class="col-sm-12 col-md-4" *ngIf="formularioReferencia.controls['upsReferencia_desc'].value == 'APOY. DIAGNOSTICO'">
-                    <mat-form-field appearance="standard" class="form-group">
-                        <mat-label>Examen Especial</mat-label>
-                        <mat-select formControlName="examenEspecial" (selectionChange)="setExamenEspecial($event)">
-                            <mat-option *ngFor="let proc of dataSourceProcedimiento.data" [value]="proc.code + '|' + proc.procedimiento">
-                                {{proc.procedimiento}}</mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="formularioReferencia.controls['examenEspecial'].hasError('required')">
-                            Este campo es requerido
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-                <div class="col-sm-12 col-md-4" *ngIf="formularioReferencia.controls['upsReferencia_desc'].value != 'APOY. DIAGNOSTICO'">
-                    <mat-form-field appearance="standard" class="form-group">
-                        <mat-label>Especialidades</mat-label>
-                        <mat-select formControlName="especialidades">
-                            <mat-option value="1">Medicina General</mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="formularioReferencia.controls['especialidades'].hasError('required')">
-                            Este campo es requerido
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-                <div class="col-sm-12 col-md-4">
-                    <div style="display: flex;flex-direction: column;">
-                        <mat-label style="margin-bottom: 5px;">Condición del establecimiento del
-                            Traslado</mat-label>
-                        <mat-radio-group formControlName="condicion">
-                            <mat-radio-button value="1" style="margin-right: 10px;">Estable
-                            </mat-radio-button>
-                            <mat-radio-button value="2">Mal estado</mat-radio-button>
-                        </mat-radio-group>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12 col-md-2 col-md-offset-8" style="margin-bottom: 10px;">
-                    <button type="button" class="g-btn g-btn-gris block" (click)="formReferencia(false)">CANCELAR</button>
-                </div>
-                <div class="col-sm-12 col-md-2">
-                    <button type="button" class="g-btn g-btn-verde block" (click)="enviarReferencia()" [disabled]="!formularioReferencia?.valid">REGISTAR
-                        REFERENCIA</button>
-                </div>
-            </div>
-        </fieldset>
-    </form>
-</mat-card>
-<mat-accordion class="expansion_panel">
-    <mat-expansion-panel [expanded]="true" *ngIf="datos_referencia && !isNurseValue" style="margin-bottom: 15px;">
-        <mat-expansion-panel-header>
-            <mat-panel-title style="font-weight: bold;">
-                Referencia
-            </mat-panel-title>
-            <mat-panel-description style="display: contents;" *ngIf="data_consulta?.estado !== 'ATENDIDO'">
-                <span class="material-icons" *ngIf="editarInformacion"  (click)="registrarReferencia(false)" style="margin-right: 10px;">
-                    edit
-                </span>
-            </mat-panel-description>
-        </mat-expansion-panel-header>
-        <div class="clearfix g-box-content">
-            <ul class="row g-list-md">
-                <li class="col-md-4 clearfix cnt-item">
-                    <div class="col-sm-5 col-xs-6 item-label">No. de Referencia</div>
-                    <div class="col-sm-7 col-xs-6 item-dato">{{formularioReferencia.controls['nroReferencia'].value}}
-                    </div>
-                </li>
-                <li class="col-md-4 clearfix cnt-item">
-                    <div class="col-sm-5 col-xs-6 item-label">Fecha de Referencia</div>
-                    <div class="col-sm-7 col-xs-6 item-dato">{{formularioReferencia.controls['fechaReferencia'].value}}</div>
-                </li>
-                <li class="col-md-4 clearfix cnt-item">
-                    <div class="col-sm-5 col-xs-6 item-label">Establec. de Origen</div>
-                    <div class="col-sm-7 col-xs-6 item-dato">{{formularioReferencia.controls['origen'].value}}</div>
-                </li>
-            </ul>
 
-            <ul class="row g-list-md">
-                <li class="col-md-4 clearfix cnt-item">
-                    <div class="col-sm-5 col-xs-6 item-label">Establec. de Destino</div>
-                    <div class="col-sm-7 col-xs-6 item-dato">{{formularioReferencia.controls['destino'].value}}
-                    </div>
-                </li>
-                <li class="col-md-4 clearfix cnt-item">
-                    <div class="col-sm-5 col-xs-6 item-label">UPS Destino de la Ref.</div>
-                    <div class="col-sm-7 col-xs-6 item-dato">{{formularioReferencia.controls['upsReferencia_desc'].value}}</div>
-                </li>
-                <li class="col-md-4 clearfix cnt-item">
-                    <div class="col-sm-5 col-xs-6 item-label">Examen Especial</div>
-                    <div class="col-sm-7 col-xs-6 item-dato">{{formularioReferencia.controls['examenEspecial_desc'].value}}</div>
-                </li>
-            </ul>
+<detalle-clinica-referencia *ngIf="agregarReferencia && !isNurseValue" [datosConsulta]="data_consulta" 
+    [datosReferencia]="data_referencia" [hasDatosReferencia]="datos_referencia" 
+    (close)="formReferencia(false)" (saveReferencia)="guardarNewReferencia($event)"></detalle-clinica-referencia>
 
-            <ul class="row g-list-md">
-                <li class="col-md-4 clearfix cnt-item">
-                    <div class="col-sm-5 col-xs-6 item-label">Condición Inicial</div>
-                    <div class="col-sm-7 col-xs-6 item-dato">{{formularioReferencia.controls['condicion'].value == 1 ? 'Estable' : 'Mal estado'}}</div>
-                </li>
-            </ul>
-        </div>
-    </mat-expansion-panel>
-</mat-accordion>
-<mat-card style="box-shadow: none;">
-    <div class="row" *ngIf="!isNurseValue ">
+<mat-card style="box-shadow: none;" *ngIf="!isNurseValue">
+    <div class="row">
         <div class="col-sm-12 col-md-2 col-md-offset-10" *ngIf="data_consulta?.estado !== 'ATENDIDO'">
             <button type="button" class="g-btn g-btn-verde block" *ngIf ="(data_consulta && data_consulta?.estado !== 'ANULADO' && data_consulta?.estado !== 'EN ESPERA TRIAJE')" (click)="finalizarAtencion()">FINALIZAR
                 ATENCION</button>
         </div>
     </div>
 </mat-card>
-
-

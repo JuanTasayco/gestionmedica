@@ -1,0 +1,143 @@
+<mat-card class="nueva-referencia-container" *ngIf="!hasDatosReferencia">
+    <div class="form-row">
+        <div class="row">
+            <div class="col-sm-12 col-md-11"><p><b>Nueva referencia</b></p></div>
+
+            <div class="col-sm-12 col-md-1 text-right">
+                <span class="material-icons cursor-pointer" (click)="closeNewReference()">
+                    close
+                </span>
+            </div>
+        </div>
+
+        <mat-hint class="nueva-referencia-subtitle">
+            Recuerda completar la información de manera detallada para poder registrar la referencia
+        </mat-hint>
+    </div>
+
+    <div>
+        <referencia-step-1 [origen]="sede" [currentStep]="currentStep" (saveData)="saveStep($event, 1)" (cancelSave)="closeNewReference()"></referencia-step-1>
+
+        <referencia-step-2 [paciente]="paciente" [currentStep]="currentStep" (saveData)="saveStep($event, 2)"></referencia-step-2>
+
+        <referencia-step-3 [currentStep]="currentStep" (saveData)="saveStep($event, 3)"></referencia-step-3>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-2 col-md-offset-8 mb-xs-1">
+            <button type="button" class="g-btn g-btn-transparent block" (click)="closeNewReference()">CANCELAR</button>
+        </div>
+        <div class="col-sm-12 col-md-2">
+            <button type="button" class="g-btn g-btn-verde block" (click)="enviarReferencia()" [disabled]="!completeSteps">REGISTRAR REFERENCIA</button>
+        </div>
+    </div>
+</mat-card>
+
+<mat-accordion class="expansion_panel" *ngIf="hasDatosReferencia">
+    <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                <b>Referencia</b>
+            </mat-panel-title>
+            <mat-panel-description>
+                <span class="material-icons mr-xs-1" (click)="descargarPdf($event)" matTooltip="Descargar PDF">
+                    print
+                </span>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div class="clearfix g-box-content">
+            <mat-card class="mb-xs-3 location-container">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 border-location pr-md-3 pb-xs-2 pt-xs-2">
+                        <div>
+                            <span class="material-icons-outlined">location_on</span>
+                            <span class="mr-xs-1"><b>Origen</b></span>
+                            <span>{{datosReferencia?.proveedorOrigen.nombre}} / 
+                                {{datosReferencia?.proveedorOrigen.departamento}} - 
+                                {{datosReferencia?.proveedorOrigen.provincia}}</span>
+                        </div>
+                    </div>
+
+                    <div class="arrow-direction arrow-direction-left">
+                        <span class="material-icons">east</span>
+                    </div>
+
+                    <div class="arrow-direction arrow-direction-down">
+                        <span class="material-icons">south</span>
+                    </div>
+
+                    <div class="col-md-6 col-sm-12 pl-md-3 pb-xs-2 pt-xs-2">
+                        <div>
+                            <span class="material-icons">location_on</span>
+                            <span class="mr-xs-1"><b>Destino</b></span>
+                            <span>{{datosReferencia?.proveedorDestino.nombre}} / 
+                                {{datosReferencia?.proveedorDestino.departamento}} - 
+                                {{datosReferencia?.proveedorDestino.provincia}}</span>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+
+            <ul class="row g-list-md">
+                <li class="col-md-4 clearfix cnt-item">
+                    <span class="item-label mr-xs-1">Tipo de referencia</span>
+                    <span class="item-dato">{{datosReferencia?.tReferencia}}</span>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <span class="item-label mr-xs-1">Fecha y hora</span>
+                    <span class="item-dato">{{datosReferencia?.fechaHora | date:'dd/MM/yyyy h:mm a'}}</span>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <span class="item-label mr-xs-1">Usuario de creación</span>
+                    <span class="item-dato">{{datosReferencia?.codUsuCreador}}</span>
+                </li>
+            </ul>
+
+            <ul class="row g-list-md">
+                <li class="col-md-4 clearfix cnt-item">
+                    <span class="item-label mr-xs-1">Paciente</span>
+                    <span class="item-dato">{{getNombrePaciente(datosReferencia?.asegurado)}} - {{datosReferencia?.asegurado.tipDoc}}:
+                        {{datosReferencia?.asegurado.numDoc}}</span>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <span class="item-label mr-xs-1">Condición del paciente</span>
+                    <span class="item-dato">{{datosReferencia?.condicionIng}}</span>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <span class="item-label mr-xs-1">Diagnóstico presuntivo</span>
+                    <span class="item-dato">{{datosReferencia?.diagnosticoIng}}</span>
+                </li>
+            </ul>
+
+            <ul class="row g-list-md">
+                <li class="col-md-4 clearfix cnt-item">
+                    <span class="item-label mr-xs-1">Medio de traslado</span>
+                    <span class="item-dato">{{datosReferencia?.proveedorTraslado.meTraslado}}</span>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <span class="item-label mr-xs-1">Tipo de traslado</span>
+                    <span class="item-dato">{{datosReferencia?.proveedorTraslado.tipMeTraslado}}</span>
+                </li>
+                <li class="col-md-4 clearfix cnt-item">
+                    <span class="item-label mr-xs-1">Proveedor de traslado</span>
+                    <span class="item-dato">{{datosReferencia?.proveedorTraslado.nombre}}</span>
+                </li>
+            </ul>
+
+            <ul class="row g-list-md">
+                <li class="col-md-12 clearfix cnt-item">
+                    <span class="item-label mr-xs-1">Observaciones</span>
+                    <span class="item-dato">{{datosReferencia?.observacion}}</span>
+                </li>
+            </ul>
+
+            <ul class="row g-list-md">
+                <li class="col-md-12 clearfix cnt-item">
+                    <span class="item-label mr-xs-1">Requerimiento en destino</span>
+                    <span class="item-dato">{{getRequerimientosDestino(datosReferencia?.proveedorDestino.requerimientosCumple)}}</span>
+                </li>
+            </ul>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>
