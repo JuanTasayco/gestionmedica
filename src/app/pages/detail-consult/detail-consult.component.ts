@@ -23,7 +23,7 @@ import { OdontogramaService } from '@shared/services/odontograma.service';
 export class DetailConsultComponent implements OnInit  {
   @ViewChild(TabDetalleClinicaComponent) child;
   @ViewChildren('tab') tabs: QueryList<ElementRef>;
-  data_consulta:any ;
+  data_consulta_value:any ;
   diagnostico : string;
   pdfBase64:string;
   src:any;
@@ -62,7 +62,7 @@ export class DetailConsultComponent implements OnInit  {
   ngOnInit() {
     let numeroConsulta= this.route.snapshot.paramMap.get('numeroConsulta')
     this.getDetalleConsultaMedica(numeroConsulta)
-    this.validateMedicalRest();
+    // this.validateMedicalRest();
   }
 
   ngAfterViewInit() {
@@ -75,12 +75,12 @@ export class DetailConsultComponent implements OnInit  {
   previewPDF(){
 
     const filtro = {
-      "numeroConsulta": this.data_consulta['numeroConsulta'],
+      "numeroConsulta": this.data_consulta_value['numeroConsulta'],
       "tempDiagnosticos": this.child.tempDiagnosticos[0]['code']
     }
     this.eventTracker.postEventTracker("opc64", JSON.stringify(filtro)).subscribe()
   
-    this.consultaMedService.obtenerGuiaPractica( +this.data_consulta['numeroConsulta'], this.child.tempDiagnosticos[0]['code'])
+    this.consultaMedService.obtenerGuiaPractica( +this.data_consulta_value['numeroConsulta'], this.child.tempDiagnosticos[0]['code'])
         .subscribe((response: any) => {
             if ( response) { 
               this.showComponentPDF('data:application/pdf;base64, '+response.data.base64);              
@@ -104,24 +104,24 @@ export class DetailConsultComponent implements OnInit  {
     let dialogRef = this.dialog.open(SearchDocumentComponent, {
       width : '650px',
       autoFocus : false,
-      data : +this.data_consulta['numeroConsulta']
+      data : +this.data_consulta_value['numeroConsulta']
     });
 
 
     const filtro = {
-      "numeroConsulta": this.data_consulta['numeroConsulta']
+      "numeroConsulta": this.data_consulta_value['numeroConsulta']
     }
     this.eventTracker.postEventTracker("opc65", JSON.stringify(filtro)).subscribe()
   }
 
   anularConsulta(){
     const filtro={
-      "numeroConsulta": this.data_consulta['numeroConsulta']
+      "numeroConsulta": this.data_consulta_value['numeroConsulta']
     }
     
     this.eventTracker.postEventTracker("opc67", JSON.stringify(filtro)).subscribe()
   
-    this.consultaMedService.anularConsulta( +this.data_consulta['numeroConsulta'] )
+    this.consultaMedService.anularConsulta( +this.data_consulta_value['numeroConsulta'] )
         .subscribe((response: any) => {
             if ( response.operacion == 200 && response.mensaje == 'Ok' ) {
               this.router.navigate(['medical-appointments']);                 
@@ -133,13 +133,13 @@ export class DetailConsultComponent implements OnInit  {
   previewHistoria(){
    
   
-    const numeroConsulta = this.data_consulta['numeroConsulta'];
+    const numeroConsulta = this.data_consulta_value['numeroConsulta'];
     const request:any = {
       ordenAtencion: 0,
       tipoDocumento: "hc_inicial"
     }
     const filtro ={
-      "numeroConsulta" : this.data_consulta['numeroConsulta'],
+      "numeroConsulta" : this.data_consulta_value['numeroConsulta'],
       "tipoDocumento": "hc_inicial"
     }
     this.eventTracker.postEventTracker("opc63", JSON.stringify(filtro)).subscribe()
@@ -222,13 +222,13 @@ export class DetailConsultComponent implements OnInit  {
   previewEpisodio(){
     
    
-    const numeroConsulta = this.data_consulta['numeroConsulta'];
+    const numeroConsulta = this.data_consulta_value['numeroConsulta'];
     const request:any = {
       ordenAtencion: 0,
       tipoDocumento: "episodio_actual"
     }
     const filtro ={
-      "numeroConsulta":  this.data_consulta['numeroConsulta'],
+      "numeroConsulta":  this.data_consulta_value['numeroConsulta'],
       "tipoDocumento": "episodio_actual"
     }
     this.eventTracker.postEventTracker("opc62", JSON.stringify(filtro)).subscribe()
@@ -293,13 +293,13 @@ export class DetailConsultComponent implements OnInit  {
   previewConstancia(){
     
   
-    const numeroConsulta = this.data_consulta['numeroConsulta'];
+    const numeroConsulta = this.data_consulta_value['numeroConsulta'];
     const request:any = {
       ordenAtencion: 0,
       tipoDocumento: "constancia_atencion"
     }
     const filtro = {
-      "numeroConsulta": this.data_consulta['numeroConsulta'],
+      "numeroConsulta": this.data_consulta_value['numeroConsulta'],
       "tipoDocumento": "constancia_atencion"
     }
     this.eventTracker.postEventTracker("opc58", JSON.stringify(filtro)).subscribe()
@@ -500,9 +500,9 @@ export class DetailConsultComponent implements OnInit  {
     this.consultaMedService.getDetalleConsultaMedica(numeroConsulta)
       .subscribe((response: any) => {
         if (response && response.mensaje == 'OK' && response.operacion == 200 && response.data) {          
-          this.data_consulta = response.data;
+          this.data_consulta_value = response.data;
           this.showOdontogramButton = response.data.indicadorOdontogica === ODONTOGRAM_TYPE.TYPE ? true : false;
-          localStorage.setItem('data_consulta',  JSON.stringify(this.data_consulta));
+          localStorage.setItem('data_consulta',  JSON.stringify(this.data_consulta_value));
         }
       })
   }
@@ -511,7 +511,7 @@ export class DetailConsultComponent implements OnInit  {
     
    
     const status = this.statusMedicalRest;
-    const numeroConsulta = this.data_consulta['numeroConsulta'];
+    const numeroConsulta = this.data_consulta_value['numeroConsulta'];
     const request: any = {
       codigoMedico: +localStorage.getItem('codMedico'),
       ordenAtencion: 0,
@@ -570,28 +570,28 @@ export class DetailConsultComponent implements OnInit  {
     }
   }
 
-  validateMedicalRest(): any {
-    const numeroConsulta = this.route.snapshot.paramMap.get('numeroConsulta');
-    const request: any = {
-      ordenAtencion: 0,
-      tipoDocumento: 'descanso_medico'
-    };
+  // validateMedicalRest(): any {
+  //   const numeroConsulta = this.route.snapshot.paramMap.get('numeroConsulta');
+  //   const request: any = {
+  //     ordenAtencion: 0,
+  //     tipoDocumento: 'descanso_medico'
+  //   };
 
-    this.consultaMedService.validarArchivo(numeroConsulta, request).subscribe(
-      (response) => {
-        this.statusMedicalRest = response.status;
-        this.showButtonMedicalRest = response.status === 200 ? false : true;
-        if (!this.showButtonMedicalRest) {
-          const firmado = response.body.data.estaFirmado;
-          this.signMedicalRest = firmado;
-        }
-      },
-      error => {
-        this.statusMedicalRest = error.status;
-      }
-    );
+  //   this.consultaMedService.validarArchivo(numeroConsulta, request).subscribe(
+  //     (response) => {
+  //       this.statusMedicalRest = response.status;
+  //       this.showButtonMedicalRest = response.status === 200 ? false : true;
+  //       if (!this.showButtonMedicalRest) {
+  //         const firmado = response.body.data.estaFirmado;
+  //         this.signMedicalRest = firmado;
+  //       }
+  //     },
+  //     error => {
+  //       this.statusMedicalRest = error.status;
+  //     }
+  //   );
 
-  }
+  // }
 
   change(tab: any, index: any) {
     const historia = '<p><strong>✓&nbsp;</strong>Historia Clínica.</p>';
@@ -648,8 +648,8 @@ export class DetailConsultComponent implements OnInit  {
   }
 
   openOdontogramaInicial() {
-    if (this.data_consulta['estado'] === ESTADOS.atendido) {
-      const numeroConsulta = this.data_consulta['numeroConsulta'];
+    if (this.data_consulta_value['estado'] === ESTADOS.atendido) {
+      const numeroConsulta = this.data_consulta_value['numeroConsulta'];
       let request:any = {
         codigoMedico:+localStorage.getItem('codMedico'),
         ordenAtencion: 0,
@@ -669,8 +669,8 @@ export class DetailConsultComponent implements OnInit  {
   }
 
   openOdontogramaEvolutivo() {
-    if (this.data_consulta['estado'] === ESTADOS.atendido) {
-      const numeroConsulta = this.data_consulta['numeroConsulta'];
+    if (this.data_consulta_value['estado'] === ESTADOS.atendido) {
+      const numeroConsulta = this.data_consulta_value['numeroConsulta'];
       let request:any = {
         codigoMedico:+localStorage.getItem('codMedico'),
         ordenAtencion: 0,

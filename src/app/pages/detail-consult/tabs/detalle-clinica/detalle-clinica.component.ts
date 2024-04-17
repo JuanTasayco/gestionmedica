@@ -193,7 +193,6 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   pdfBase64:string = ''
 
   @Input() buttonMedicalRest: boolean;
-  @Input() isDocSign: boolean;
   @Input() isNurseValue: boolean;
   // isSaveAllResults = false;
   stringArraySaveAll = [];
@@ -206,14 +205,14 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   subscription : Subscription;
   constructor(private consultaMedService: ConsultaMedicaService, private route: ActivatedRoute, private _ngZone: NgZone, private referenciaService: ReferenciaService,
     private dialog: MatDialog, private profesionalservice: ProfesionalService, private router:Router,  private eventTracker: EventTrackerService,
-    private odontogramaService: OdontogramaService) { }
+    ) { }
 
   ejecutarEvento(){
     this.evento.emit(this.mensaje);
   }  
 
   ngOnInit() {
-    this.current_user = JSON.parse(localStorage.getItem("evoProfile"))
+    this.current_user = JSON.parse(localStorage.getItem("evoProfile"));
     this.numeroConsulta = this.route.snapshot.paramMap.get('numeroConsulta');
 
     
@@ -222,7 +221,7 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
     this.getDiagnosticosIdentificados(this.numeroConsulta);
     //this.getReferencia(this.numeroConsulta);
     this.getNewReferencia(this.numeroConsulta);
-    this.getCodUsuario();
+    // this.getCodUsuario();
     this.cargarDosis();
     this.cargarFrecuencia();
     this.cargarDuracion();
@@ -352,12 +351,12 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       )
     ).subscribe();
 
-    if(localStorage.getItem('codMedico')) {
-      this.profesionalservice.obtenerDataMedico(localStorage.getItem('codMedico'))
-        .subscribe((response: any) => {
-            this.medico = response.data;
-        });
-    }
+    // if(localStorage.getItem('codMedico')) {
+    //   this.profesionalservice.obtenerDataMedico(localStorage.getItem('codMedico'))
+    //     .subscribe((response: any) => {
+    //         this.medico = response.data;
+    //     });
+    // }
 
   }
 
@@ -1202,19 +1201,21 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       (lista) => {
         return forkJoin([
           of(lista),
-    this.consultaMedService.getDetalleConsultaMedica(numeroConsulta)
+          of({data: this.data_consulta}),
+    // this.consultaMedService.getDetalleConsultaMedica(numeroConsulta)
         ])
       }
     ));
     this.subscription = obs.subscribe(res => {
       const respConsultorio = res[0];
       const response = res[1];
+      this.formularioReferencia.controls.origen.setValue(response.data['codigoSede'])
       if(respConsultorio.status === 200) {
         if( respConsultorio.body.data) {
           this.consultoriosList = respConsultorio.body.data;
         }
       }
-        if (response && response.mensaje == 'OK' && response.operacion == 200 && response.data) {
+        if (response && response.data) {
           //información del paciente
           if (response.data['peso'] || response.data['talla'] || response.data['imc'] || response.data['frecuenciaRespiratoria'] ||
             response.data['frecuenciaCardiaca'] || response.data['presion'] || response.data['temperaturaOral'] ||
@@ -1255,7 +1256,7 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
             this.editarInformacion = true;
           }
           
-          this.data_consulta = response.data
+          // this.data_consulta = response.data
 
         if(response.data['tipoCita'] === 'P') {
           this.informacion_paciente.controls.consultorio.setValidators([Validators.required]);
@@ -1390,7 +1391,6 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   getSedeByCodMedico(codMedico: string) {
     this.profesionalservice.getSede(codMedico)
       .subscribe((response: any) => {
-        this.destinos = response.data;
         this.formularioReferencia.controls.origen.setValue(this.data_consulta['sede'])
       });
   }
@@ -2189,6 +2189,10 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       odontogramaInicial: 0,
       odontogramaEvolutivo: 0
     }
+    if(localStorage.getItem('codMedico')) {
+      this.profesionalservice.obtenerDataMedico(localStorage.getItem('codMedico'))
+        .subscribe((response: any) => {
+            this.medico = response.data;
     if (this.medico && this.medico.certificado) {
       let dialogRef = this.dialog.open(SignDocumentComponent, {
         width: '550px',
@@ -2236,6 +2240,8 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
           });
         }
       });
+    }
+        });
     }
   }
 
