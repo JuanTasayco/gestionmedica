@@ -128,6 +128,11 @@
 </mat-accordion>
 <mat-card *ngIf="!inf_paciente && data_consulta?.estado != 'ANULADO'"
     style="padding: 30px;box-shadow: none;border: 1px solid rgb(231, 231, 231);margin-bottom: 15px;">
+    <div class="row text-right mb-1">
+      <span class="material-icons" [ngStyle]="{'cursor': 'pointer'}" (click)="closeInfoPaciente()">
+          close
+      </span>
+  </div>
     <form [formGroup]="informacion_paciente">
     <div class="row">
         <div class="col-sm-12 col-md-6">
@@ -328,6 +333,11 @@
 </mat-accordion>
 <mat-card *ngIf="!detalle_paciente && !isNurseValue" style="padding: 30px;box-shadow: none;border: 1px solid rgb(231, 231, 231);
 margin-bottom: 15px;">
+<div class="row text-right mb-1">
+  <span class="material-icons" [ngStyle]="{'cursor': 'pointer'}" (click)="closeDetalleAtencion()">
+      close
+  </span>
+</div>
     <div class="row">
         <div class="col-sm-12 col-md-6">
         <b>Detalle de la atención</b>
@@ -481,6 +491,11 @@ margin-bottom: 15px;">
             </div>
         </div>
         <mat-hint *ngIf="!listaServicios && data_consulta?.estado != 'ANULADO'" style="font-size: 12px;">
+          <div class="row text-right">
+            <span class="material-icons" [ngStyle]="{'cursor': 'pointer'}" (click)="closeDiagnosticos()">
+              close
+          </span>
+          </div>
             <ng-container *ngIf="data_consulta?.estado !== 'ATENDIDO'">
                 Los diagnósticos agregados son tomados como
             <b>"Presuntivo"</b>, si deseas iniciar que son <b>"Definitivo"</b> debes activar la
@@ -497,7 +512,7 @@ margin-bottom: 15px;">
                     <mat-label>Agregar diagnóstico por nombre o CIE10</mat-label>
                     <input matInput #diagnosticoSearch [formControl]="diagnostico_FormControl" [matAutocomplete]="auto">
                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="diagnosticoSeleccionado($event)">
-                        <mat-option *ngFor="let d of diagnosticosFiltrados | async" [value]="d.codigo">
+                        <mat-option *ngFor="let d of diagnosticosFiltradosValue" [value]="d.codigo" (click)="clearDiagnosticoFiltrado()">
                             {{d.descripcion}}
                         </mat-option>
                     </mat-autocomplete>
@@ -576,7 +591,7 @@ margin-bottom: 15px;">
                         <mat-label>Agregar servicio por nombre o código</mat-label>
                         <input matInput #diagnosticoInput [formControl]="servDiag_FormControl" [matAutocomplete]="auto2">
                         <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="servDiagSeleccionado($event)">
-                            <mat-option *ngFor="let d of servDiagFiltrados | async" [value]="d.codigo">
+                            <mat-option *ngFor="let d of servDiagFiltradosValue" [value]="d.codigo" (click)="clearServDiagFilter()">
                                 {{d.descripcion}}
                             </mat-option>
                         </mat-autocomplete>
@@ -690,7 +705,7 @@ margin-bottom: 15px;">
                         <mat-label>Agregar servicio por nombre o código</mat-label>
                         <input matInput #procedimientoInput [formControl]="procedimiento_FormControl" [matAutocomplete]="auto3">
                         <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="procedimientoSeleccionado($event)">
-                            <mat-option *ngFor="let p of procedimientosFiltrados | async" [value]="p.codigo">
+                            <mat-option *ngFor="let p of procedimientosFiltradosValue" [value]="p.codigo" (click)="clearProcedimientosFiltrados()">
                                 {{p.descripcion}}
                             </mat-option>
                         </mat-autocomplete>
@@ -807,7 +822,7 @@ margin-bottom: 15px;">
                         <mat-label>Agregar medicamento por nombre o DCI</mat-label>
                         <input matInput #medicamentoInput [formControl]="medicamento_FormControl" [matAutocomplete]="auto3">
                         <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="medicamentoSeleccionado($event)">
-                            <mat-option *ngFor="let m of medicamentosFiltrados | async" [value]="m.codigo">
+                            <mat-option *ngFor="let m of medicamentosFiltradosValue" [value]="m.codigo" (click)="clearMedicamentosFiltrados()">
                                 <span>{{m.descripcion}}</span>
                             </mat-option>
                         </mat-autocomplete>
