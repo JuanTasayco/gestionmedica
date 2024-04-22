@@ -2199,7 +2199,8 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
     this.eventTracker.postEventTracker("opc55",JSON.stringify(this.data_consulta)).subscribe()
   
     this.createArray();
-    if(this.obsArraySaveAll.length === 0) {
+    // if(this.obsArraySaveAll.length === 0) {
+    if(this.listaServicios && this.inf_paciente && this.detalle_paciente) {
       this.finalizaTemp();
     } else {
     this.guardarTodo(true).subscribe(res => {
@@ -2232,7 +2233,9 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
 
   async finalizaTemp() {
     if (this.informacion_paciente.dirty) {
+      if(!this.listaServicios || !this.inf_paciente || !this.detalle_paciente) {
       this.guardarCabeceraConsulta(null, null, null, null, 'informacion', true);
+    }
     }
     if (!this.formCreate.valid) {
       markFormGroupTouched(this.formCreate);
@@ -2245,7 +2248,9 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       });
       return;
     } else {
+      if(!this.listaServicios || !this.inf_paciente || !this.detalle_paciente) {
       this.guardarCabeceraConsulta(null, null, null, null, 'detalle', true);
+    }
     }
     const numeroConsulta = this.data_consulta['numeroConsulta'];
     let requestGenera:any = {

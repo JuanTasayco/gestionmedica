@@ -577,8 +577,7 @@ margin-bottom: 15px;">
             <div class="col-sm-12 col-md-4">
                 <mat-form-field appearance="standard" class="form-group">
                     <mat-label>Diagnóstico Identificado</mat-label>
-                    <mat-select [(ngModel)]="diagSeleccionado_Serv"
-                        (selectionChange)="listarServDiagSeleccionado($event)">
+                    <mat-select [(ngModel)]="diagSeleccionado_Serv">
                         <mat-option *ngFor="let serv of cboservDiag" [value]="serv">
                             {{serv.value}}</mat-option>
                     </mat-select>
@@ -690,8 +689,7 @@ margin-bottom: 15px;">
             <div class="col-sm-12 col-md-4">
                 <mat-form-field appearance="standard" class="form-group">
                     <mat-label>Diagnóstico Identificado</mat-label>
-                    <mat-select [(ngModel)]="diagSeleccionado_Proc"
-                        (selectionChange)="listarProcedimientoSeleccionado($event)">
+                    <mat-select [(ngModel)]="diagSeleccionado_Proc">
                         <mat-option *ngFor="let serv of cboservDiag" [value]="serv">
                             {{serv.value}}</mat-option>
                     </mat-select>
@@ -808,8 +806,7 @@ margin-bottom: 15px;">
             <div class="col-sm-12 col-md-4">
                 <mat-form-field appearance="standard" class="form-group">
                     <mat-label>Diagnóstico Identificado</mat-label>
-                    <mat-select [(ngModel)]="medicamentoSeleccionado_Proc"
-                        (selectionChange)="listarRecetaSeleccionado($event)">
+                    <mat-select [(ngModel)]="medicamentoSeleccionado_Proc">
                         <mat-option *ngFor="let serv of cboservDiag" [value]="serv">
                             {{serv.value}}</mat-option>
                     </mat-select>
