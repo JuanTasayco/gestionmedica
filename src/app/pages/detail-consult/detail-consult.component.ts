@@ -69,7 +69,7 @@ export class DetailConsultComponent implements OnInit  {
 	}
 
   volverConsulta(){
-      this.router.navigate(['medical-appointments']);   
+      this.router.navigate(['medical-appointments']);
   }
 
   previewPDF(){
@@ -79,28 +79,28 @@ export class DetailConsultComponent implements OnInit  {
       "tempDiagnosticos": this.child.tempDiagnosticos[0]['code']
     }
     this.eventTracker.postEventTracker("opc64", JSON.stringify(filtro)).subscribe()
-  
+
     this.consultaMedService.obtenerGuiaPractica( +this.data_consulta_value['numeroConsulta'], this.child.tempDiagnosticos[0]['code'])
         .subscribe((response: any) => {
-            if ( response) { 
-              this.showComponentPDF('data:application/pdf;base64, '+response.data.base64);              
+            if ( response) {
+              this.showComponentPDF('data:application/pdf;base64, '+response.data.base64);
           }     else{
             const data = {
               title : 'Mensaje del sistema',
               message : 'Lo sentimos, en estos momentos no podemos generar el documento.',
             }
-  
-            const dialogRef = this.dialog.open(AlertComponent, { 
-                width: '400px', data: { alert: data } 
+
+            const dialogRef = this.dialog.open(AlertComponent, {
+                width: '400px', data: { alert: data }
             });
-          }    
+          }
     });
 
   }
 
   searchDocument(){
-    
-  
+
+
     let dialogRef = this.dialog.open(SearchDocumentComponent, {
       width : '650px',
       autoFocus : false,
@@ -118,21 +118,21 @@ export class DetailConsultComponent implements OnInit  {
     const filtro={
       "numeroConsulta": this.data_consulta_value['numeroConsulta']
     }
-    
+
     this.eventTracker.postEventTracker("opc67", JSON.stringify(filtro)).subscribe()
-  
+
     this.consultaMedService.anularConsulta( +this.data_consulta_value['numeroConsulta'] )
         .subscribe((response: any) => {
             if ( response.operacion == 200 && response.mensaje == 'Ok' ) {
-              this.router.navigate(['medical-appointments']);                 
+              this.router.navigate(['medical-appointments']);
             }else{
-            }        
+            }
         });
   }
 
   previewHistoria(){
-   
-  
+
+
     const numeroConsulta = this.data_consulta_value['numeroConsulta'];
     const request:any = {
       ordenAtencion: 0,
@@ -152,11 +152,11 @@ export class DetailConsultComponent implements OnInit  {
       tipoDocumento: 'hc_inicial',
           token:'123456'
     }
-              
+
         if(response.status == 200){
-    
+
             const firmado = response.body.data.estaFirmado;
-    
+
             this.consultaMedService.generarArchivo(numeroConsulta, request)
             .subscribe( async (response: any) => {
               if(response && response.data){
@@ -165,7 +165,7 @@ export class DetailConsultComponent implements OnInit  {
                 }else{
                   const base64Response = await fetch( "data:application/pdf;base64,"+response.data.base64 )
                   const blob = await base64Response.blob();
-            
+
                   var a = document.createElement('a');
                   a.href = URL.createObjectURL(blob);
                   a.download = response.data.nombre;
@@ -177,41 +177,41 @@ export class DetailConsultComponent implements OnInit  {
                   title : 'Mensaje del sistema',
                   message: 'No existe Historia Clínica para esta consulta.',
                 };
-        
+
                 this.dialog.open(AlertComponent, {
                     width: '400px', data: { alert: mensaje }
                 });
               }
             })
-    
+
         }else if(response.status == 204){
             this.consultaMedService.generarArchivo(numeroConsulta, request)
             .subscribe((response: any) => {
-              if(response && response.data){              
-                //this.showComponentPDF("data:application/pdf;base64,"+response.data.base64)  
+              if(response && response.data){
+                //this.showComponentPDF("data:application/pdf;base64,"+response.data.base64)
                 downloadBase64(response.data.base64, response.data.nombre, CONTENT_TYPE.pdf);
               } else {
                 const mensaje = {
                   title : 'Mensaje del sistema',
                   message: 'No existe Historia Clínica para esta consulta.',
                 };
-        
+
                 this.dialog.open(AlertComponent, {
                     width: '400px', data: { alert: mensaje }
                 });
-              }                          
+              }
             })
-          
+
             }else{
               const data = {
                 title : 'Mensaje del sistema',
                 message : 'Lo sentimos, en estos momentos no podemos generar el documento.',
               }
-    
-          this.dialog.open(AlertComponent, { 
-                  width: '400px', data: { alert: data } 
+
+          this.dialog.open(AlertComponent, {
+                  width: '400px', data: { alert: data }
               });
-            }      
+            }
       },
       (error)=>{
         console.log(error)
@@ -220,8 +220,8 @@ export class DetailConsultComponent implements OnInit  {
   }
 
   previewEpisodio(){
-    
-   
+
+
     const numeroConsulta = this.data_consulta_value['numeroConsulta'];
     const request:any = {
       ordenAtencion: 0,
@@ -241,11 +241,11 @@ export class DetailConsultComponent implements OnInit  {
       tipoDocumento: 'episodio_actual',
           token:'123456'
     }
-              
+
         if(response.status == 200){
-    
+
             const firmado = response.body.data.estaFirmado;
-    
+
             this.consultaMedService.generarArchivo(numeroConsulta, request)
             .subscribe( async (response: any) => {
               if(response){
@@ -254,7 +254,7 @@ export class DetailConsultComponent implements OnInit  {
                 }else{
                   const base64Response = await fetch( "data:application/pdf;base64,"+response.data.base64 )
                   const blob = await base64Response.blob();
-            
+
                   var a = document.createElement('a');
                   a.href = URL.createObjectURL(blob);
                   a.download = response.data.nombre;
@@ -263,26 +263,26 @@ export class DetailConsultComponent implements OnInit  {
                 await downloadBase64Async(response.data.base64, response.data.nombre, CONTENT_TYPE.pdf);
               }
             })
-    
+
         }else if(response.status == 204){
             this.consultaMedService.generarArchivo(numeroConsulta, request)
             .subscribe((response: any) => {
-              if(response){              
-                //this.showComponentPDF("data:application/pdf;base64,"+response.data.base64)  
+              if(response){
+                //this.showComponentPDF("data:application/pdf;base64,"+response.data.base64)
                 downloadBase64(response.data.base64, response.data.nombre, CONTENT_TYPE.pdf);
-              }                           
+              }
             })
-          
+
           }   else{
             const data = {
               title : 'Mensaje del sistema',
               message : 'Lo sentimos, en estos momentos no podemos generar el documento.',
             }
-  
-          this.dialog.open(AlertComponent, { 
-                width: '400px', data: { alert: data } 
+
+          this.dialog.open(AlertComponent, {
+                width: '400px', data: { alert: data }
             });
-          }      
+          }
       },
       (error)=>{
         console.log(error)
@@ -291,8 +291,8 @@ export class DetailConsultComponent implements OnInit  {
   }
 
   previewConstancia(){
-    
-  
+
+
     const numeroConsulta = this.data_consulta_value['numeroConsulta'];
     const request:any = {
       ordenAtencion: 0,
@@ -367,18 +367,18 @@ export class DetailConsultComponent implements OnInit  {
         }
         this.consultaMedService.generarArchivo(numeroConsulta, request)
             .subscribe((response: any) => {
-              if ( response ) { 
+              if ( response ) {
                 this.imprimir( response.data.base64, response.data.nombre)
               } else{
                 const data = {
                   title : 'Mensaje del sistema',
                   message : 'Lo sentimos, en estos momentos no podemos generar el documento.',
                 }
-      
-                const dialogRef = this.dialog.open(AlertComponent, { 
-                    width: '400px', data: { alert: data } 
+
+                const dialogRef = this.dialog.open(AlertComponent, {
+                    width: '400px', data: { alert: data }
                 });
-              }      
+              }
         });
       }
     }) */
@@ -395,7 +395,7 @@ export class DetailConsultComponent implements OnInit  {
 
     this.consultaMedService.generarArchivo(numeroConsulta, request)
             .subscribe((response: any) => {
-                if ( response ) { 
+                if ( response ) {
                   if (firma) {
                     const data = {
                       title: 'Éxito',
@@ -420,26 +420,26 @@ export class DetailConsultComponent implements OnInit  {
                   title : 'Mensaje del sistema',
                   message : 'Lo sentimos, en estos momentos no podemos generar el documento.',
                 };
-      
-                const dialogRef = this.dialog.open(AlertComponent, { 
-                    width: '400px', data: { alert: data } 
+
+                const dialogRef = this.dialog.open(AlertComponent, {
+                    width: '400px', data: { alert: data }
                 });
-              }      
+              }
         });
   }
 
   imprimir( base64:string, nombre:string){
     let data="data:application/pdf;base64,"+base64;
                   this.pdfBase64 = data;
-                  
+
     const pdf = document.getElementById('pdf1')
-        
+
                   var winparams = 'resizable,width=850px,height=1050px';
                   var printWindow = window.open('', "PDF", winparams);
-        
+
     printWindow.document.head.innerHTML = '<title>'+ nombre+'</title>';
                   printWindow.document.body.append(pdf)
-                
+
     printWindow.document.getElementById('print1')
                   setTimeout(
                     ()=>printWindow.print(),
@@ -448,11 +448,11 @@ export class DetailConsultComponent implements OnInit  {
                   printWindow.onbeforeunload = ()=>{
       document.getElementById('print1').append(pdf)
                   }
-        
+
                   printWindow.onafterprint = ()=>{
                     printWindow.close()
-                  }              
-  } 
+                  }
+  }
 
   showComponentPDF(src : any){
     let dialogRef = this.dialog.open(PdfViewerComponent, {
@@ -484,22 +484,22 @@ export class DetailConsultComponent implements OnInit  {
         "fechaInicio": "2021-01-01",
         "fechaFin": "2021-10-01"
       }
-  
+
       this.consultaMedService.buscarHistorial( request )
           .subscribe((response: any) => {
               if ( response.operacion == 200  ) {
-                console.log(response)             
-              }       
+                console.log(response)
+              }
           }); */
 
     }
-    
+
   }
 
   getDetalleConsultaMedica(numeroConsulta: string) {
     this.consultaMedService.getDetalleConsultaMedica(numeroConsulta)
       .subscribe((response: any) => {
-        if (response && response.mensaje == 'OK' && response.operacion == 200 && response.data) {          
+        if (response && response.mensaje == 'OK' && response.operacion == 200 && response.data) {
           this.data_consulta_value = response.data;
           this.showOdontogramButton = response.data.indicadorOdontogica === ODONTOGRAM_TYPE.TYPE ? true : false;
           localStorage.setItem('data_consulta',  JSON.stringify(this.data_consulta_value));
@@ -507,8 +507,8 @@ export class DetailConsultComponent implements OnInit  {
       })
   }
 
-  async showFormMedicalRest(): any {
-    
+  async showFormMedicalRest(): Promise<any> {
+
     const numeroConsulta = this.data_consulta_value['numeroConsulta'];
     const requestValida: any = {
       ordenAtencion: 0,
@@ -534,7 +534,7 @@ export class DetailConsultComponent implements OnInit  {
                   title : 'Mensaje del sistema',
                   message : 'No existe Descanso Médico para esta consulta.',
                 };
-        
+
                 this.dialog.open(AlertComponent, {
                     width: '400px', data: { alert: mensaje }
                 });
@@ -552,7 +552,7 @@ export class DetailConsultComponent implements OnInit  {
                   title : 'Mensaje del sistema',
                   message : 'No existe Descanso Médico para esta consulta.',
                 };
-        
+
                 this.dialog.open(AlertComponent, {
                     width: '400px', data: { alert: mensaje }
                 });
