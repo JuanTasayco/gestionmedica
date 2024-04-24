@@ -507,11 +507,14 @@ export class DetailConsultComponent implements OnInit  {
       })
   }
 
-  showFormMedicalRest(): void {
+  async showFormMedicalRest(): any {
     
-   
-    const status = this.statusMedicalRest;
     const numeroConsulta = this.data_consulta_value['numeroConsulta'];
+    const requestValida: any = {
+      ordenAtencion: 0,
+      tipoDocumento: 'descanso_medico'
+    };
+    const estado = await this.consultaMedService.validarArchivo(numeroConsulta, requestValida).toPromise();
     const request: any = {
       codigoMedico: +localStorage.getItem('codMedico'),
       ordenAtencion: 0,
@@ -519,8 +522,8 @@ export class DetailConsultComponent implements OnInit  {
       token: '123456'
     };
 
-    this.eventTracker.postEventTracker("opc49", JSON.stringify(request)).subscribe()
-    switch (status) {
+    this.eventTracker.postEventTracker("opc49", JSON.stringify(request)).subscribe();
+    switch (estado.status) {
       case 200:
         this.consultaMedService.generarArchivo(numeroConsulta, request)
             .subscribe( async (response: any) => {
