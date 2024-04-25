@@ -203,6 +203,10 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   // servDiagFiltrados: Observable<Array<any>>;
   // procedimientosFiltrados: Observable<Array<any>>;
 
+  formInfoPacienteModified = false;
+  formDetalleAtencionModified = false;
+  formDiagnosticosModified = false;
+
   private _diagnosticosFiltrados = new BehaviorSubject<Array<any>>([]);
   private _servDiagFiltrados = new BehaviorSubject<Array<any>>([]);
   private _procedimientosFiltrados = new BehaviorSubject<Array<any>>([]);
@@ -453,6 +457,9 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   }
 
   closeInfoPaciente() {
+    if (this.informacion_paciente.dirty && this.informacion_paciente.touched){
+      this.formInfoPacienteModified = true;
+    }
     this.inf_paciente = true;
   }
 
@@ -1200,8 +1207,10 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       this.alertaFormulario();
       return;
     }
+    if(this.formInfoPacienteModified) {
     if (this.informacion_paciente.dirty) {
       this.guardarCabeceraConsulta(null, null, null, null, 'informacion', true);
+    }
     }
     if (!this.formCreate.valid) {
       markFormGroupTouched(this.formCreate);
@@ -1214,7 +1223,9 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       });
       return;
     } else {
+      if (this.formDetalleAtencionModified) {
       this.guardarCabeceraConsulta(null, null, null, null, 'detalle', true);
+    }
     }
     const errorReceta = this.dataSourceMedicamento.data.find((f: any) => f.cantidadProducto > 999);
     if(errorReceta) {
@@ -1544,6 +1555,13 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   }
 
   closeDiagnosticos() {
+    if (
+      (this.frmServicio && this.frmServicio.form && this.frmServicio.form.touched) ||
+      (this.frmProcedimiento && this.frmProcedimiento.form && this.frmProcedimiento.form.touched) ||
+      (this.formularioMedicamento  && this.formularioMedicamento.form && this.formularioMedicamento.form.touched)
+  ) {
+      this.formDiagnosticosModified = true
+    }
     this.listaServicios = true;
   }
 
@@ -1578,19 +1596,27 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
 
 
   enviarApoyoDiagnosticoService() {
+    
     if (this.apoyoGuardar.apoyosDiagnostico.length > 0) {
+        if (this.frmServicio && this.frmServicio.form && this.frmServicio.form.dirty) {
       this.obsArraySaveAll.push(this.consultaMedService.guardarApoyoDiagnostico(this.apoyoGuardar, this.numeroConsulta));
       this.stringArraySaveAll.push('guardarApoyoDiagnostico');
     }
+      }
 
     if (this.apoyoActualizar.apoyosDiagnostico.length > 0) {
+        if (this.frmServicio && this.frmServicio.form && this.frmServicio.form.dirty) {
       this.obsArraySaveAll.push(this.consultaMedService.actualizarApoyoDiagnostico(this.apoyoActualizar, this.numeroConsulta));
       this.stringArraySaveAll.push('actualizarApoyoDiagnostico');
     }
   }
 
+  }
+
   enviarProcedimientosService() {
+   
     if (this.procedimientosGuardar.procedimientos.length > 0) {
+      if (this.frmProcedimiento && this.frmProcedimiento.form && this.frmProcedimiento.form.dirty) {
       this.procedimientosGuardar.procedimientos.forEach(element => {
         this.apoyoGuardar.apoyosDiagnostico.push(element);
       });
@@ -1604,8 +1630,10 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       // this.obsArraySaveAll.push(this.consultaMedService.guardarProcedimientos(this.procedimientosGuardar, this.numeroConsulta));
       this.stringArraySaveAll.push('guardarProcedimientos');
     }
+    }
 
     if (this.procedimientosActualizar.procedimientos.length > 0) {
+      if (this.frmProcedimiento && this.frmProcedimiento.form && this.frmProcedimiento.form.dirty) {
       this.procedimientosActualizar.procedimientos.forEach(element => {
         this.apoyoActualizar.apoyosDiagnostico.push(element);
       });
@@ -1621,16 +1649,23 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
     }
   }
 
+  }
+
   enviarRecetasService() {
+    
     if (this.recetaGuardar.recetas.length > 0) {
+      if (this.formularioMedicamento && this.formularioMedicamento.form && this.formularioMedicamento.form.dirty) {
       this.obsArraySaveAll.push(this.consultaMedService.guardarReceta(this.recetaGuardar, this.numeroConsulta));
       this.stringArraySaveAll.push('guardarReceta');
     }
+    }
 
     if (this.recetaActualizar.recetas.length > 0) {
+      if (this.formularioMedicamento && this.formularioMedicamento.form && this.formularioMedicamento.form.dirty) {
       this.obsArraySaveAll.push(this.consultaMedService.actualizarReceta(this.recetaActualizar, this.numeroConsulta));
       this.stringArraySaveAll.push('actualizarReceta');
     }
+  }
   }
 
 
@@ -2196,15 +2231,18 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   finalizarAtencion() {
     this.alertaFormulario();
     if(this.hasError) return;
+    this.closeInfoPaciente();
+    this.closeDetalleAtencion();
+    this.closeDiagnosticos();
     this.eventTracker.postEventTracker("opc55",JSON.stringify(this.data_consulta)).subscribe()
   
     this.createArray();
     // if(this.obsArraySaveAll.length === 0) {
-    if(this.listaServicios && this.inf_paciente && this.detalle_paciente) {
+    if(!this.formInfoPacienteModified && !this.formDetalleAtencionModified  && !this.formDiagnosticosModified) {
       this.finalizaTemp();
     } else {
     this.guardarTodo(true).subscribe(res => {
-        this.updateDiagnosticos();
+        // this.updateDiagnosticos();
         let array = [];
         let arrayString = [];
         this.createArrayGetData(array, arrayString);
@@ -2233,9 +2271,9 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
 
   async finalizaTemp() {
     if (this.informacion_paciente.dirty) {
-      if(!this.listaServicios || !this.inf_paciente || !this.detalle_paciente) {
+      // if(!this.listaServicios || !this.inf_paciente || !this.detalle_paciente) {
       this.guardarCabeceraConsulta(null, null, null, null, 'informacion', true);
-    }
+      // }
     }
     if (!this.formCreate.valid) {
       markFormGroupTouched(this.formCreate);
@@ -2404,6 +2442,9 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   }
 
   closeDetalleAtencion() {
+    if (this.formCreate.dirty && this.formCreate.touched){
+      this.formDetalleAtencionModified = true;
+    }
     this.detalle_paciente = true;
   }
 
@@ -2436,6 +2477,8 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
           width: "400px",
           data: { alert: data },
       });
+     } else {
+      this.formularioMedicamento.form.markAsUntouched();
      }
     }
   }
@@ -2454,6 +2497,8 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
         width: "400px",
         data: { alert: data },
     });
+   } else {
+    this.frmServicio.form.markAsUntouched();
    }
   }
   }
@@ -2472,6 +2517,8 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
         width: "400px",
         data: { alert: data },
     });
+   } else {
+    this.frmProcedimiento.form.markAsUntouched();
    }
   }
   }
