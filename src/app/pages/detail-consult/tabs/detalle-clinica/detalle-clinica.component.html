@@ -618,7 +618,7 @@ margin-bottom: 15px;">
                         <th mat-header-cell *matHeaderCellDef width ="8%"> Cantidad</th>
                         <td mat-cell *matCellDef="let element; index as i">
                           <mat-form-field appearance="standard" class="form-group">
-                          <input integerInput matInput type="text" maxlength="2" #cantidad="ngModel" [(ngModel)]="element.cantidad" name="cantidad_{{i}}" required
+                          <input (change)="changeCantidad($event, element)" integerInput matInput type="text" maxlength="2" #cantidad="ngModel" [(ngModel)]="element.cantidad" name="cantidad_{{i}}" required
                             onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                           oninput="javascript: if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                             <mat-hint class="mat-error">
@@ -732,7 +732,7 @@ margin-bottom: 15px;">
                         <th mat-header-cell *matHeaderCellDef width ="8%"> Cantidad</th>
                         <td mat-cell *matCellDef="let element; index as i">
                           <mat-form-field appearance="standard" class="form-group">
-                            <input integerInput matInput type="text" maxlength="2" #cantidadProc="ngModel" [(ngModel)]="element.cantidad" name="cantidadProc_{{i}}" required
+                            <input integerInput matInput type="text" maxlength="2" #cantidadProc="ngModel" [(ngModel)]="element.cantidad" name="cantidadProc_{{i}}" (change)="changeCantidadProcedimiento($event, element)" required
                               onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                             oninput="javascript: if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                               <mat-hint class="mat-error">
@@ -848,7 +848,7 @@ margin-bottom: 15px;">
                                         <mat-form-field appearance="standard" class="form-group">
                                             <mat-label>Dosis</mat-label>
                                                 <input  matInput [(ngModel)]="dm.dosis" name="dosis" (keypress)="onlyNumbersMedicaments($event)" #medDosis="ngModel"
-                              (keyup)="calcularCantidad($event.target.value, i)" required >
+                              (keyup)="calcularCantidad($event.target.value, i)" required (change)="changeCantidadMedicamento($event, dm)" >
                                         </mat-form-field>
                             <div class="row" *ngIf="medDosis.invalid && (medDosis.dirty || medDosis.touched)">
                               <div class="col-md-12"  *ngIf="medDosis.errors.required">
@@ -863,7 +863,7 @@ margin-bottom: 15px;">
                                         <mat-form-field appearance="standard" class="form-group">
                                             <mat-label>UM Dosis</mat-label>
                             <mat-select [(ngModel)]="dm.unidadMedidaDosis" name="unidadMedidaDosis" required
-                              (selectionChange)="calcularCantidad($event.value, i)">
+                              (selectionChange)="calcularCantidad($event.value, i); changeCantidadMedicamento($event, dm)">
                                                 <!-- <mat-option value="">Todos</mat-option> -->
                                                 <mat-option *ngFor="let d of listaDosis" [value]="d.codigo">
                                                     {{d.descripcion}}</mat-option>
@@ -873,7 +873,7 @@ margin-bottom: 15px;">
                                     <div class="col-sm-12 col-md-1">
                                         <mat-form-field appearance="standard" class="form-group">
                                             <mat-label>Cada</mat-label>
-                            <input matInput [(ngModel)]="dm.frecuencia" name="frecuencia" required #medFrec="ngModel"
+                            <input matInput [(ngModel)]="dm.frecuencia" name="frecuencia" required #medFrec="ngModel" (change)="changeCantidadMedicamento($event, dm)"
                               (keypress)="onlyNumbersMedicaments($event)" (keyup)="calcularCantidad($event.target.value, i)">
                                         </mat-form-field>
                                         <div class="row" *ngIf="medFrec.invalid && (medFrec.dirty || medFrec.touched)">
@@ -889,7 +889,7 @@ margin-bottom: 15px;">
                                         <mat-form-field appearance="standard" class="form-group">
                                             <mat-label>UM Frecuencia</mat-label>
                             <mat-select [(ngModel)]="dm.unidadMedidaFrecuencia" name="unidadMedidaFrecuencia" required
-                              (selectionChange)="calcularCantidad($event.value, i)">
+                              (selectionChange)="calcularCantidad($event.value, i); changeCantidadMedicamento($event, dm)">
                                                 <mat-option *ngFor="let f of listaFrecuencias" [value]="f.codigo">
                                                     {{f.descripcion}}</mat-option>
                                             </mat-select>
@@ -899,7 +899,7 @@ margin-bottom: 15px;">
                                         <mat-form-field appearance="standard" class="form-group">
                                             <mat-label>Duración</mat-label>
                             <input matInput [(ngModel)]="dm.duracion" name="duracion" (keypress)="onlyNumbersMedicaments($event)" required #medDur="ngModel"
-                              (keyup)="calcularCantidad($event.target.value, i)">
+                              (keyup)="calcularCantidad($event.target.value, i)" (change)="changeCantidadMedicamento($event, dm)">
                                         </mat-form-field>
                                         <div class="row" *ngIf="medDur.invalid && (medDur.dirty || medDur.touched)">
                                           <div class="col-md-12"  *ngIf="medDur.errors.required">
@@ -914,7 +914,7 @@ margin-bottom: 15px;">
                                         <mat-form-field appearance="standard" class="form-group">
                                             <mat-label>UM Duración</mat-label>
                             <mat-select [(ngModel)]="dm.unidadMedidaDuracion" name="unidadMedidaDuracion" required
-                              (selectionChange)="calcularCantidad($event.value, i)">
+                              (selectionChange)="calcularCantidad($event.value, i); changeCantidadMedicamento($event, dm)">
                                                 <mat-option *ngFor="let r of listaDuracion" [value]="r.codigo">
                                                     {{r.descripcion}}</mat-option>
                                             </mat-select>
@@ -925,7 +925,7 @@ margin-bottom: 15px;">
                                         <mat-form-field appearance="standard" class="form-group">
                                             <mat-label>Cantidad</mat-label>
                           <input matInput #cantidadProducto="ngModel" [(ngModel)]="dm.cantidadProducto" name="cantidadProducto" required
-                            pattern="^[+]?(\d*|\d{1,3}(,\d{3})*)(\.\d+)?\b$">
+                            pattern="^[+]?(\d*|\d{1,3}(,\d{3})*)(\.\d+)?\b$" (change)="changeCantidadMedicamento($event, dm)">
                                         </mat-form-field>
                                         <div class="row" *ngIf="cantidadProducto.invalid && (cantidadProducto.dirty || cantidadProducto.touched)">
                                           <div class="col-md-12"  *ngIf="cantidadProducto.errors.required">
@@ -941,7 +941,7 @@ margin-bottom: 15px;">
                                     <div class="col-md-12">
                                         <mat-form-field appearance="standard" class="form-group">
                                             <mat-label>Indicaciones médicas</mat-label>
-                                                <textarea inputrestriction="800" matInput [(ngModel)]="dm.indicacionMedica" name="indicacionMedica" cdkTextareaAutosize autocomplete="off"
+                                                <textarea inputrestriction="800" matInput [(ngModel)]="dm.indicacionMedica" name="indicacionMedica" cdkTextareaAutosize autocomplete="off" (change)="changeCantidadMedicamento($event, dm)"
                                                 #autosize="cdkTextareaAutosize"
                                                 cdkAutosizeMinRows="1"
                                                 cdkAutosizeMaxRows="5"> </textarea>
