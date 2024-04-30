@@ -1232,7 +1232,9 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       });
       return;
     } else {
+      if (this.formCreate.dirty) {
       this.guardarCabeceraConsulta(null, null, null, null, 'detalle', true);
+    }
     }
     const errorReceta = this.dataSourceMedicamento.data.find((f: any) => f.cantidadProducto > 999);
     if(errorReceta) {
@@ -1249,77 +1251,22 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
      this.createArray();
     }
     if(flag) {
-      let obsArraySaveAll: any = [];
-      let newData: any = [];
-      let updateData: any = [];
-      //servicios diagnosticos
-      const nuevosDatos = this.dataSourceServicio.data.filter((item: any) => item.nuevo);
-      const datosModificados = this.dataSourceServicio.data.filter((item: any) => !item.nuevo && this.modificadosCantidad.has(item));
-      const datosSinModificar = this.dataSourceServicio.data.filter((item: any) => !item.nuevo && !this.modificadosCantidad.has(item));
-      //procedimientos
-      const nuevosDatosProcedimientos = this.dataSourceProcedimiento.data.filter((item: any) => item.nuevo);
-      const datosModificadosProcedimientos = this.dataSourceProcedimiento.data.filter((item: any) => !item.nuevo && this.modificadosCantidadProcedimiento.has(item));
-      const datosSinModificarProcedimientos = this.dataSourceProcedimiento.data.filter((item: any) => !item.nuevo && !this.modificadosCantidadProcedimiento.has(item));
-      //medicamentos
-      const nuevosDatosMedicamentos = this.dataSourceMedicamento.data.filter((item: any) => item.nuevo);
-      const datosModificadosMedicamentos = this.dataSourceMedicamento.data.filter((item: any) => !item.nuevo && this.modificadosCantidadMedicamento.has(item));
-      const datosSinModificarMedicamentos = this.dataSourceMedicamento.data.filter((item: any) => !item.nuevo && !this.modificadosCantidadMedicamento.has(item));
-      const datosActualizar = [...datosModificados, ...datosSinModificar];
-      const datosActualizarProcedimientos = [...datosModificadosProcedimientos, ...datosSinModificarProcedimientos];
-      const datosActualizarMedicamentos = [...datosModificadosMedicamentos, ...datosSinModificarMedicamentos];
-      //servicios diagnosticos
-      if (nuevosDatos.length > 0) {
-        newData = DetalleRequest._mapApoyoGuardar(nuevosDatos);
-      }
-      if (datosActualizar.length > 0) {
-        updateData = DetalleRequest._mapApoyoActualizar(datosActualizar);
-      }
-      //procedimientos
-      if (nuevosDatosProcedimientos.length > 0) {
-        const newDataProc = DetalleRequest._mapProcedimientoGuardar(nuevosDatosProcedimientos);
-        newData = [...newData, ...newDataProc];
-      }
-      if (datosActualizarProcedimientos.length > 0) {
-        const updateDataProc = DetalleRequest._mapProcedimientoActualizar(datosActualizarProcedimientos);
-        updateData = [...updateData, ...updateDataProc];
-      }
-      //receta
-      if (nuevosDatosMedicamentos.length > 0) {
-        if (this.isMedicamentoAdd) {
-        const newDataMedic = DetalleRequest._mapMedicamentoGuardar(nuevosDatosMedicamentos);
-        obsArraySaveAll.push(this.consultaMedService.guardarReceta({recetas: newDataMedic}, this.numeroConsulta));
-        }
-      }
-      if (datosActualizarMedicamentos.length > 0) {
-        if (this.isMedicamentoModified) {
-          const updateDataMedic = DetalleRequest._mapMedicamentoActualizar(datosActualizarMedicamentos);
-          obsArraySaveAll.push(this.consultaMedService.actualizarReceta({recetas: updateDataMedic}, this.numeroConsulta));
-        }
-      }
-      //
-      if(newData.length > 0) {
-        if (this.isServicioDiagnosticoAdd) {
-        obsArraySaveAll.push(this.consultaMedService.guardarApoyoDiagnostico({apoyosDiagnostico: newData}, this.numeroConsulta));
-        }
-      }
-      if(updateData.length > 0) {
-        if (this.isServicioDiagnosticoModified) {
-          obsArraySaveAll.push(this.consultaMedService.actualizarApoyoDiagnostico({apoyosDiagnostico: updateData}, this.numeroConsulta));
-        }
-      }
+      const obsArraySaveAll = this.getObsData();
       return forkJoin(obsArraySaveAll);
         // return forkJoin(this.obsArraySaveAll);
     } else {
-        forkJoin(this.obsArraySaveAll).subscribe(res => {
-        this.updateDiagnosticos();
-        let array = [];
-        let arrayString = [];
-        this.createArrayGetData(array, arrayString);
-        forkJoin(array).subscribe(respuesta => {
-          this.createArrayUpdateData(arrayString, respuesta);
+        const obsArraySaveAll = this.getObsData();
+        forkJoin(obsArraySaveAll).subscribe(res => {
+        // this.updateDiagnosticos();
+        // let array = [];
+        // let arrayString = [];
+        // this.createArrayGetData(array, arrayString);
+        // forkJoin(array).subscribe(respuesta => {
+        //   this.createArrayUpdateData(arrayString, respuesta);
+        //       this.ejecutarEvento();
+        // });
+        // this.clearArray();
               this.ejecutarEvento();
-        });
-        this.clearArray();
       }, (err: any) => {
         this.clearArray();
         const errorData = this.consultaMedService.errorValue;
@@ -2290,15 +2237,16 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       this.finalizaTemp();
     } else {
     this.guardarTodo(true).subscribe(res => {
-        this.updateDiagnosticos();
-        let array = [];
-        let arrayString = [];
-        this.createArrayGetData(array, arrayString);
-        forkJoin(array).subscribe(respuesta => {
-          this.createArrayUpdateData(arrayString, respuesta);
-            this.ejecutarEvento();
-        });
-      this.clearArray();
+      // this.ejecutarEvento();
+        // this.updateDiagnosticos();
+        // let array = [];
+        // let arrayString = [];
+        // this.createArrayGetData(array, arrayString);
+        // forkJoin(array).subscribe(respuesta => {
+        //   this.createArrayUpdateData(arrayString, respuesta);
+        //     this.ejecutarEvento();
+        // });
+      // this.clearArray();
       this.finalizaTemp();
     }, (err: any) => {
       const errorData = this.consultaMedService.errorValue;
@@ -2689,6 +2637,71 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   }
   changeCantidadMedicamento(e:any, el:any) {
     this.isMedicamentoModified = true;
+    if (!this.modificadosCantidadMedicamento.has(el)) {
     this.modificadosCantidadMedicamento.add(el);
+  }
+}
+
+  getObsData() {
+    let obsArraySaveAll: any = [];
+      let newData: any = [];
+      let updateData: any = [];
+      //servicios diagnosticos
+      const nuevosDatos = this.dataSourceServicio.data.filter((item: any) => item.nuevo);
+      const datosModificados = this.dataSourceServicio.data.filter((item: any) => !item.nuevo && this.modificadosCantidad.has(item));
+      const datosSinModificar = this.dataSourceServicio.data.filter((item: any) => !item.nuevo && !this.modificadosCantidad.has(item));
+      //procedimientos
+      const nuevosDatosProcedimientos = this.dataSourceProcedimiento.data.filter((item: any) => item.nuevo);
+      const datosModificadosProcedimientos = this.dataSourceProcedimiento.data.filter((item: any) => !item.nuevo && this.modificadosCantidadProcedimiento.has(item));
+      const datosSinModificarProcedimientos = this.dataSourceProcedimiento.data.filter((item: any) => !item.nuevo && !this.modificadosCantidadProcedimiento.has(item));
+      //medicamentos
+      const nuevosDatosMedicamentos = this.dataSourceMedicamento.data.filter((item: any) => item.nuevo);
+      const datosModificadosMedicamentos = this.dataSourceMedicamento.data.filter((item: any) => !item.nuevo && this.modificadosCantidadMedicamento.has(item));
+      const datosSinModificarMedicamentos = this.dataSourceMedicamento.data.filter((item: any) => !item.nuevo && !this.modificadosCantidadMedicamento.has(item));
+      const datosActualizar = [...datosModificados, ...datosSinModificar];
+      const datosActualizarProcedimientos = [...datosModificadosProcedimientos, ...datosSinModificarProcedimientos];
+      const datosActualizarMedicamentos = [...datosModificadosMedicamentos, ...datosSinModificarMedicamentos];
+      //servicios diagnosticos
+      if (nuevosDatos.length > 0) {
+        newData = DetalleRequest._mapApoyoGuardar(nuevosDatos);
+      }
+      if (datosActualizar.length > 0) {
+        updateData = DetalleRequest._mapApoyoActualizar(datosActualizar);
+      }
+      //procedimientos
+      if (nuevosDatosProcedimientos.length > 0) {
+        const newDataProc = DetalleRequest._mapProcedimientoGuardar(nuevosDatosProcedimientos);
+        newData = [...newData, ...newDataProc];
+      }
+      if (datosActualizarProcedimientos.length > 0) {
+        const updateDataProc = DetalleRequest._mapProcedimientoActualizar(datosActualizarProcedimientos);
+        updateData = [...updateData, ...updateDataProc];
+      }
+      //receta
+      if (nuevosDatosMedicamentos.length > 0) {
+        if (this.isMedicamentoAdd) {
+        const newDataMedic = DetalleRequest._mapMedicamentoGuardar(nuevosDatosMedicamentos);
+        obsArraySaveAll.push(this.consultaMedService.guardarReceta({recetas: newDataMedic}, this.numeroConsulta));
+        }
+      }
+      if (datosActualizarMedicamentos.length > 0) {
+        if (this.isMedicamentoModified) {
+          const updateDataMedic = DetalleRequest._mapMedicamentoActualizar(datosActualizarMedicamentos);
+          obsArraySaveAll.push(this.consultaMedService.actualizarReceta({recetas: updateDataMedic}, this.numeroConsulta));
+        }
+      }
+      //
+      if(newData.length > 0) {
+        if (this.isServicioDiagnosticoAdd) {
+        obsArraySaveAll.push(this.consultaMedService.guardarApoyoDiagnostico({apoyosDiagnostico: newData}, this.numeroConsulta));
+        }
+      }
+      if(updateData.length > 0) {
+        if (this.isServicioDiagnosticoModified) {
+          obsArraySaveAll.push(this.consultaMedService.actualizarApoyoDiagnostico({apoyosDiagnostico: updateData}, this.numeroConsulta));
+        }
+      }
+
+      return obsArraySaveAll;
   }
 }
