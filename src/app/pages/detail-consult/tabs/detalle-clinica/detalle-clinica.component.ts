@@ -1257,6 +1257,7 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
     } else {
         const obsArraySaveAll = this.getObsData();
         forkJoin(obsArraySaveAll).subscribe(res => {
+        this.setDiagnostico();
         // this.updateDiagnosticos();
         // let array = [];
         // let arrayString = [];
