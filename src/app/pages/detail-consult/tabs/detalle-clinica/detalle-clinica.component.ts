@@ -1420,7 +1420,7 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
     } else
     this.isServicioDiagnosticoAdd = false;
     this.isServicioDiagnosticoModified = false;
-          if (response.mensaje == 'OK' && response.operacion == 200 && response.data.length > 0) {
+          if (response && response.mensaje == 'OK' && response.operacion == 200 && response.data.length > 0) {
             this.itemsDiagnosticos = true;
             this.listaServicios = true;
             this.data_diagnosticos = false;
