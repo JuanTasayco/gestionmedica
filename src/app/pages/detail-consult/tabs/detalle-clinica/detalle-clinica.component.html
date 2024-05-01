@@ -74,53 +74,53 @@
             <ul class="row g-list-md">
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">Peso (kg)</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['peso'].value | empty}}
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['peso'] | empty}}
                     </div>
                 </li>
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">Talla (mt)</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['talla'].value | empty}}</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['talla'] | empty}}</div>
                 </li>
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">IMC</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['imc'].value | empty}}</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['imc'] | empty}}</div>
                 </li>
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">FR</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['frecuenciaRespiratoria'].value | empty}}
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['frecuenciaRespiratoria'] | empty}}
                     </div>
                 </li>
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">FC</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['frecuenciaCardiaca'].value | empty}}</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['frecuenciaCardiaca'] | empty}}</div>
                 </li>
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">Presión</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['presion'].value | empty}}</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['presion'] | empty}}</div>
                 </li>
             </ul>
 
             <ul class="row g-list-md">
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">T. Oral</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['temperaturaOral'].value | empty}}
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['temperaturaOral'] | empty}}
                     </div>
                 </li>
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">T. Otica</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['temperaturaOtica'].value | empty}}</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['temperaturaOtica'] | empty}}</div>
                 </li>
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">T. Rectal</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['temperaturaRectal'].value | empty}}</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['temperaturaRectal'] | empty}}</div>
                 </li>
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">T. Axilar</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['temperaturaAxilar'].value | empty}}</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['temperaturaAxilar'] | empty}}</div>
                 </li>
                 <li class="col-md-4 clearfix cnt-item">
                     <div class="col-sm-3 col-xs-6 item-label">Consultorio</div>
-                    <div class="col-sm-9 col-xs-6 item-dato">&nbsp;{{informacion_paciente.controls['nroConsultorio'].value | empty}}</div>
+                    <div class="col-sm-9 col-xs-6 item-dato">&nbsp;{{data_consulta['nroConsultorio'] | empty}}</div>
                 </li>
             </ul>
         </div>
@@ -492,7 +492,7 @@ margin-bottom: 15px;">
         </div>
         <mat-hint *ngIf="!listaServicios && data_consulta?.estado != 'ANULADO'" style="font-size: 12px;">
           <div class="row text-right">
-            <span class="material-icons" [ngStyle]="{'cursor': 'pointer'}" (click)="closeDiagnosticos()">
+            <span class="material-icons" [ngStyle]="{'cursor': 'pointer'}" (click)="closeDiagnosticos(); updateDataDiagnostico()">
               close
           </span>
           </div>
