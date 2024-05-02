@@ -1895,11 +1895,33 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   changeInterno(e: any, element: any) {
     let index = this.dataSourceServicio.data.indexOf(element, 0)
     this.dataSourceServicio.data[index]['interno'] = e.value;
+    if (e.value === 'N') {
+      const data = {
+        title: 'Alerta',
+        message: 'Al indicar NO, este servicio no genera OA y no se mostrará en la impresión.',
+        type: 4
+      }
+
+      const dialogRef = this.dialog.open(AlertComponent, {
+        width: '400px', data: { alert: data }
+      });
+    }
   }
 
   changeInternoProc(e: any, element: any) {
     let index = this.dataSourceProcedimiento.data.indexOf(element, 0)
     this.dataSourceProcedimiento.data[index]['interno'] = e.value;
+    if (e.value === 'N') {
+      const data = {
+        title: 'Alerta',
+        message: 'Al indicar NO, este procedimiento no genera OA y no se mostrará en la impresión.',
+        type: 4
+      }
+
+      const dialogRef = this.dialog.open(AlertComponent, {
+        width: '400px', data: { alert: data }
+      });
+    }
   }
 
   imprimir( base64:string, nombre:string){
