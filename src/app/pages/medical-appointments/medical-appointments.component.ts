@@ -201,9 +201,10 @@ export class MedicalAppointmentsComponent implements OnInit {
             codigo:response.body.data.codMedico
           })
           this.getEspecialidadesLista(response.body.data.codMedico, '0')
+        } else {
+          this.getEspecialidadesLista('0', '0');
         }
         this.getSedeLista(response.body.data.codMedico);
-        this.getEspecialidadesLista('0', '0');
         localStorage.setItem('codMedico',response.body.data.codMedico);
     });
   }

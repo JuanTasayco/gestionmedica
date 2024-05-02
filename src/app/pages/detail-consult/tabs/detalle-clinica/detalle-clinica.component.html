@@ -492,7 +492,7 @@ margin-bottom: 15px;">
         </div>
         <mat-hint *ngIf="!listaServicios && data_consulta?.estado != 'ANULADO'" style="font-size: 12px;">
           <div class="row text-right">
-            <span class="material-icons" [ngStyle]="{'cursor': 'pointer'}" (click)="closeDiagnosticos(); updateDataDiagnostico()">
+            <span class="material-icons" [ngStyle]="{'cursor': 'pointer'}" (click)="updateDataDiagnostico(); closeDiagnosticos()">
               close
           </span>
           </div>

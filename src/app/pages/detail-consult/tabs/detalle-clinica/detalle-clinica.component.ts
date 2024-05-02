@@ -1264,7 +1264,7 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
         forkJoin(obsArraySaveAll).subscribe(res => {
         this.setDiagnostico();
         this.ejecutarEvento();
-        this.closeDiagnosticos();
+        // this.closeDiagnosticos();
       }, (err: any) => {
         this.clearArray();
         const errorData = this.consultaMedService.errorValue;
@@ -2534,16 +2534,17 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   }
 
   setDiagnostico() {
-    let obsArray = [];
+    const nuevosDatos = this.dataSourceServicio.data.filter((item: any) => item.nuevo);
+    const nuevosDatosProcedimientos = this.dataSourceProcedimiento.data.filter((item: any) => item.nuevo);
     if (this.isServicioDiagnosticoAdd || this.isServicioDiagnosticoModified) {
-      if (this.frmServicio && this.frmServicio.form && this.frmServicio.form.dirty) {
+      if (this.frmServicio && this.frmServicio.form && this.frmServicio.form.dirty || nuevosDatos.length > 0) {
         this.consultaMedService.getApoyoDiagnosticos(this.numeroConsulta).subscribe(response => {
           this.respGetApoyoDiagnostico(response);
           this.clearData();
           this.closeDiagnosticos();
         })
       }
-      if (this.frmProcedimiento && this.frmProcedimiento.form && this.frmProcedimiento.form.dirty) {
+      if (this.frmProcedimiento && this.frmProcedimiento.form && this.frmProcedimiento.form.dirty || nuevosDatosProcedimientos.length > 0) {
         this.consultaMedService.getProcedimientos(this.numeroConsulta).subscribe(response => {
           this.respGetProcedimientos(response);
           this.clearData();
@@ -2561,14 +2562,15 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   }
 
   updateDataDiagnostico() {
-    let obsArray = [];
-      if (this.frmServicio && this.frmServicio.form && this.frmServicio.form.dirty) {
+    const nuevosDatos = this.dataSourceServicio.data.filter((item: any) => item.nuevo);
+    const nuevosDatosProcedimientos = this.dataSourceProcedimiento.data.filter((item: any) => item.nuevo);
+      if (nuevosDatos.length > 0) {
         this.consultaMedService.getApoyoDiagnosticos(this.numeroConsulta).subscribe(response => {
           this.respGetApoyoDiagnostico(response);
           this.clearData();
         })
       }
-      if (this.frmProcedimiento && this.frmProcedimiento.form && this.frmProcedimiento.form.dirty) {
+      if (nuevosDatosProcedimientos.length > 0) {
         this.consultaMedService.getProcedimientos(this.numeroConsulta).subscribe(response => {
           this.respGetProcedimientos(response);
           this.clearData();
