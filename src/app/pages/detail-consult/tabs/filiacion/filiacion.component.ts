@@ -55,12 +55,12 @@ import { EventTrackerService } from "@shared/services/event-tracker.service";
             responsable: new FormControl('')
           });
         this.cargarFiliacionAntecedentes();
-        this.consultaMedService.getDetalleConsultaMedica(this.numeroConsulta)
-          .subscribe((response: any) => {
-            if (response.mensaje === 'OK' && response.operacion === 200 && response.data) {
-              this.data_consulta = response.data;
-            }
-          });
+        // this.consultaMedService.getDetalleConsultaMedica(this.numeroConsulta)
+        //   .subscribe((response: any) => {
+        //     if (response.mensaje === 'OK' && response.operacion === 200 && response.data) {
+        //       this.data_consulta = response.data;
+        //     }
+        //   });
       }
 
       limpiarFormFormulario(){

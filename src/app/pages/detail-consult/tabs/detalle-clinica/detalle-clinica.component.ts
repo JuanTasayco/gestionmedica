@@ -13,13 +13,14 @@ import { ConsultaMedicaService } from "@shared/services/consultas-medicas.servic
 import { OdontogramaService } from "@shared/services/odontograma.service";
 import { ProfesionalService } from "@shared/services/profesional.service";
 import * as moment from "moment";
-import { Observable, Subscription, forkJoin, of } from "rxjs";
+import { BehaviorSubject, Observable, Subscription, forkJoin, of } from "rxjs";
 import { debounceTime, map, mergeMap, startWith, take, tap } from "rxjs/operators";
 import { downloadBase64Async, downloadBase64, markFormGroupTouched } from '@shared/helpers/utils';
 import { MedicalRestComponent } from "@shared/components/medical-rest/medical-rest.component";
 import { CdkTextareaAutosize } from "@angular/cdk/text-field";
 import { ReferenciaService } from "@shared/services/referencia.service";
 import { EventTrackerService } from "@shared/services/event-tracker.service";
+import { DetalleRequest } from "./detalle";
 
 //diagnostico identificado
 export interface DiagnosticoModel {
@@ -43,6 +44,7 @@ export interface ServDiagnosticoModel {
   numOA: string;
   realizado: string;
   interno: string;
+  nuevo?: boolean;
 }
 
 var ELEMENT_DATA_SERV: ServDiagnosticoModel[] = [
@@ -60,6 +62,7 @@ export interface ProcedimientoModel {
   numOA: string;
   realizado: string;
   interno: string;
+  nuevo?: boolean;
 }
 
 var ELEMENT_DATA_PROC: ProcedimientoModel[] = [
@@ -82,7 +85,7 @@ export interface MedicamentoModel {
   indicacionMedica: string;
   indicaciones?:string;
   isMedicamento?:boolean;
-
+  nuevo?: boolean;
 }
 
 var ELEMENT_DATA_MED: MedicamentoModel[] = [
@@ -117,7 +120,6 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   detalle_paciente: boolean = false;
   //diagnosticos
   listaDiagnosticos = [];
-  diagnosticosFiltrados: Observable<Array<any>>;
   diagnostico_FormControl = new FormControl('');
 
   //tabla de diagnosticos identificados
@@ -142,19 +144,16 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   cboservDiag = []
   listaServDiagnosticos = []
   servDiag_FormControl = new FormControl('');
-  servDiagFiltrados: Observable<Array<any>>;
   diagSeleccionado_Serv: string;
 
   //combo para procedimientos
   listaProcedimientos = []
   procedimiento_FormControl = new FormControl('');
-  procedimientosFiltrados: Observable<Array<any>>;
   diagSeleccionado_Proc: string;
 
   //cbo para medicamentos
   listaMedicamentos = []
   medicamento_FormControl = new FormControl('');
-  medicamentosFiltrados: Observable<Array<any>>;
   medicamentoSeleccionado_Proc: string;
 
   //guardar_diagnostico
@@ -193,7 +192,6 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   pdfBase64:string = ''
 
   @Input() buttonMedicalRest: boolean;
-  @Input() isDocSign: boolean;
   @Input() isNurseValue: boolean;
   // isSaveAllResults = false;
   stringArraySaveAll = [];
@@ -204,16 +202,77 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   consultoriosList: any = [];
   codConsultorio: any;
   subscription : Subscription;
+
+  // servDiagFiltrados: Observable<Array<any>>;
+  // procedimientosFiltrados: Observable<Array<any>>;
+
+  formInfoPacienteModified = false;
+  formDetalleAtencionModified = false;
+  formDiagnosticosModified = false;
+
+  isServicioDiagnosticoModified = false;
+  isMedicamentoModified = false;
+  isServicioDiagnosticoAdd = false;
+  isMedicamentoAdd = false;
+
+  private _diagnosticosFiltrados = new BehaviorSubject<Array<any>>([]);
+  private _servDiagFiltrados = new BehaviorSubject<Array<any>>([]);
+  private _procedimientosFiltrados = new BehaviorSubject<Array<any>>([]);
+  private _medicamentosFiltrados = new BehaviorSubject<Array<any>>([]);
   constructor(private consultaMedService: ConsultaMedicaService, private route: ActivatedRoute, private _ngZone: NgZone, private referenciaService: ReferenciaService,
     private dialog: MatDialog, private profesionalservice: ProfesionalService, private router:Router,  private eventTracker: EventTrackerService,
-    private odontogramaService: OdontogramaService) { }
+    ) { }
+
+    get diagnosticosFiltradosValue(): any {
+      return this._diagnosticosFiltrados.value;
+    }
+  
+    set diagnosticosFiltradosData(data: any) {
+      this._diagnosticosFiltrados.next(data);
+    }
+
+    get servDiagFiltradosValue(): any {
+      return this._servDiagFiltrados.value;
+    }
+  
+    set servDiagFiltradosData(data: any) {
+      this._servDiagFiltrados.next(data);
+    }
+
+    get procedimientosFiltradosValue(): any {
+      return this._procedimientosFiltrados.value;
+    }
+  
+    set procedimientosFiltradosData(data: any) {
+      this._procedimientosFiltrados.next(data);
+    }
+
+    get medicamentosFiltradosValue(): any {
+      return this._medicamentosFiltrados.value;
+    }
+  
+    set medicamentosFiltradosData(data: any) {
+      this._medicamentosFiltrados.next(data);
+    }
+
+    clearServDiagFilter() {
+      this.servDiagFiltradosData = [];
+    }
+
+    clearProcedimientosFiltrados() {
+      this.procedimientosFiltradosData = [];
+    }
+
+    clearMedicamentosFiltrados() {
+      this.medicamentosFiltradosData = [];
+    }
 
   ejecutarEvento(){
     this.evento.emit(this.mensaje);
   }  
 
   ngOnInit() {
-    this.current_user = JSON.parse(localStorage.getItem("evoProfile"))
+    this.current_user = JSON.parse(localStorage.getItem("evoProfile"));
     this.numeroConsulta = this.route.snapshot.paramMap.get('numeroConsulta');
 
     
@@ -222,7 +281,7 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
     this.getDiagnosticosIdentificados(this.numeroConsulta);
     //this.getReferencia(this.numeroConsulta);
     this.getNewReferencia(this.numeroConsulta);
-    this.getCodUsuario();
+    // this.getCodUsuario();
     this.cargarDosis();
     this.cargarFrecuencia();
     this.cargarDuracion();
@@ -297,6 +356,9 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       startWith(''),
       debounceTime(1000),
       tap(value => {
+        if(value === '') {
+          this.diagnosticosFiltradosData = [];
+        }
         if (value && value != null && value.length > 2) {
           this.diagnostico = this.diagnostico_FormControl.value
           this.cargarListaDiagnosticos();
@@ -309,6 +371,9 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       startWith(''),
       debounceTime(1000),
       tap(value => {
+        if(value === '') {
+          this.clearServDiagFilter();
+        }
         if (value && value != null && value.length > 2) {
           //this.diagnostico = this.diagnostico_FormControl.value
           let data = { value: { value_search: this.servDiag_FormControl.value } }
@@ -322,6 +387,9 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       startWith(''),
       debounceTime(1000),
       tap(value => {
+        if (value === '') {
+          this.clearProcedimientosFiltrados();
+        }
         if (value && value != null && value.length > 2) {
           //this.diagnostico = this.diagnostico_FormControl.value
           let data = { value: { value_search: this.procedimiento_FormControl.value } }
@@ -335,6 +403,9 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       startWith(''),
       debounceTime(1000),
       tap(value => {
+        if (value === '') {
+          this.clearMedicamentosFiltrados();
+        }
         if (value && value != null && value.length > 2) {
           //this.diagnostico = this.diagnostico_FormControl.value
           let data = { value: { value_search: this.medicamento_FormControl.value } }
@@ -352,12 +423,12 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       )
     ).subscribe();
 
-    if(localStorage.getItem('codMedico')) {
-      this.profesionalservice.obtenerDataMedico(localStorage.getItem('codMedico'))
-        .subscribe((response: any) => {
-            this.medico = response.data;
-        });
-    }
+    // if(localStorage.getItem('codMedico')) {
+    //   this.profesionalservice.obtenerDataMedico(localStorage.getItem('codMedico'))
+    //     .subscribe((response: any) => {
+    //         this.medico = response.data;
+    //     });
+    // }
 
   }
 
@@ -386,11 +457,21 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
     this.eventTracker.postEventTracker("opc48", JSON.stringify( this.informacion_paciente.value)).subscribe()
    
     this.inf_paciente = false;
-    Object.keys(this.informacion_paciente.controls).forEach((key) => {
-      if (this.informacion_paciente.get(key).value === '0') {
-        this.informacion_paciente.get(key).setValue(null);
-      }
-    });
+    this.informacion_paciente.controls.peso.setValue(this.data_consulta.peso);
+    this.informacion_paciente.controls.talla.setValue(this.data_consulta.talla);
+    this.informacion_paciente.controls.imc.setValue(this.data_consulta.imc);
+    this.informacion_paciente.controls.frecuenciaRespiratoria.setValue(this.data_consulta.frecuenciaRespiratoria);
+    this.informacion_paciente.controls.frecuenciaCardiaca.setValue(this.data_consulta.frecuenciaCardiaca);
+    this.informacion_paciente.controls.presion.setValue(this.data_consulta.presion);
+    this.informacion_paciente.controls.temperaturaOral.setValue(this.data_consulta.temperaturaOral);
+    this.informacion_paciente.controls.temperaturaOtica.setValue(this.data_consulta.temperaturaOtica);
+    this.informacion_paciente.controls.temperaturaRectal.setValue(this.data_consulta.temperaturaRectal);
+    this.informacion_paciente.controls.temperaturaAxilar.setValue(this.data_consulta.temperaturaAxilar);
+    this.informacion_paciente.controls.consultorio.setValue(this.data_consulta.nroConsultorio);
+  }
+
+  closeInfoPaciente() {
+    this.inf_paciente = true;
   }
 
 
@@ -413,6 +494,8 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
     const element = ELEMENT_DATA.find(f => f.code === event.option.value);
     if(element) {
       this.diagnosticoSearch.nativeElement.value = '';
+      this._diagnosticosFiltrados.next([]);
+      this.diagnostico_FormControl.setValue('');
       this.alertaDuplicados('El diagnóstico ya fue seleccionado');
       return;
     }
@@ -423,6 +506,11 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
     this.diagnostico_FormControl.setValue('');
     this.itemsDiagnosticos = true;
     this.actualizarDiagnosticos();
+    this._diagnosticosFiltrados.next([]);
+  }
+
+  clearDiagnosticoFiltrado() {
+    this.diagnosticosFiltradosData = [];
   }
 
   actualizarDiagnosticos() {
@@ -438,12 +526,13 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       .subscribe((response: any) => {
         if (response) {
           this.listaDiagnosticos = response.data;
-          this.diagnosticosFiltrados = this.diagnostico_FormControl.valueChanges
-            .pipe(
-              startWith(''),
-              map(value => typeof value === 'string' ? value : value.descripcion),
-              map(descripcion => descripcion ? this._filterDiagnostico(descripcion) : this.listaDiagnosticos.slice())
-            );
+          this.diagnosticosFiltradosData = this.listaDiagnosticos.slice();
+          // this.diagnosticosFiltrados = this.diagnostico_FormControl.valueChanges
+          //   .pipe(
+          //     startWith(''),
+          //     map(value => typeof value === 'string' ? value : value.descripcion),
+          //     map(descripcion => descripcion ? this._filterDiagnostico(descripcion) : this.listaDiagnosticos.slice())
+          //   );
         }
 
       });
@@ -501,12 +590,13 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       .subscribe((response: any) => {
         if (response) {
           this.listaServDiagnosticos = response.data;
-          this.servDiagFiltrados = this.servDiag_FormControl.valueChanges
-            .pipe(
-              startWith(''),
-              map(value => typeof value === 'string' ? value : value.descripcion),
-              map(descripcion => descripcion ? this._filterServDiag(descripcion) : this.listaServDiagnosticos.slice())
-            );
+          this.servDiagFiltradosData = this.listaServDiagnosticos.slice();
+          // this.servDiagFiltrados = this.servDiag_FormControl.valueChanges
+          //   .pipe(
+          //     startWith(''),
+          //     map(value => typeof value === 'string' ? value : value.descripcion),
+          //     map(descripcion => descripcion ? this._filterServDiag(descripcion) : this.listaServDiagnosticos.slice())
+          //   );
         }
 
       });
@@ -526,6 +616,7 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       this.diagnosticoInput.nativeElement.value = '';
       this.alertaDuplicados();
     } else {
+      this.isServicioDiagnosticoAdd = true;
       ELEMENT_DATA_SERV.push(
         {
           numeroMovimiento: 0,
@@ -537,7 +628,8 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
           cantidad: 1,
           numOA: '-',
           realizado: 'N',
-          interno: 'S'
+          interno: 'S',
+          nuevo: true,
         }
       );
       this.dataSourceServicio.data = ELEMENT_DATA_SERV;
@@ -599,12 +691,13 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       .subscribe((response: any) => {
         if (response) {
           this.listaProcedimientos = response.data;
-          this.procedimientosFiltrados = this.procedimiento_FormControl.valueChanges
-            .pipe(
-              startWith(''),
-              map(value => typeof value === 'string' ? value : value.descripcion),
-              map(descripcion => descripcion ? this._filterProcedimientos(descripcion) : this.listaProcedimientos.slice())
-            );
+          this.procedimientosFiltradosData = this.listaProcedimientos.slice();
+          // this.procedimientosFiltrados = this.procedimiento_FormControl.valueChanges
+          //   .pipe(
+          //     startWith(''),
+          //     map(value => typeof value === 'string' ? value : value.descripcion),
+          //     map(descripcion => descripcion ? this._filterProcedimientos(descripcion) : this.listaProcedimientos.slice())
+          //   );
         }
 
       });
@@ -625,6 +718,7 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       this.procedimientoInput.nativeElement.value = '';
       this.alertaDuplicados();
     } else {
+      this.isServicioDiagnosticoAdd = true;
       this.procedimiento_FormControl.setValue('');
       ELEMENT_DATA_PROC.push(
         {
@@ -637,7 +731,8 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
           cantidad: 1,
           numOA: '-',
           realizado: 'N',
-          interno: 'S'
+          interno: 'S',
+          nuevo: true,
         }
       );
       this.dataSourceProcedimiento.data = ELEMENT_DATA_PROC;
@@ -695,12 +790,13 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       .subscribe((response: any) => {
         if (response) {
           this.listaMedicamentos = response.data;
-          this.medicamentosFiltrados = this.medicamento_FormControl.valueChanges
-            .pipe(
-              startWith(''),
-              map(value => typeof value === 'string' ? value : value.descripcion),
-              map(descripcion => descripcion ? this._filterMedicamentos(descripcion) : this.listaMedicamentos.slice())
-            );
+          this.medicamentosFiltradosData = this.listaMedicamentos.slice();
+          // this.medicamentosFiltrados = this.medicamento_FormControl.valueChanges
+          //   .pipe(
+          //     startWith(''),
+          //     map(value => typeof value === 'string' ? value : value.descripcion),
+          //     map(descripcion => descripcion ? this._filterMedicamentos(descripcion) : this.listaMedicamentos.slice())
+          //   );
         }
 
       });
@@ -731,6 +827,7 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       this.medicamentoInput.nativeElement.value = '';
       this.alertaDuplicados();
     } else {
+      this.isMedicamentoAdd = true;
       this.medicamento_FormControl.setValue('');
   
       ELEMENT_DATA_MED.push(
@@ -747,7 +844,8 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
           duracion:  isMedicamento ? null : 1,
           unidadMedidaDuracion: isMedicamento ? '' : '002',
           cantidadProducto: '',
-          indicacionMedica: ''
+          indicacionMedica: '',
+          nuevo: true,
         }
       );
       this.dataSourceMedicamento.data = ELEMENT_DATA_MED;
@@ -877,7 +975,7 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       case 3: this.informacion_paciente.controls.temperaturaOral.setValue(num); break;
       case 4: this.informacion_paciente.controls.temperaturaOtica.setValue(num); break;
       case 5: this.informacion_paciente.controls.temperaturaRectal.setValue(num); break;
-      case 5: this.informacion_paciente.controls.temperaturaAxilar.setValue(num); break;
+      // case 5: this.informacion_paciente.controls.temperaturaAxilar.setValue(num); break;
     }
 
   }
@@ -1126,7 +1224,7 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       this.alertaFormulario();
       return;
     }
-    if (this.informacion_paciente.dirty) {
+    if (this.informacion_paciente.dirty && this.informacion_paciente.touched) {
       this.guardarCabeceraConsulta(null, null, null, null, 'informacion', true);
     }
     if (!this.formCreate.valid) {
@@ -1140,7 +1238,9 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       });
       return;
     } else {
+      if (this.formCreate.dirty && this.formCreate.touched) {
       this.guardarCabeceraConsulta(null, null, null, null, 'detalle', true);
+    }
     }
     const errorReceta = this.dataSourceMedicamento.data.find((f: any) => f.cantidadProducto > 999);
     if(errorReceta) {
@@ -1157,18 +1257,14 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
      this.createArray();
     }
     if(flag) {
-      return forkJoin(this.obsArraySaveAll);
+      const obsArraySaveAll = this.getObsData();
+      return forkJoin(obsArraySaveAll);
     } else {
-        forkJoin(this.obsArraySaveAll).subscribe(res => {
-        this.updateDiagnosticos();
-        let array = [];
-        let arrayString = [];
-        this.createArrayGetData(array, arrayString);
-        forkJoin(array).subscribe(respuesta => {
-          this.createArrayUpdateData(arrayString, respuesta);
-              this.ejecutarEvento();
-        });
-        this.clearArray();
+        const obsArraySaveAll = this.getObsData();
+        forkJoin(obsArraySaveAll).subscribe(res => {
+        this.setDiagnostico();
+        this.ejecutarEvento();
+        // this.closeDiagnosticos();
       }, (err: any) => {
         this.clearArray();
         const errorData = this.consultaMedService.errorValue;
@@ -1202,19 +1298,20 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       (lista) => {
         return forkJoin([
           of(lista),
-    this.consultaMedService.getDetalleConsultaMedica(numeroConsulta)
+          of({data: this.data_consulta}),
         ])
       }
     ));
     this.subscription = obs.subscribe(res => {
       const respConsultorio = res[0];
       const response = res[1];
+      this.formularioReferencia.controls.origen.setValue(response.data['codigoSede'])
       if(respConsultorio.status === 200) {
         if( respConsultorio.body.data) {
           this.consultoriosList = respConsultorio.body.data;
         }
       }
-        if (response && response.mensaje == 'OK' && response.operacion == 200 && response.data) {
+        if (response && response.data) {
           //información del paciente
           if (response.data['peso'] || response.data['talla'] || response.data['imc'] || response.data['frecuenciaRespiratoria'] ||
             response.data['frecuenciaCardiaca'] || response.data['presion'] || response.data['temperaturaOral'] ||
@@ -1255,7 +1352,7 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
             this.editarInformacion = true;
           }
           
-          this.data_consulta = response.data
+          // this.data_consulta = response.data
 
         if(response.data['tipoCita'] === 'P') {
           this.informacion_paciente.controls.consultorio.setValidators([Validators.required]);
@@ -1317,7 +1414,9 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
           ELEMENT_DATA_SERV = [];
           this.dataSourceServicio.data = ELEMENT_DATA_SERV;
     } else
-          if (response.mensaje == 'OK' && response.operacion == 200 && response.data.length > 0) {
+    this.isServicioDiagnosticoAdd = false;
+    this.isServicioDiagnosticoModified = false;
+          if (response && response.mensaje == 'OK' && response.operacion == 200 && response.data.length > 0) {
             this.itemsDiagnosticos = true;
             this.listaServicios = true;
             this.data_diagnosticos = false;
@@ -1335,7 +1434,8 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
                   cantidad: response.data[index]['cantidad'],
                   numOA: '-',
                   realizado: response.data[index]['realizado'],
-                  interno: response.data[index]['interno']
+                  interno: response.data[index]['interno'],
+                  nuevo: false,
                 }
               );
             }
@@ -1349,6 +1449,8 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
 
   respGetProcedimientos(response: any) {
         if (response) {
+          this.isServicioDiagnosticoAdd = false;
+          this.isServicioDiagnosticoModified = false;
           if (response.mensaje == 'OK' && response.operacion == 200 && response.data.length > 0) {
             this.itemsDiagnosticos = true;
             this.listaServicios = true;
@@ -1367,7 +1469,8 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
                   cantidad: response.data[index]['cantidad'],
                   numOA: '-',
                   realizado: response.data[index]['realizado'],
-                  interno: response.data[index]['interno']
+                  interno: response.data[index]['interno'],
+                  nuevo: false,
                 }
               );
             }
@@ -1390,7 +1493,6 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   getSedeByCodMedico(codMedico: string) {
     this.profesionalservice.getSede(codMedico)
       .subscribe((response: any) => {
-        this.destinos = response.data;
         this.formularioReferencia.controls.origen.setValue(this.data_consulta['sede'])
       });
   }
@@ -1401,6 +1503,8 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
 
   respGetRecetas(response: any) {
         if (response) {
+          this.isMedicamentoAdd = false;
+          this.isMedicamentoModified = false;
           if (response.mensaje == 'OK' && response.operacion == 200 && response.data.length > 0) {
             this.itemsDiagnosticos = true;
             this.listaServicios = true;
@@ -1425,7 +1529,8 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
                   unidadMedidaDuracion: response.data[index]['unidadMedidaDuracion'],
                   cantidadProducto: response.data[index]['cantidadProducto'],
                   indicacionMedica: response.data[index]['indicacionMedica'],
-                  indicaciones: response.data[index]['indicaciones']
+                  indicaciones: response.data[index]['indicaciones'],
+                  nuevo: false
 
                 }
               );
@@ -1466,6 +1571,10 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
 
   editarDiagnosticos() {
     this.listaServicios = false;
+  }
+
+  closeDiagnosticos() {
+    this.listaServicios = true;
   }
 
   getUPS() {
@@ -1786,11 +1895,33 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
   changeInterno(e: any, element: any) {
     let index = this.dataSourceServicio.data.indexOf(element, 0)
     this.dataSourceServicio.data[index]['interno'] = e.value;
+    if (e.value === 'N') {
+      const data = {
+        title: 'Alerta',
+        message: 'Al indicar NO, este servicio no genera OA y no se mostrará en la impresión.',
+        type: 4
+      }
+
+      const dialogRef = this.dialog.open(AlertComponent, {
+        width: '400px', data: { alert: data }
+      });
+    }
   }
 
   changeInternoProc(e: any, element: any) {
     let index = this.dataSourceProcedimiento.data.indexOf(element, 0)
     this.dataSourceProcedimiento.data[index]['interno'] = e.value;
+    if (e.value === 'N') {
+      const data = {
+        title: 'Alerta',
+        message: 'Al indicar NO, este procedimiento no genera OA y no se mostrará en la impresión.',
+        type: 4
+      }
+
+      const dialogRef = this.dialog.open(AlertComponent, {
+        width: '400px', data: { alert: data }
+      });
+    }
   }
 
   imprimir( base64:string, nombre:string){
@@ -2118,21 +2249,11 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
     this.alertaFormulario();
     if(this.hasError) return;
     this.eventTracker.postEventTracker("opc55",JSON.stringify(this.data_consulta)).subscribe()
-  
-    this.createArray();
-    if(this.obsArraySaveAll.length === 0) {
+    if(!this.isMedicamentoAdd && !this.isMedicamentoModified && !this.isServicioDiagnosticoAdd && !this.isServicioDiagnosticoModified) {
       this.finalizaTemp();
     } else {
     this.guardarTodo(true).subscribe(res => {
-        this.updateDiagnosticos();
-        let array = [];
-        let arrayString = [];
-        this.createArrayGetData(array, arrayString);
-        forkJoin(array).subscribe(respuesta => {
-          this.createArrayUpdateData(arrayString, respuesta);
-            this.ejecutarEvento();
-        });
-      this.clearArray();
+      this.setDiagnostico();
       this.finalizaTemp();
     }, (err: any) => {
       const errorData = this.consultaMedService.errorValue;
@@ -2153,7 +2274,9 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
 
   async finalizaTemp() {
     if (this.informacion_paciente.dirty) {
+      if(!this.listaServicios || !this.inf_paciente || !this.detalle_paciente) {
       this.guardarCabeceraConsulta(null, null, null, null, 'informacion', true);
+      }
     }
     if (!this.formCreate.valid) {
       markFormGroupTouched(this.formCreate);
@@ -2166,16 +2289,12 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       });
       return;
     } else {
+      if(!this.listaServicios || !this.inf_paciente || !this.detalle_paciente) {
       this.guardarCabeceraConsulta(null, null, null, null, 'detalle', true);
     }
-    const numeroConsulta = this.data_consulta['numeroConsulta'];
-    let requestGenera:any = {
-        codigoMedico:+localStorage.getItem('codMedico'),
-        ordenAtencion: 0,
-        tipoDocumento: 'odontograma_inicial',
-        token: '123456'
     }
-    // const responseGenera = await this.consultaMedService.generarArchivo(numeroConsulta, requestGenera).toPromise();
+
+    this.closeDiagnosticos();
     let request = {
       token: '000000',
       codigoMedico: +localStorage.getItem('codMedico'),
@@ -2189,6 +2308,10 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       odontogramaInicial: 0,
       odontogramaEvolutivo: 0
     }
+    if(localStorage.getItem('codMedico')) {
+      this.profesionalservice.obtenerDataMedico(localStorage.getItem('codMedico'))
+        .subscribe((response: any) => {
+            this.medico = response.data;
     if (this.medico && this.medico.certificado) {
       let dialogRef = this.dialog.open(SignDocumentComponent, {
         width: '550px',
@@ -2237,6 +2360,8 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
         }
       });
     }
+        });
+    }
   }
 
   generarPedido() {
@@ -2280,19 +2405,8 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
       "tipoDocumento": 'descanso_medico'
     }
 
-    this.eventTracker.postEventTracker("opc57", JSON.stringify(filtro)).subscribe()
+    this.eventTracker.postEventTracker("opc57", JSON.stringify(filtro)).subscribe();
 
-    this.consultaMedService.validarArchivo(numeroConsulta, request).subscribe(
-      (res) => {
-        const status = res.status === 200 ? false : true;
-        const firmado = !status ? res.body.data.estaFirmado : false;
-        if (firmado) {
-          const dato = { title: 'Mensaje del sistema', message: 'El documento ya se encuentra firmado' };
-          this.dialog.open(AlertComponent, {
-            width: '400px', data: { alert: dato }
-          });
-          return;
-        } else {
           this.consultaMedService.consultarDescansoMedico(numeroConsulta)
             .subscribe((response: any) => {
               const data = response ? true : false;
@@ -2303,14 +2417,40 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
                 data: { data, numeroConsulta, dias }
               });
             })
-        }
-      },
-      error => {
 
-      }
-    );
+    // this.consultaMedService.validarArchivo(numeroConsulta, request).subscribe(
+    //   (res) => {
+    //     const status = res.status === 200 ? false : true;
+    //     const firmado = !status ? res.body.data.estaFirmado : false;
+    //     if (firmado) {
+    //       const dato = { title: 'Mensaje del sistema', message: 'El documento ya se encuentra firmado' };
+    //       this.dialog.open(AlertComponent, {
+    //         width: '400px', data: { alert: dato }
+    //       });
+    //       return;
+    //     } else {
+    //       this.consultaMedService.consultarDescansoMedico(numeroConsulta)
+    //         .subscribe((response: any) => {
+    //           const data = response ? true : false;
+    //           const dias = data ? response.data.numeroDiaDescanso : null;
+    //           const dialogRef = this.dialog.open(MedicalRestComponent, {
+    //             width: '550px',
+    //             autoFocus: false,
+    //             data: { data, numeroConsulta, dias }
+    //           });
+    //         })
+    //     }
+    //   },
+    //   error => {
+
+    //   }
+    // );
 
 
+  }
+
+  closeDetalleAtencion() {
+    this.detalle_paciente = true;
   }
 
   alertaDuplicados(mensaje: any = null) {
@@ -2391,6 +2531,58 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
         this.respGetProcedimientos(response[1]);
         this.respGetRecetas(response[2]);
     });
+  }
+
+  setDiagnostico() {
+    const nuevosDatos = this.dataSourceServicio.data.filter((item: any) => item.nuevo);
+    const nuevosDatosProcedimientos = this.dataSourceProcedimiento.data.filter((item: any) => item.nuevo);
+    if (this.isServicioDiagnosticoAdd || this.isServicioDiagnosticoModified) {
+      if (this.frmServicio && this.frmServicio.form && this.frmServicio.form.dirty || nuevosDatos.length > 0) {
+        this.consultaMedService.getApoyoDiagnosticos(this.numeroConsulta).subscribe(response => {
+          this.respGetApoyoDiagnostico(response);
+          this.clearData();
+          this.closeDiagnosticos();
+        })
+      }
+      if (this.frmProcedimiento && this.frmProcedimiento.form && this.frmProcedimiento.form.dirty || nuevosDatosProcedimientos.length > 0) {
+        this.consultaMedService.getProcedimientos(this.numeroConsulta).subscribe(response => {
+          this.respGetProcedimientos(response);
+          this.clearData();
+          this.closeDiagnosticos();
+        })
+      }
+    }
+    if (this.isMedicamentoAdd || this.isMedicamentoModified) {
+      this.consultaMedService.getRecetas(this.numeroConsulta).subscribe(response => {
+        this.respGetRecetas(response);
+        this.clearData();
+        this.closeDiagnosticos();
+      })
+    }
+  }
+
+  updateDataDiagnostico() {
+    const nuevosDatos = this.dataSourceServicio.data.filter((item: any) => item.nuevo);
+    const nuevosDatosProcedimientos = this.dataSourceProcedimiento.data.filter((item: any) => item.nuevo);
+      if (nuevosDatos.length > 0) {
+        this.consultaMedService.getApoyoDiagnosticos(this.numeroConsulta).subscribe(response => {
+          this.respGetApoyoDiagnostico(response);
+          this.clearData();
+        })
+      }
+      if (nuevosDatosProcedimientos.length > 0) {
+        this.consultaMedService.getProcedimientos(this.numeroConsulta).subscribe(response => {
+          this.respGetProcedimientos(response);
+          this.clearData();
+        })
+      }
+
+    if (this.formularioMedicamento && this.formularioMedicamento.form && this.formularioMedicamento.form.dirty) {
+      this.consultaMedService.getRecetas(this.numeroConsulta).subscribe(response => {
+        this.respGetRecetas(response);
+        this.clearData();
+      })
+    }
   }
 
   guardarNewReferencia(event: any) {
@@ -2494,5 +2686,94 @@ export class TabDetalleClinicaComponent implements OnInit, OnDestroy{
     };
 
     this.consultaMedService.guardarDiagnosticos(data, this.numeroConsulta).subscribe((response: any) => {});
+  }
+  modificadosCantidad: Set<any> = new Set();
+  modificadosCantidadProcedimiento: Set<any> = new Set();
+  modificadosCantidadMedicamento: Set<any> = new Set();
+
+  changeCantidad(e:any, el:any) {
+    this.isServicioDiagnosticoModified = true;
+    this.modificadosCantidad.add(el);
+  }
+  changeCantidadProcedimiento(e:any, el:any) {
+    this.isServicioDiagnosticoModified = true;
+    this.modificadosCantidadProcedimiento.add(el);
+  }
+  changeCantidadMedicamento(e:any, el:any) {
+    this.isMedicamentoModified = true;
+    if (!this.modificadosCantidadMedicamento.has(el)) {
+    this.modificadosCantidadMedicamento.add(el);
+  }
+}
+
+  clearData() {
+    this.modificadosCantidad.clear();
+    this.modificadosCantidadProcedimiento.clear();
+    this.modificadosCantidadMedicamento.clear();
+    this.isServicioDiagnosticoModified = false;
+    this.isMedicamentoModified = false;
+  }
+
+  getObsData() {
+    let obsArraySaveAll: any = [];
+      let newData: any = [];
+      let updateData: any = [];
+      //servicios diagnosticos
+      const nuevosDatos = this.dataSourceServicio.data.filter((item: any) => item.nuevo);
+      const datosModificados = this.dataSourceServicio.data.filter((item: any) => !item.nuevo && this.modificadosCantidad.has(item));
+      const datosSinModificar = this.dataSourceServicio.data.filter((item: any) => !item.nuevo && !this.modificadosCantidad.has(item));
+      //procedimientos
+      const nuevosDatosProcedimientos = this.dataSourceProcedimiento.data.filter((item: any) => item.nuevo);
+      const datosModificadosProcedimientos = this.dataSourceProcedimiento.data.filter((item: any) => !item.nuevo && this.modificadosCantidadProcedimiento.has(item));
+      const datosSinModificarProcedimientos = this.dataSourceProcedimiento.data.filter((item: any) => !item.nuevo && !this.modificadosCantidadProcedimiento.has(item));
+      //medicamentos
+      const nuevosDatosMedicamentos = this.dataSourceMedicamento.data.filter((item: any) => item.nuevo);
+      const datosModificadosMedicamentos = this.dataSourceMedicamento.data.filter((item: any) => !item.nuevo && this.modificadosCantidadMedicamento.has(item));
+      const datosSinModificarMedicamentos = this.dataSourceMedicamento.data.filter((item: any) => !item.nuevo && !this.modificadosCantidadMedicamento.has(item));
+      const datosActualizar = [...datosModificados];
+      const datosActualizarProcedimientos = [...datosModificadosProcedimientos];
+      const datosActualizarMedicamentos = [...datosModificadosMedicamentos];
+      //servicios diagnosticos
+      if (nuevosDatos.length > 0) {
+        newData = DetalleRequest._mapApoyoGuardar(nuevosDatos);
+      }
+      if (datosActualizar.length > 0) {
+        updateData = DetalleRequest._mapApoyoActualizar(datosActualizar);
+      }
+      //procedimientos
+      if (nuevosDatosProcedimientos.length > 0) {
+        const newDataProc = DetalleRequest._mapProcedimientoGuardar(nuevosDatosProcedimientos);
+        newData = [...newData, ...newDataProc];
+      }
+      if (datosActualizarProcedimientos.length > 0) {
+        const updateDataProc = DetalleRequest._mapProcedimientoActualizar(datosActualizarProcedimientos);
+        updateData = [...updateData, ...updateDataProc];
+      }
+      //receta
+      if (nuevosDatosMedicamentos.length > 0) {
+        if (this.isMedicamentoAdd) {
+        const newDataMedic = DetalleRequest._mapMedicamentoGuardar(nuevosDatosMedicamentos);
+        obsArraySaveAll.push(this.consultaMedService.guardarReceta({recetas: newDataMedic}, this.numeroConsulta));
+        }
+      }
+      if (datosActualizarMedicamentos.length > 0) {
+        if (this.isMedicamentoModified) {
+          const updateDataMedic = DetalleRequest._mapMedicamentoActualizar(datosActualizarMedicamentos);
+          obsArraySaveAll.push(this.consultaMedService.actualizarReceta({recetas: updateDataMedic}, this.numeroConsulta));
+        }
+      }
+      //
+      if(newData.length > 0) {
+        if (this.isServicioDiagnosticoAdd) {
+        obsArraySaveAll.push(this.consultaMedService.guardarApoyoDiagnostico({apoyosDiagnostico: newData}, this.numeroConsulta));
+        }
+      }
+      if(updateData.length > 0) {
+        if (this.isServicioDiagnosticoModified) {
+          obsArraySaveAll.push(this.consultaMedService.actualizarApoyoDiagnostico({apoyosDiagnostico: updateData}, this.numeroConsulta));
+        }
+      }
+
+      return obsArraySaveAll;
   }
 }

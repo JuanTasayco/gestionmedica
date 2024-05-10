@@ -74,53 +74,53 @@
             <ul class="row g-list-md">
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">Peso (kg)</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['peso'].value | empty}}
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['peso'] | empty}}
                     </div>
                 </li>
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">Talla (mt)</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['talla'].value | empty}}</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['talla'] | empty}}</div>
                 </li>
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">IMC</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['imc'].value | empty}}</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['imc'] | empty}}</div>
                 </li>
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">FR</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['frecuenciaRespiratoria'].value | empty}}
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['frecuenciaRespiratoria'] | empty}}
                     </div>
                 </li>
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">FC</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['frecuenciaCardiaca'].value | empty}}</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['frecuenciaCardiaca'] | empty}}</div>
                 </li>
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">Presión</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['presion'].value | empty}}</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['presion'] | empty}}</div>
                 </li>
             </ul>
 
             <ul class="row g-list-md">
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">T. Oral</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['temperaturaOral'].value | empty}}
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['temperaturaOral'] | empty}}
                     </div>
                 </li>
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">T. Otica</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['temperaturaOtica'].value | empty}}</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['temperaturaOtica'] | empty}}</div>
                 </li>
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">T. Rectal</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['temperaturaRectal'].value | empty}}</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['temperaturaRectal'] | empty}}</div>
                 </li>
                 <li class="col-md-2 clearfix cnt-item">
                     <div class="col-sm-7 col-xs-6 item-label">T. Axilar</div>
-                    <div class="col-sm-5 col-xs-6 item-dato">{{informacion_paciente.controls['temperaturaAxilar'].value | empty}}</div>
+                    <div class="col-sm-5 col-xs-6 item-dato">{{data_consulta['temperaturaAxilar'] | empty}}</div>
                 </li>
                 <li class="col-md-4 clearfix cnt-item">
                     <div class="col-sm-3 col-xs-6 item-label">Consultorio</div>
-                    <div class="col-sm-9 col-xs-6 item-dato">&nbsp;{{informacion_paciente.controls['nroConsultorio'].value | empty}}</div>
+                    <div class="col-sm-9 col-xs-6 item-dato">&nbsp;{{data_consulta['nroConsultorio'] | empty}}</div>
                 </li>
             </ul>
         </div>
@@ -128,6 +128,11 @@
 </mat-accordion>
 <mat-card *ngIf="!inf_paciente && data_consulta?.estado != 'ANULADO'"
     style="padding: 30px;box-shadow: none;border: 1px solid rgb(231, 231, 231);margin-bottom: 15px;">
+    <div class="row text-right mb-1">
+      <span class="material-icons" [ngStyle]="{'cursor': 'pointer'}" (click)="closeInfoPaciente()">
+          close
+      </span>
+  </div>
     <form [formGroup]="informacion_paciente">
     <div class="row">
         <div class="col-sm-12 col-md-6">
@@ -328,13 +333,18 @@
 </mat-accordion>
 <mat-card *ngIf="!detalle_paciente && !isNurseValue" style="padding: 30px;box-shadow: none;border: 1px solid rgb(231, 231, 231);
 margin-bottom: 15px;">
+<div class="row text-right mb-1">
+  <span class="material-icons" [ngStyle]="{'cursor': 'pointer'}" (click)="closeDetalleAtencion()">
+      close
+  </span>
+</div>
     <div class="row">
         <div class="col-sm-12 col-md-6">
         <b>Detalle de la atención</b>
     </div>
         <div class="col-sm-12 col-md-6" style="text-align: end;">
             <button type="button"
-            *ngIf ="!isDocSign && data_consulta && data_consulta?.estado === 'EN ATENCION' || data_consulta?.estado === 'EN ESPERA' || data_consulta?.estado === 'EN ESPERA TRIAJE'"
+            *ngIf ="data_consulta && data_consulta?.estado === 'EN ATENCION' || data_consulta?.estado === 'EN ESPERA' || data_consulta?.estado === 'EN ESPERA TRIAJE'"
              (click)="openMedicalRestModal()" class="g-btn g-btn-green-border">+ DESCANSO
                 MEDICO</button>
         </div>
@@ -481,6 +491,11 @@ margin-bottom: 15px;">
             </div>
         </div>
         <mat-hint *ngIf="!listaServicios && data_consulta?.estado != 'ANULADO'" style="font-size: 12px;">
+          <div class="row text-right">
+            <span class="material-icons" [ngStyle]="{'cursor': 'pointer'}" (click)="updateDataDiagnostico(); closeDiagnosticos()">
+              close
+          </span>
+          </div>
             <ng-container *ngIf="data_consulta?.estado !== 'ATENDIDO'">
                 Los diagnósticos agregados son tomados como
             <b>"Presuntivo"</b>, si deseas iniciar que son <b>"Definitivo"</b> debes activar la
@@ -497,7 +512,7 @@ margin-bottom: 15px;">
                     <mat-label>Agregar diagnóstico por nombre o CIE10</mat-label>
                     <input matInput #diagnosticoSearch [formControl]="diagnostico_FormControl" [matAutocomplete]="auto">
                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="diagnosticoSeleccionado($event)">
-                        <mat-option *ngFor="let d of diagnosticosFiltrados | async" [value]="d.codigo">
+                        <mat-option *ngFor="let d of diagnosticosFiltradosValue" [value]="d.codigo" (click)="clearDiagnosticoFiltrado()">
                             {{d.descripcion}}
                         </mat-option>
                     </mat-autocomplete>
@@ -562,8 +577,7 @@ margin-bottom: 15px;">
             <div class="col-sm-12 col-md-4">
                 <mat-form-field appearance="standard" class="form-group">
                     <mat-label>Diagnóstico Identificado</mat-label>
-                    <mat-select [(ngModel)]="diagSeleccionado_Serv"
-                        (selectionChange)="listarServDiagSeleccionado($event)">
+                    <mat-select [(ngModel)]="diagSeleccionado_Serv">
                         <mat-option *ngFor="let serv of cboservDiag" [value]="serv">
                             {{serv.value}}</mat-option>
                     </mat-select>
@@ -576,7 +590,7 @@ margin-bottom: 15px;">
                         <mat-label>Agregar servicio por nombre o código</mat-label>
                         <input matInput #diagnosticoInput [formControl]="servDiag_FormControl" [matAutocomplete]="auto2">
                         <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="servDiagSeleccionado($event)">
-                            <mat-option *ngFor="let d of servDiagFiltrados | async" [value]="d.codigo">
+                            <mat-option *ngFor="let d of servDiagFiltradosValue" [value]="d.codigo" (click)="clearServDiagFilter()">
                                 {{d.descripcion}}
                             </mat-option>
                         </mat-autocomplete>
@@ -604,7 +618,7 @@ margin-bottom: 15px;">
                         <th mat-header-cell *matHeaderCellDef width ="8%"> Cantidad</th>
                         <td mat-cell *matCellDef="let element; index as i">
                           <mat-form-field appearance="standard" class="form-group">
-                          <input integerInput matInput type="text" maxlength="2" #cantidad="ngModel" [(ngModel)]="element.cantidad" name="cantidad_{{i}}" required
+                          <input (change)="changeCantidad($event, element)" integerInput matInput type="text" maxlength="2" #cantidad="ngModel" [(ngModel)]="element.cantidad" name="cantidad_{{i}}" required
                             onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                           oninput="javascript: if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                             <mat-hint class="mat-error">
@@ -675,8 +689,7 @@ margin-bottom: 15px;">
             <div class="col-sm-12 col-md-4">
                 <mat-form-field appearance="standard" class="form-group">
                     <mat-label>Diagnóstico Identificado</mat-label>
-                    <mat-select [(ngModel)]="diagSeleccionado_Proc"
-                        (selectionChange)="listarProcedimientoSeleccionado($event)">
+                    <mat-select [(ngModel)]="diagSeleccionado_Proc">
                         <mat-option *ngFor="let serv of cboservDiag" [value]="serv">
                             {{serv.value}}</mat-option>
                     </mat-select>
@@ -690,7 +703,7 @@ margin-bottom: 15px;">
                         <mat-label>Agregar servicio por nombre o código</mat-label>
                         <input matInput #procedimientoInput [formControl]="procedimiento_FormControl" [matAutocomplete]="auto3">
                         <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="procedimientoSeleccionado($event)">
-                            <mat-option *ngFor="let p of procedimientosFiltrados | async" [value]="p.codigo">
+                            <mat-option *ngFor="let p of procedimientosFiltradosValue" [value]="p.codigo" (click)="clearProcedimientosFiltrados()">
                                 {{p.descripcion}}
                             </mat-option>
                         </mat-autocomplete>
@@ -719,7 +732,7 @@ margin-bottom: 15px;">
                         <th mat-header-cell *matHeaderCellDef width ="8%"> Cantidad</th>
                         <td mat-cell *matCellDef="let element; index as i">
                           <mat-form-field appearance="standard" class="form-group">
-                            <input integerInput matInput type="text" maxlength="2" #cantidadProc="ngModel" [(ngModel)]="element.cantidad" name="cantidadProc_{{i}}" required
+                            <input integerInput matInput type="text" maxlength="2" #cantidadProc="ngModel" [(ngModel)]="element.cantidad" name="cantidadProc_{{i}}" (change)="changeCantidadProcedimiento($event, element)" required
                               onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                             oninput="javascript: if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                               <mat-hint class="mat-error">
@@ -793,8 +806,7 @@ margin-bottom: 15px;">
             <div class="col-sm-12 col-md-4">
                 <mat-form-field appearance="standard" class="form-group">
                     <mat-label>Diagnóstico Identificado</mat-label>
-                    <mat-select [(ngModel)]="medicamentoSeleccionado_Proc"
-                        (selectionChange)="listarRecetaSeleccionado($event)">
+                    <mat-select [(ngModel)]="medicamentoSeleccionado_Proc">
                         <mat-option *ngFor="let serv of cboservDiag" [value]="serv">
                             {{serv.value}}</mat-option>
                     </mat-select>
@@ -807,7 +819,7 @@ margin-bottom: 15px;">
                         <mat-label>Agregar medicamento por nombre o DCI</mat-label>
                         <input matInput #medicamentoInput [formControl]="medicamento_FormControl" [matAutocomplete]="auto3">
                         <mat-autocomplete #auto3="matAutocomplete" (optionSelected)="medicamentoSeleccionado($event)">
-                            <mat-option *ngFor="let m of medicamentosFiltrados | async" [value]="m.codigo">
+                            <mat-option *ngFor="let m of medicamentosFiltradosValue" [value]="m.codigo" (click)="clearMedicamentosFiltrados()">
                                 <span>{{m.descripcion}}</span>
                             </mat-option>
                         </mat-autocomplete>
@@ -836,7 +848,7 @@ margin-bottom: 15px;">
                                         <mat-form-field appearance="standard" class="form-group">
                                             <mat-label>Dosis</mat-label>
                                                 <input  matInput [(ngModel)]="dm.dosis" name="dosis" (keypress)="onlyNumbersMedicaments($event)" #medDosis="ngModel"
-                              (keyup)="calcularCantidad($event.target.value, i)" required >
+                              (keyup)="calcularCantidad($event.target.value, i)" required (change)="changeCantidadMedicamento($event, dm)" >
                                         </mat-form-field>
                             <div class="row" *ngIf="medDosis.invalid && (medDosis.dirty || medDosis.touched)">
                               <div class="col-md-12"  *ngIf="medDosis.errors.required">
@@ -851,7 +863,7 @@ margin-bottom: 15px;">
                                         <mat-form-field appearance="standard" class="form-group">
                                             <mat-label>UM Dosis</mat-label>
                             <mat-select [(ngModel)]="dm.unidadMedidaDosis" name="unidadMedidaDosis" required
-                              (selectionChange)="calcularCantidad($event.value, i)">
+                              (selectionChange)="calcularCantidad($event.value, i); changeCantidadMedicamento($event, dm)">
                                                 <!-- <mat-option value="">Todos</mat-option> -->
                                                 <mat-option *ngFor="let d of listaDosis" [value]="d.codigo">
                                                     {{d.descripcion}}</mat-option>
@@ -861,7 +873,7 @@ margin-bottom: 15px;">
                                     <div class="col-sm-12 col-md-1">
                                         <mat-form-field appearance="standard" class="form-group">
                                             <mat-label>Cada</mat-label>
-                            <input matInput [(ngModel)]="dm.frecuencia" name="frecuencia" required #medFrec="ngModel"
+                            <input matInput [(ngModel)]="dm.frecuencia" name="frecuencia" required #medFrec="ngModel" (change)="changeCantidadMedicamento($event, dm)"
                               (keypress)="onlyNumbersMedicaments($event)" (keyup)="calcularCantidad($event.target.value, i)">
                                         </mat-form-field>
                                         <div class="row" *ngIf="medFrec.invalid && (medFrec.dirty || medFrec.touched)">
@@ -877,7 +889,7 @@ margin-bottom: 15px;">
                                         <mat-form-field appearance="standard" class="form-group">
                                             <mat-label>UM Frecuencia</mat-label>
                             <mat-select [(ngModel)]="dm.unidadMedidaFrecuencia" name="unidadMedidaFrecuencia" required
-                              (selectionChange)="calcularCantidad($event.value, i)">
+                              (selectionChange)="calcularCantidad($event.value, i); changeCantidadMedicamento($event, dm)">
                                                 <mat-option *ngFor="let f of listaFrecuencias" [value]="f.codigo">
                                                     {{f.descripcion}}</mat-option>
                                             </mat-select>
@@ -887,7 +899,7 @@ margin-bottom: 15px;">
                                         <mat-form-field appearance="standard" class="form-group">
                                             <mat-label>Duración</mat-label>
                             <input matInput [(ngModel)]="dm.duracion" name="duracion" (keypress)="onlyNumbersMedicaments($event)" required #medDur="ngModel"
-                              (keyup)="calcularCantidad($event.target.value, i)">
+                              (keyup)="calcularCantidad($event.target.value, i)" (change)="changeCantidadMedicamento($event, dm)">
                                         </mat-form-field>
                                         <div class="row" *ngIf="medDur.invalid && (medDur.dirty || medDur.touched)">
                                           <div class="col-md-12"  *ngIf="medDur.errors.required">
@@ -902,7 +914,7 @@ margin-bottom: 15px;">
                                         <mat-form-field appearance="standard" class="form-group">
                                             <mat-label>UM Duración</mat-label>
                             <mat-select [(ngModel)]="dm.unidadMedidaDuracion" name="unidadMedidaDuracion" required
-                              (selectionChange)="calcularCantidad($event.value, i)">
+                              (selectionChange)="calcularCantidad($event.value, i); changeCantidadMedicamento($event, dm)">
                                                 <mat-option *ngFor="let r of listaDuracion" [value]="r.codigo">
                                                     {{r.descripcion}}</mat-option>
                                             </mat-select>
@@ -913,7 +925,7 @@ margin-bottom: 15px;">
                                         <mat-form-field appearance="standard" class="form-group">
                                             <mat-label>Cantidad</mat-label>
                           <input matInput #cantidadProducto="ngModel" [(ngModel)]="dm.cantidadProducto" name="cantidadProducto" required
-                            pattern="^[+]?(\d*|\d{1,3}(,\d{3})*)(\.\d+)?\b$">
+                            pattern="^[+]?(\d*|\d{1,3}(,\d{3})*)(\.\d+)?\b$" (change)="changeCantidadMedicamento($event, dm)">
                                         </mat-form-field>
                                         <div class="row" *ngIf="cantidadProducto.invalid && (cantidadProducto.dirty || cantidadProducto.touched)">
                                           <div class="col-md-12"  *ngIf="cantidadProducto.errors.required">
@@ -929,7 +941,7 @@ margin-bottom: 15px;">
                                     <div class="col-md-12">
                                         <mat-form-field appearance="standard" class="form-group">
                                             <mat-label>Indicaciones médicas</mat-label>
-                                                <textarea inputrestriction="800" matInput [(ngModel)]="dm.indicacionMedica" name="indicacionMedica" cdkTextareaAutosize autocomplete="off"
+                                                <textarea inputrestriction="800" matInput [(ngModel)]="dm.indicacionMedica" name="indicacionMedica" cdkTextareaAutosize autocomplete="off" (change)="changeCantidadMedicamento($event, dm)"
                                                 #autosize="cdkTextareaAutosize"
                                                 cdkAutosizeMinRows="1"
                                                 cdkAutosizeMaxRows="5"> </textarea>
@@ -1020,8 +1032,8 @@ margin-bottom: 15px;">
                 </div>
 </mat-card>
 
-<detalle-clinica-referencia *ngIf="agregarReferencia && !isNurseValue" [datosConsulta]="data_consulta" 
-    [datosReferencia]="data_referencia" [hasDatosReferencia]="datos_referencia" 
+<detalle-clinica-referencia *ngIf="agregarReferencia && !isNurseValue" [datosConsulta]="data_consulta"
+    [datosReferencia]="data_referencia" [hasDatosReferencia]="datos_referencia"
     (close)="formReferencia(false)" (saveReferencia)="guardarNewReferencia($event)"></detalle-clinica-referencia>
 
 <mat-card style="box-shadow: none;" *ngIf="!isNurseValue">

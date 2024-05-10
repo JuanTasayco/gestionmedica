@@ -4,15 +4,15 @@
             <div class="row">
                 <div class="col-sm-12 col-md-6">
                     <span class="material-icons" style="margin-right: 8px;cursor: pointer;" (click)="volverConsulta()">close</span>
-                    <h1 style="font-weight: 400;">Consulta No. {{data_consulta?.numeroConsulta}}</h1>   
-                    <span [ngClass]="{'anulado': data_consulta?.estado == 'ANULADO', 
-                    'atendido' : data_consulta?.estado == 'ATENDIDO','atencion' : data_consulta?.estado == 'EN ATENCION', 'espera' : data_consulta?.estado == 'EN ESPERA',
-                    'triaje' : data_consulta?.estado == 'EN ESPERA TRIAJE'}"  style="padding: 2px 8px 2px 8px; margin-left: 8px;border-radius: 3px;">{{data_consulta?.estado}}</span>
+                    <h1 style="font-weight: 400;">Consulta No. {{data_consulta_value?.numeroConsulta}}</h1>
+                    <span [ngClass]="{'anulado': data_consulta_value?.estado == 'ANULADO',
+                    'atendido' : data_consulta_value?.estado == 'ATENDIDO','atencion' : data_consulta_value?.estado == 'EN ATENCION', 'espera' : data_consulta_value?.estado == 'EN ESPERA',
+                    'triaje' : data_consulta_value?.estado == 'EN ESPERA TRIAJE'}"  style="padding: 2px 8px 2px 8px; margin-left: 8px;border-radius: 3px;">{{data_consulta_value?.estado}}</span>
                     <span style="padding: 2px 8px 2px 8px; margin-left: 8px;border-radius: 3px;">
                         <a matTooltipPosition='above'
                             rel="noopener noreferrer"
-                            href="{{data_consulta?.urlGenesys}}" target="_blank"
-                            *ngIf="data_consulta?.urlGenesys">
+                            href="{{data_consulta_value?.urlGenesys}}" target="_blank"
+                            *ngIf="data_consulta_value?.urlGenesys">
                             Ir a Genesys
                         </a>
                     </span>
@@ -63,7 +63,7 @@
                           </mat-icon>
                       </button>
                     </ng-container>
-                    <button *ngIf="data_consulta?.flagEliminacion == 'S'" type="button" class="g-btn g-btn-transparent" (click)="anularConsulta()" style="padding-right: 35px;padding-left: 35px;">
+                    <button *ngIf="data_consulta_value?.flagEliminacion == 'S'" type="button" class="g-btn g-btn-transparent" (click)="anularConsulta()" style="padding-right: 35px;padding-left: 35px;">
                         <span>ANULAR</span>
                     </button>
                 </div>
@@ -72,22 +72,22 @@
     </div>
     <div class="dashboard-body g-border-top h-myd-border--top-0">
         <div class="g-section-inner g-dashboard-section">
-            <div class="container">
+            <div class="container" *ngIf="data_consulta_value">
                 <mat-tab-group #tabgroup mat-stretch-tabs (selectedTabChange)="buscarHistorial($event); change(tabgroup,$event)">
                     <mat-tab  #tab  label="DETALLE DE CONSULTA">
-                        <mantenimiento-tab-detalle-clinica (evento)="getMensaje($event)" [data_consulta] = "data_consulta" [isNurseValue]="nurseValue" [buttonMedicalRest]="showButtonMedicalRest" [isDocSign]="signMedicalRest"></mantenimiento-tab-detalle-clinica>
+                        <mantenimiento-tab-detalle-clinica (evento)="getMensaje($event)" [data_consulta]= "data_consulta_value" [isNurseValue]="nurseValue" [buttonMedicalRest]="showButtonMedicalRest"></mantenimiento-tab-detalle-clinica>
                     </mat-tab>
                     <mat-tab  #tab  label="HISTORIAL DE ATENCIONES" >
                         <ng-template #tab matTabContent>
-                            <mantenimiento-tab-historial [data_consulta] = "data_consulta"></mantenimiento-tab-historial>
+                            <mantenimiento-tab-historial [data_consulta] = "data_consulta_value"></mantenimiento-tab-historial>
                         </ng-template>
-                        
+
                     </mat-tab>
                     <mat-tab  #tab  label="FILIACIÓN Y ANTECEDENTES">
                         <ng-template matTabContent>
-                            <mantenimiento-tab-filiacion (historia)="getMensajeHistoria($event)" (antecedentes)="getMensajeAntecedentes($event)"  [isNurseValue]="nurseValue" [data_consulta] = "data_consulta"></mantenimiento-tab-filiacion>
+                            <mantenimiento-tab-filiacion (historia)="getMensajeHistoria($event)" (antecedentes)="getMensajeAntecedentes($event)"  [isNurseValue]="nurseValue" [data_consulta] = "data_consulta_value"></mantenimiento-tab-filiacion>
                         </ng-template>
-                        
+
                     </mat-tab>
                     <mat-tab  #tab  label="DECLARACIÓN SALUD">
                         <mantenimiento-tab-declaracion-salud></mantenimiento-tab-declaracion-salud>
